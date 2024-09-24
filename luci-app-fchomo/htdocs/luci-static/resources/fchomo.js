@@ -884,6 +884,55 @@ function encodeBase64(input) {
 	return new Uint8Array(buf).toBase64(); // OR btoa(String.fromCharCode.apply(null, buf));
 }
 
+// thanks to https://github.com/scottschiller/ArmorAlley/blob/master/src/floppy/index-floppy.html
+/**
+ * Unzip Gzip data
+ * @param {string|Array|ArrayBuffer|Uint8Array} input - Input data (Base64 string or binary object)
+ * @param {boolean} asText - Return a string? (true: text, false: arrayBuffer)
+ * @param {function} callback - Callback function (result)
+ */
+function decompressGzip(input, asText = false, callback) {
+	if (isEmpty(input))
+		return callback?.(null);
+
+	const decompress = async(data) => {
+		try {
+			const ds = new DecompressionStream('gzip');
+
+			let blob_in;
+			if (typeof data === 'string') {
+				if (data.match(/^H4sI/)) { // Gzip magic + Deflate
+					const response = await window.fetch('data:application/octet-stream;base64,' + data);
+					blob_in = await response.blob();
+				} else
+					throw new Error('Not a valid base64 encoded gzip');
+			} else {
+				// The `data` should be `Array` or `ArrayBuffer` or `Uint8Array`.
+				data = new Uint8Array(data);
+				if (data.subarray(0, 3).join(',') === [0x1f, 0x8b, 0x08].join(',')) // Gzip magic + Deflate
+					blob_in = new Blob([data]);
+				else
+					throw new Error('Not a valid gzip');
+			}
+
+			const decodedStream = blob_in.stream().pipeThrough(ds);
+			const blob_out = await new window.Response(decodedStream).blob();
+
+			if (asText)
+				return await blob_out.text();
+			else {
+				const buf = await blob_out.arrayBuffer();
+				return new Uint8Array(buf);
+			}
+		} catch (e) {
+			throw e;
+		}
+	};
+
+	decompress(input)
+		.then(result => callback?.(result));
+}
+
 function generateRand(type, length) {
 	let byteArr;
 	if (['base64', 'hex'].includes(type))
@@ -1710,6 +1759,7 @@ return baseclass.extend({
 	calcStringMD5,
 	decodeBase64,
 	encodeBase64,
+	decompressGzip,
 	generateRand,
 	shuffle,
 	json2yaml,

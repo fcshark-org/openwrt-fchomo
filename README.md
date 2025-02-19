@@ -1,11 +1,11 @@
 # FullCombo Shark!
 
 ![Releases](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Ffantastic-packages.github.io%2Fpackages%2Freleases%2FSNAPSHOT%2Fpackages%2Fx86_64%2Fluci%2Findex.json&query=%24.packages.luci-app-fchomo&label=releases&style=flat-square&color=73eba0)
-[![License](https://img.shields.io/github/license/muink/openwrt-fchomo?style=flat-square)](./LICENSE)
-![Stars](https://img.shields.io/github/stars/muink/openwrt-fchomo?style=flat-square&color=ea4aaa)
-[![Discussions](https://img.shields.io/github/discussions/muink/openwrt-fchomo?style=flat-square)](https://github.com/muink/openwrt-fchomo/discussions)
+[![License](https://img.shields.io/github/license/fcshark-org/openwrt-fchomo?style=flat-square)](./LICENSE)
+![Stars](https://img.shields.io/github/stars/fcshark-org/openwrt-fchomo?style=flat-square&color=ea4aaa)
+[![Discussions](https://img.shields.io/github/discussions/fcshark-org/openwrt-fchomo?style=flat-square)](https://github.com/fcshark-org/openwrt-fchomo/discussions)
 [![Static](https://img.shields.io/badge/chat-on%20Telegram-blue?style=flat-square)](https://t.me/fc_shark)
-<!-- ![Codesize](https://img.shields.io/github/languages/code-size/muink/openwrt-fchomo?style=flat-square) -->
+<!-- ![Codesize](https://img.shields.io/github/languages/code-size/fcshark-org/openwrt-fchomo?style=flat-square) -->
 
 ## Features
 
@@ -61,7 +61,7 @@ make menuconfig
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 # Get Makefile
-git clone --depth 1 --branch master --single-branch --no-checkout https://github.com/muink/openwrt-fchomo.git package/openwrt-fchomo
+git clone --depth 1 --branch master --single-branch --no-checkout https://github.com/fcshark-org/openwrt-fchomo.git package/openwrt-fchomo
 pushd package/openwrt-fchomo
 umask 022
 git checkout
@@ -72,4 +72,4 @@ make menuconfig
 make package/luci-app-fchomo/compile V=s BUILD_LOG=y -j$(nproc)
 ```
 
-[initial resource pack]: https://github.com/muink/openwrt-fchomo/raw/refs/heads/initialpack/initial.tgz
+[initial resource pack]: https://github.com/fcshark-org/openwrt-fchomo/raw/refs/heads/initialpack/initial.tgz

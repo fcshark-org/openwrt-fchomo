@@ -30,7 +30,7 @@ jobs:
           exit 1
         fi
         # Routing list
-        listrepo='muink/route-list'
+        listrepo='fcshark-org/route-list'
         listref='release'
         listnames='
           china_ip4:china_ipv4.txt

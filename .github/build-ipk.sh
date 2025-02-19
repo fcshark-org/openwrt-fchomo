@@ -36,7 +36,7 @@ cat > "$TEMP_PKG_DIR/CONTROL/control" <<-EOF
 	Package: $PKG_NAME
 	Version: $PKG_VERSION
 	Depends: libc, mihomo, ca-bundle, firewall4, kmod-nft-tproxy, curl, yq
-	Source: https://github.com/muink/openwrt-fchomo
+	Source: https://github.com/fcshark-org/openwrt-fchomo
 	SourceName: $PKG_NAME
 	Section: luci
 	SourceDateEpoch: $PKG_SOURCE_DATE_EPOCH

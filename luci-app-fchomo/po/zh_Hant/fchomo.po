@@ -520,11 +520,19 @@ msgstr "停用 SNI"
 msgid "Disable UDP"
 msgstr "停用 UDP"
 
-#: htdocs/luci-static/resources/view/fchomo/client.js:1107
-#: htdocs/luci-static/resources/view/fchomo/client.js:1112
-#: htdocs/luci-static/resources/view/fchomo/client.js:1177
-#: htdocs/luci-static/resources/view/fchomo/client.js:1184
-#: htdocs/luci-static/resources/view/fchomo/client.js:1186
+#: htdocs/luci-static/resources/view/fchomo/client.js:548
+msgid ""
+"Do not resolve the domain connection to IP for this match.</br>Only works "
+"for pure domain inbound connections without DNS resolution. e.g., socks5h"
+msgstr ""
+"不要將網域連線解析為 IP 以進行此次匹配。 </br>僅對未經 DNS 解析的純網域入站連"
+"線有效。例如，socks5h"
+
+#: htdocs/luci-static/resources/view/fchomo/client.js:1110
+#: htdocs/luci-static/resources/view/fchomo/client.js:1115
+#: htdocs/luci-static/resources/view/fchomo/client.js:1180
+#: htdocs/luci-static/resources/view/fchomo/client.js:1187
+#: htdocs/luci-static/resources/view/fchomo/client.js:1189
 msgid "Domain"
 msgstr "網域"
 
@@ -2279,6 +2287,10 @@ msgstr "傳輸層欄位"
 #: htdocs/luci-static/resources/view/fchomo/node.js:581
 msgid "Transport type"
 msgstr "傳輸層類型"
+
+#: htdocs/luci-static/resources/view/fchomo/client.js:530
+msgid "Treat the <code>destination IP</code> as the <code>source IP</code>."
+msgstr "將 <code>目標 IP</code> 視為 <code>來源 IP</code>。"
 
 #: htdocs/luci-static/resources/fchomo.js:102
 msgid "Trojan"

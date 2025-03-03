@@ -86,9 +86,11 @@ return view.extend({
 		o.placeholder = '::';
 		o.modalonly = true;
 
-		o = s.option(form.Value, 'port', _('Listen port'));
-		o.datatype = 'port';
+		o = s.option(form.Value, 'port', _('Listen port') + ' / ' + _('Ports pool'));
+		o.datatype = 'or(port, portrange)';
+		//o.placeholder = '1080,2079-2080,3080'; // Incompatible with firewall
 		o.rmempty = false;
+		//o.validate = L.bind(hm.validateCommonPort, o); // Incompatible with firewall
 
 		// dev: Features under development
 		// rule

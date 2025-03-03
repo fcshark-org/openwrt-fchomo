@@ -49,7 +49,7 @@ uci.foreach(uciconf, uciserver, (cfg) => {
 		type: cfg.type,
 
 		listen: cfg.listen || '::',
-		port: strToInt(cfg.port),
+		port: cfg.port,
 		proxy: 'DIRECT',
 		udp: strToBool(cfg.udp),
 

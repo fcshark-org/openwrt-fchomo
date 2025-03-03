@@ -51,7 +51,6 @@ uci.foreach(uciconf, uciserver, (cfg) => {
 		listen: cfg.listen || '::',
 		port: cfg.port,
 		proxy: 'DIRECT',
-		udp: strToBool(cfg.udp),
 
 		/* Hysteria2 */
 		up: strToInt(cfg.hysteria_up_mbps),
@@ -100,7 +99,10 @@ uci.foreach(uciconf, uciserver, (cfg) => {
 			...arrToObj([[cfg.uuid, cfg.password]])
 		} : null),
 
-		/* TLS */
+		/* Extra fields */
+		udp: strToBool(cfg.udp),
+
+		/* TLS fields */
 		...(cfg.tls === '1' ? {
 			alpn: cfg.tls_alpn,
 			...(cfg.tls_reality === '1' ? {

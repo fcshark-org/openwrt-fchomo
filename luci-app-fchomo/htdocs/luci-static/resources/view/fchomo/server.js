@@ -255,7 +255,7 @@ return view.extend({
 
 			return true;
 		}
-		o.depends({type: /^(vmess|vless|tuic|hysteria2)$/});
+		o.depends({type: /^(http|socks|mixed|vmess|vless|tuic|hysteria2)$/});
 		o.modalonly = true;
 
 		o = s.option(form.DynamicList, 'tls_alpn', _('TLS ALPN'),

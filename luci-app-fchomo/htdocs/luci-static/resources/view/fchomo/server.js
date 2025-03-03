@@ -372,6 +372,54 @@ return view.extend({
 		o.rmempty = false;
 		o.depends('tls_reality', '1');
 		o.modalonly = true;
+
+		/* Transport fields */
+		o = s.taboption('field_general', form.Flag, 'transport_enabled', _('Transport'));
+		o.default = o.disabled;
+		o.depends({type: /^(vmess|vless|trojan)$/});
+		o.modalonly = true;
+
+		o = s.taboption('field_transport', form.ListValue, 'transport_type', _('Transport type'));
+		o.value('grpc', _('gRPC'));
+		o.value('ws', _('WebSocket'));
+		o.validate = function(section_id, value) {
+			const type = this.section.getOption('type').formvalue(section_id);
+
+			switch (type) {
+				case 'vmess':
+				case 'vless':
+					if (!['http', 'h2', 'grpc', 'ws'].includes(value))
+						return _('Expecting: only support %s.').format(_('HTTP') +
+							' / ' + _('HTTPUpgrade') +
+							' / ' + _('gRPC') +
+							' / ' + _('WebSocket'));
+					break;
+				case 'trojan':
+					if (!['grpc', 'ws'].includes(value))
+						return _('Expecting: only support %s.').format(_('gRPC') +
+							' / ' + _('WebSocket'));
+					break;
+				default:
+					break;
+			}
+
+			return true;
+		}
+		o.depends('transport_enabled', '1');
+		o.modalonly = true;
+
+		o = s.taboption('field_transport', form.Value, 'transport_path', _('Request path'));
+		o.placeholder = '/';
+		o.default = '/';
+		o.rmempty = false;
+		o.depends({transport_enabled: '1', transport_type: 'ws'});
+		o.modalonly = true;
+
+		o = s.taboption('field_transport', form.Value, 'transport_grpc_servicename', _('gRPC service name'));
+		o.placeholder = 'GunService';
+		o.rmempty = false;
+		o.depends({transport_enabled: '1', transport_type: 'grpc'});
+		o.modalonly = true;
 		/* Server settings END */
 
 		return m.render();

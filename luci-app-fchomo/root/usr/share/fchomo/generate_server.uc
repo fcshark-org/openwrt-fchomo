@@ -116,6 +116,12 @@ uci.foreach(uciconf, uciserver, (cfg) => {
 				certificate: cfg.tls_cert_path,
 				"private-key": cfg.tls_key_path
 			})
+		} : {}),
+
+		/* Transport fields */
+		...(cfg.transport_enabled === '1' ? {
+			"grpc-service-name": cfg.transport_grpc_servicename,
+			"ws-path": cfg.transport_path
 		} : {})
 	});
 });

@@ -71,8 +71,15 @@ uci.foreach(uciconf, uciserver, (cfg) => {
 		"authentication-timeout": durationToSecond(cfg.tuic_authentication_timeout),
 		"max-udp-relay-packet-size": strToInt(cfg.tuic_max_udp_relay_packet_size),
 
-		/* HTTP / SOCKS / VMess / VLESS / Tuic / Hysteria2 */
-		users: (cfg.type in ['http', 'socks', 'mixed', 'vmess', 'vless']) ? [
+		/* Trojan */
+		"ss-option": cfg.trojan_ss_enabled === '1' ? {
+			enabled: true,
+			method: cfg.trojan_ss_chipher,
+			password: cfg.trojan_ss_password
+		} : null,
+
+		/* HTTP / SOCKS / VMess / VLESS / Trojan / Tuic / Hysteria2 */
+		users: (cfg.type in ['http', 'socks', 'mixed', 'vmess', 'vless', 'trojan']) ? [
 			{
 				/* HTTP / SOCKS */
 				username: cfg.username,

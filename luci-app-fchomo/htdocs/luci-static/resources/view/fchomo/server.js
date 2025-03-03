@@ -108,6 +108,7 @@ return view.extend({
 		o.validate = L.bind(hm.validateAuthPassword, o);
 		o.rmempty = false;
 		o.depends({type: /^(http|socks|mixed|hysteria2)$/, username: /.+/});
+		o.depends('type', 'trojan');
 		o.depends({type: /^(tuic)$/, uuid: /.+/});
 		o.modalonly = true;
 
@@ -204,6 +205,29 @@ return view.extend({
 		o.depends('type', 'tuic');
 		o.modalonly = true;
 
+		/* Trojan fields */
+		o = s.option(form.Flag, 'trojan_ss_enabled', _('Shadowsocks encrypt'));
+		o.default = o.disabled;
+		o.depends('type', 'trojan');
+		o.modalonly = true;
+
+		o = s.option(form.ListValue, 'trojan_ss_chipher', _('Shadowsocks chipher'));
+		o.default = hm.trojan_cipher_methods[0][0];
+		hm.trojan_cipher_methods.forEach((res) => {
+			o.value.apply(o, res);
+		})
+		o.depends({type: 'trojan', trojan_ss_enabled: '1'});
+		o.modalonly = true;
+
+		o = s.option(hm.GenValue, 'trojan_ss_password', _('Shadowsocks password'));
+		o.password = true;
+		o.validate = function(section_id, value) {
+			const encmode = this.section.getOption('trojan_ss_chipher').formvalue(section_id);
+			return hm.validateShadowsocksPassword.call(this, encmode, section_id, value);
+		}
+		o.depends({type: 'trojan', trojan_ss_enabled: '1'});
+		o.modalonly = true;
+
 		/* VMess / VLESS fields */
 		o = s.option(hm.GenValue, 'vmess_uuid', _('UUID'));
 		o.rmempty = false;
@@ -236,7 +260,7 @@ return view.extend({
 			let tls_reality = this.section.getUIElement(section_id, 'tls_reality').node.querySelector('input');
 
 			// Force enabled
-			if (['vless', 'tuic', 'hysteria2'].includes(type)) {
+			if (['vless', 'trojan', 'tuic', 'hysteria2'].includes(type)) {
 				tls.checked = true;
 				tls.disabled = true;
 				if (['tuic', 'hysteria2'].includes(type) && !`${tls_alpn.getValue()}`)
@@ -246,7 +270,7 @@ return view.extend({
 			}
 
 			// Force disabled
-			if (!['vmess', 'vless'].includes(type)) {
+			if (!['vmess', 'vless', 'trojan'].includes(type)) {
 				tls_reality.checked = null;
 				tls_reality.disabled = true;
 			} else {
@@ -255,7 +279,7 @@ return view.extend({
 
 			return true;
 		}
-		o.depends({type: /^(http|socks|mixed|vmess|vless|tuic|hysteria2)$/});
+		o.depends({type: /^(http|socks|mixed|vmess|vless|trojan|tuic|hysteria2)$/});
 		o.modalonly = true;
 
 		o = s.option(form.DynamicList, 'tls_alpn', _('TLS ALPN'),

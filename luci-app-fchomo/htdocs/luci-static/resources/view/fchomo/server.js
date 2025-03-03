@@ -337,7 +337,7 @@ return view.extend({
 
 		o = s.taboption('field_tls', form.Value, 'tls_reality_dest', _('REALITY handshake server'));
 		o.datatype = 'hostport';
-		o.placeholder = 'cloud.tencent.com';
+		o.placeholder = 'cloud.tencent.com:443';
 		o.rmempty = false;
 		o.depends('tls_reality', '1');
 		o.modalonly = true;

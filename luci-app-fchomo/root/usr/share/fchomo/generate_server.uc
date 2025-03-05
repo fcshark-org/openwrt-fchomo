@@ -52,6 +52,28 @@ uci.foreach(uciconf, uciserver, (cfg) => {
 		port: cfg.port,
 		proxy: 'DIRECT',
 
+		/* HTTP / SOCKS / VMess / VLESS / Trojan / AnyTLS / Tuic / Hysteria2 */
+		users: (cfg.type in ['http', 'socks', 'mixed', 'vmess', 'vless', 'trojan']) ? [
+			{
+				/* HTTP / SOCKS */
+				username: cfg.username,
+				password: cfg.password,
+
+				/* VMess / VLESS */
+				uuid: cfg.vmess_uuid,
+				flow: cfg.vless_flow,
+				alterId: strToInt(cfg.vmess_alterid)
+			}
+			/*{
+			}*/
+		] : ((cfg.type in ['anytls', 'tuic', 'hysteria2']) ? {
+			/* AnyTLS / Hysteria2 */
+			...arrToObj([[cfg.username, cfg.password]]),
+
+			/* Tuic */
+			...arrToObj([[cfg.uuid, cfg.password]])
+		} : null),
+
 		/* Hysteria2 */
 		up: strToInt(cfg.hysteria_up_mbps),
 		down: strToInt(cfg.hysteria_down_mbps),
@@ -79,28 +101,6 @@ uci.foreach(uciconf, uciserver, (cfg) => {
 
 		/* AnyTLS */
 		"padding-scheme": cfg.anytls_padding_scheme,
-
-		/* HTTP / SOCKS / VMess / VLESS / Trojan / AnyTLS / Tuic / Hysteria2 */
-		users: (cfg.type in ['http', 'socks', 'mixed', 'vmess', 'vless', 'trojan']) ? [
-			{
-				/* HTTP / SOCKS */
-				username: cfg.username,
-				password: cfg.password,
-
-				/* VMess / VLESS */
-				uuid: cfg.vmess_uuid,
-				flow: cfg.vless_flow,
-				alterId: strToInt(cfg.vmess_alterid)
-			}
-			/*{
-			}*/
-		] : ((cfg.type in ['anytls', 'tuic', 'hysteria2']) ? {
-			/* AnyTLS / Hysteria2 */
-			...arrToObj([[cfg.username, cfg.password]]),
-
-			/* Tuic */
-			...arrToObj([[cfg.uuid, cfg.password]])
-		} : null),
 
 		/* Extra fields */
 		udp: strToBool(cfg.udp),

@@ -179,6 +179,11 @@ msgstr "已在更新中。"
 msgid "Alter ID"
 msgstr "额外 ID"
 
+#: htdocs/luci-static/resources/fchomo.js:73
+#: htdocs/luci-static/resources/fchomo.js:105
+msgid "AnyTLS"
+msgstr ""
+
 #: htdocs/luci-static/resources/view/fchomo/global.js:171
 msgid "Application version"
 msgstr "应用版本"
@@ -1073,6 +1078,14 @@ msgstr "仅 IPv6"
 msgid "IPv6 support"
 msgstr "IPv6 支持"
 
+#: htdocs/luci-static/resources/view/fchomo/node.js:289
+msgid "Idle session check interval"
+msgstr "空闲会话检查间隔"
+
+#: htdocs/luci-static/resources/view/fchomo/node.js:296
+msgid "Idle session timeout"
+msgstr "空闲会话超时"
+
 #: htdocs/luci-static/resources/view/fchomo/server.js:191
 msgid "Idle timeout"
 msgstr "空闲超时"
@@ -1228,6 +1241,10 @@ msgstr "支持的应用层协议协商列表，按顺序排列。"
 msgid "Listen address"
 msgstr "监听地址"
 
+#: htdocs/luci-static/resources/view/fchomo/server.js:72
+msgid "Listen fields"
+msgstr "监听字段"
+
 #: htdocs/luci-static/resources/view/fchomo/global.js:683
 msgid "Listen interfaces"
 msgstr "监听接口"
@@ -1370,6 +1387,10 @@ msgstr "Mihomo 客户端"
 #: htdocs/luci-static/resources/view/fchomo/server.js:24
 msgid "Mihomo server"
 msgstr "Mihomo 服务端"
+
+#: htdocs/luci-static/resources/view/fchomo/node.js:303
+msgid "Min of idle sessions to keep"
+msgstr "要保留的最少空闲会话数"
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:698
 msgid ""
@@ -1554,6 +1575,10 @@ msgstr ""
 #: htdocs/luci-static/resources/view/fchomo/node.js:330
 msgid "Packet encoding"
 msgstr "数据包编码"
+
+#: htdocs/luci-static/resources/view/fchomo/server.js:239
+msgid "Padding scheme"
+msgstr "填充方案"
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:78
 #: htdocs/luci-static/resources/view/fchomo/node.js:151

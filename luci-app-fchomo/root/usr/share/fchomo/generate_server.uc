@@ -77,7 +77,10 @@ uci.foreach(uciconf, uciserver, (cfg) => {
 			password: cfg.trojan_ss_password
 		} : null,
 
-		/* HTTP / SOCKS / VMess / VLESS / Trojan / Tuic / Hysteria2 */
+		/* AnyTLS */
+		"padding-scheme": cfg.anytls_padding_scheme,
+
+		/* HTTP / SOCKS / VMess / VLESS / Trojan / AnyTLS / Tuic / Hysteria2 */
 		users: (cfg.type in ['http', 'socks', 'mixed', 'vmess', 'vless', 'trojan']) ? [
 			{
 				/* HTTP / SOCKS */
@@ -91,8 +94,8 @@ uci.foreach(uciconf, uciserver, (cfg) => {
 			}
 			/*{
 			}*/
-		] : ((cfg.type in ['tuic', 'hysteria2']) ? {
-			/* Hysteria2 */
+		] : ((cfg.type in ['anytls', 'tuic', 'hysteria2']) ? {
+			/* AnyTLS / Hysteria2 */
 			...arrToObj([[cfg.username, cfg.password]]),
 
 			/* Tuic */

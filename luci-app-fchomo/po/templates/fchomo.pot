@@ -171,6 +171,11 @@ msgstr ""
 msgid "Alter ID"
 msgstr ""
 
+#: htdocs/luci-static/resources/fchomo.js:73
+#: htdocs/luci-static/resources/fchomo.js:105
+msgid "AnyTLS"
+msgstr ""
+
 #: htdocs/luci-static/resources/view/fchomo/global.js:171
 msgid "Application version"
 msgstr ""
@@ -1053,6 +1058,14 @@ msgstr ""
 msgid "IPv6 support"
 msgstr ""
 
+#: htdocs/luci-static/resources/view/fchomo/node.js:289
+msgid "Idle session check interval"
+msgstr ""
+
+#: htdocs/luci-static/resources/view/fchomo/node.js:296
+msgid "Idle session timeout"
+msgstr ""
+
 #: htdocs/luci-static/resources/view/fchomo/server.js:191
 msgid "Idle timeout"
 msgstr ""
@@ -1206,6 +1219,10 @@ msgstr ""
 msgid "Listen address"
 msgstr ""
 
+#: htdocs/luci-static/resources/view/fchomo/server.js:72
+msgid "Listen fields"
+msgstr ""
+
 #: htdocs/luci-static/resources/view/fchomo/global.js:683
 msgid "Listen interfaces"
 msgstr ""
@@ -1345,6 +1362,10 @@ msgstr ""
 #: htdocs/luci-static/resources/view/fchomo/log.js:120
 #: htdocs/luci-static/resources/view/fchomo/server.js:24
 msgid "Mihomo server"
+msgstr ""
+
+#: htdocs/luci-static/resources/view/fchomo/node.js:303
+msgid "Min of idle sessions to keep"
 msgstr ""
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:698
@@ -1529,6 +1550,10 @@ msgstr ""
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:330
 msgid "Packet encoding"
+msgstr ""
+
+#: htdocs/luci-static/resources/view/fchomo/server.js:239
+msgid "Padding scheme"
 msgstr ""
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:78

@@ -168,9 +168,9 @@ return view.extend({
 			return E('strong', [features.core_version || _('Unknown')]);
 		}
 
-		so = ss.option(form.DummyValue, '_luciapp_version', _('Application version'));
+		so = ss.option(form.DummyValue, '_app_version', _('Application version'));
 		so.cfgvalue = function() {
-			return E('strong', [features.luciapp_version || _('Unknown')]);
+			return E('strong', [features.app_version || _('Unknown')]);
 		}
 
 		so = ss.option(form.DummyValue, '_client_status', _('Client status'));

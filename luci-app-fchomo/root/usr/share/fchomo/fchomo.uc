@@ -28,13 +28,7 @@ export function shellQuote(s) {
 };
 
 export function yqRead(flags, command, filepath) {
-	let out = '';
-
-	const fd = popen(`yq ${flags} ${shellQuote(command)} ${filepath}`);
-	if (fd) {
-		out = fd.read('all');
-		fd.close();
-	}
+	const out = popen(`yq ${flags} ${shellQuote(command)} ${filepath}`).read('all');
 
 	return out;
 };

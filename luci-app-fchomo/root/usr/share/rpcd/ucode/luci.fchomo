@@ -4,17 +4,9 @@
 
 import { access, lsdir, lstat, popen, readfile, writefile } from 'fs';
 import {
-	shellQuote, yqRead,
+	shellQuote, isBinary, yqRead,
 	HM_DIR, EXE_DIR, SDL_DIR, RUN_DIR
-} from '/usr/share/fchomo/fchomo.uc';
-
-function isBinary(str) {
-	for (let off = 0, byte = ord(str); off < length(str); byte = ord(str, ++off))
-		if (byte <= 8 || (byte >= 14 && byte <= 31))
-			return true;
-
-	return false;
-}
+} from 'fchomo';
 
 function hasKernelModule(kmod) {
 	return (system(sprintf('[ -e "/lib/modules/$(uname -r)"/%s ]', shellQuote(kmod))) === 0);

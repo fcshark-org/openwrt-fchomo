@@ -586,6 +586,17 @@ function generateRand(type, length) {
 	};
 }
 
+function yaml2json(content, command) {
+	const callYaml2Json = rpc.declare({
+		object: 'luci.fchomo',
+		method: 'yaml2json',
+		params: ['content', 'command'],
+		expect: { '': {} }
+	});
+
+	return callYaml2Json(content, command).then(res => res.result);
+}
+
 function isEmpty(res) {
 	if (res == null) return true;                                                // null, undefined
 	if (typeof res === 'string' || Array.isArray(res)) return res.length === 0;  // empty String/Array
@@ -1268,6 +1279,7 @@ return baseclass.extend({
 	calcStringMD5,
 	decodeBase64Str,
 	generateRand,
+	yaml2json,
 	isEmpty,
 	removeBlankAttrs,
 	getFeatures,

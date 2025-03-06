@@ -4,7 +4,7 @@
 
 import { access, lsdir, lstat, popen, readfile, writefile } from 'fs';
 import {
-	shellQuote, isBinary, yqRead,
+	shellQuote, isBinary, yqReadFile,
 	HM_DIR, EXE_DIR, SDL_DIR, RUN_DIR
 } from 'fchomo';
 
@@ -112,7 +112,7 @@ const methods = {
 			if (req.args?.instance) {
 				const instance = req.args?.instance;
 
-				let config = json(trim(yqRead('-oj', '.[] |= with(select(type == "!!map"); del(.)) |= with(select(type == "!!seq"); del(.))', `${RUN_DIR}/${instance}.yaml`)) || '{}');
+				let config = json(trim(yqReadFile('-oj', '.[] |= with(select(type == "!!map"); del(.)) |= with(select(type == "!!seq"); del(.))', `${RUN_DIR}/${instance}.yaml`)) || '{}');
 
 				return {
 					http: config['external-controller'],

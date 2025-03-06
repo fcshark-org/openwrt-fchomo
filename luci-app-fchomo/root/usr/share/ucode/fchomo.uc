@@ -41,8 +41,8 @@ export function executeCommand(...args) {
 
 	const exitcode = system(`${join(' ', args)} >&${outfd.fileno()} 2>&${errfd.fileno()}`);
 
-	outfd.seek(0);
-	errfd.seek(0);
+	outfd.seek();
+	errfd.seek();
 
 	const stdout = outfd.read(1024 * 1024) ?? '';
 	const stderr = errfd.read(1024 * 1024) ?? '';
@@ -61,10 +61,10 @@ export function executeCommand(...args) {
 	};
 };
 
-export function yqRead(flags, command, filepath) {
-	const out = popen(`yq ${flags} ${shellQuote(command)} ${filepath}`).read('all');
+export function yqReadFile(flags, command, filepath) {
+	const out = executeCommand('yq', flags, shellQuote(command), filepath);
 
-	return out;
+	return out.stdout;
 };
 /* Utilities end */
 

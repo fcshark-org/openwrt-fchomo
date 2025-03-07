@@ -103,14 +103,14 @@ return view.extend({
 
 		/* Rule set START */
 		/* Rule set settings */
-		var prefmt = { 'prefix': 'rule_', 'suffix': '' };
-		s = m.section(form.GridSection, 'ruleset');
+		s = m.section(hm.GridSection, 'ruleset');
 		s.addremove = true;
 		s.rowcolors = true;
 		s.sortable = true;
 		s.nodescriptions = true;
-		s.modaltitle = L.bind(hm.loadModalTitle, s, _('Rule set'), _('Add a rule set'));
-		s.sectiontitle = L.bind(hm.loadDefaultLabel, s);
+		s.hm_modaltitle = [ _('Rule set'), _('Add a rule set') ];
+		s.hm_prefmt = { 'prefix': 'rule_', 'suffix': '' };
+		s.hm_lowcase_only = false;
 		/* Import rule-set links and Remove idle files start */
 		s.handleLinkImport = function() {
 			let textarea = new ui.Textarea('', {
@@ -172,7 +172,7 @@ return view.extend({
 			])
 		}
 		s.renderSectionAdd = function(/* ... */) {
-			let el = hm.renderSectionAdd.apply(this, [prefmt, false].concat(Array.prototype.slice.call(arguments)));
+			let el = hm.GridSection.prototype.renderSectionAdd.apply(this, arguments);
 
 			el.appendChild(E('button', {
 				'class': 'cbi-button cbi-button-add',
@@ -188,7 +188,6 @@ return view.extend({
 
 			return el;
 		}
-		s.handleAdd = L.bind(hm.handleAdd, s, prefmt);
 		/* Import rule-set links and Remove idle files end */
 
 		o = s.option(form.Value, 'label', _('Label'));

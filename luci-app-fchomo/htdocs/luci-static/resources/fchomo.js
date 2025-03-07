@@ -261,6 +261,24 @@ const vless_flow = [
 ];
 
 /* Prototype */
+const CBIGridSection = form.GridSection.extend({
+	modaltitle(/* ... */) {
+		return loadModalTitle.call(this, ...this.hm_modaltitle || [null,null], ...arguments)
+	},
+
+	sectiontitle(/* ... */) {
+		return loadDefaultLabel.call(this, ...arguments);
+	},
+
+	renderSectionAdd(/* ... */) {
+		return renderSectionAdd.call(this, this.hm_prefmt, this.hm_lowcase_only, ...arguments);
+	},
+
+	handleAdd(/* ... */) {
+		return handleAdd.call(this, this.hm_prefmt, ...arguments);
+	}
+});
+
 const CBIDynamicList = form.DynamicList.extend({
 	__name__: 'CBI.DynamicList',
 
@@ -1195,6 +1213,7 @@ return baseclass.extend({
 	vless_flow,
 
 	/* Prototype */
+	GridSection: CBIGridSection,
 	DynamicList: CBIDynamicList,
 	GenValue: CBIGenValue,
 	ListValue: CBIListValue,

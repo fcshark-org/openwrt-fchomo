@@ -62,6 +62,9 @@ const health_checkurls = [
 	['https://www.gstatic.com/generate_204']
 ];
 
+const payload2text = 'with(.[] | select(.payload); ' +
+					 ".payload |= map(\"- '\\(.)'\") | .payload |= join(\"\\n\"))"; // payload to text
+
 const inbound_type = [
 	['http', _('HTTP')],
 	['socks', _('SOCKS')],
@@ -338,10 +341,12 @@ const CBIhandleImport = baseclass.extend(/** @lends hm.handleImport.prototype */
 		const textarea = new ui.Textarea('', {
 			placeholder: this.placeholder
 		});
+		const textareaEl = textarea.render();
+		textareaEl.querySelector('textarea').style.fontFamily = monospacefonts.join(',');
 
 		ui.showModal(this.title, [
 			E('p', this.description),
-			textarea.render(),
+			textareaEl,
 			E('div', { class: 'right' }, [
 				E('button', {
 					class: 'btn',
@@ -1258,6 +1263,7 @@ return baseclass.extend({
 	dashrepos_urlparams,
 	checkurls,
 	health_checkurls,
+	payload2text,
 	inbound_type,
 	ip_version,
 	load_balance_strategy,

@@ -270,12 +270,45 @@ const CBIGridSection = form.GridSection.extend({
 		return loadDefaultLabel.call(this, ...arguments);
 	},
 
-	renderSectionAdd(/* ... */) {
-		return renderSectionAdd.call(this, this.hm_prefmt, this.hm_lowcase_only, ...arguments);
+	renderSectionAdd(extra_class) {
+		const prefmt = this.hm_prefmt;
+		const LC = this.hm_lowcase_only;
+
+		let el = form.GridSection.prototype.renderSectionAdd.call(this, extra_class),
+			nameEl = el.querySelector('.cbi-section-create-name');
+
+		ui.addValidator(nameEl, 'uciname', true, (v) => {
+			let button = el.querySelector('.cbi-section-create > .cbi-button-add');
+			const prefix = prefmt?.prefix ? prefmt.prefix : '';
+			const suffix = prefmt?.suffix ? prefmt.suffix : '';
+
+			if (!v) {
+				button.disabled = true;
+				return true;
+			} else if (LC && (v !== v.toLowerCase())) {
+				button.disabled = true;
+				return _('Expecting: %s').format(_('Lowercase only'));
+			} else if (uci.get(this.config, v)) {
+				button.disabled = true;
+				return _('Expecting: %s').format(_('unique UCI identifier'));
+			} else if (uci.get(this.config, prefix + v + suffix)) {
+				button.disabled = true;
+				return _('Expecting: %s').format(_('unique identifier'));
+			} else {
+				button.disabled = null;
+				return true;
+			}
+		}, 'blur', 'keyup');
+
+		return el;
 	},
 
-	handleAdd(/* ... */) {
-		return handleAdd.call(this, this.hm_prefmt, ...arguments);
+	handleAdd(ev, name) {
+		const prefmt = this.hm_prefmt;
+		const prefix = prefmt?.prefix ? prefmt.prefix : '';
+		const suffix = prefmt?.suffix ? prefmt.suffix : '';
+
+		return form.GridSection.prototype.handleAdd.call(this, ev, prefix + name + suffix);
 	}
 });
 
@@ -746,42 +779,6 @@ function renderResDownload(section_id) {
 	return El;
 }
 
-function renderSectionAdd(prefmt, LC, extra_class) {
-	let el = form.GridSection.prototype.renderSectionAdd.apply(this, [ extra_class ]),
-		nameEl = el.querySelector('.cbi-section-create-name');
-	ui.addValidator(nameEl, 'uciname', true, (v) => {
-		let button = el.querySelector('.cbi-section-create > .cbi-button-add');
-		const prefix = prefmt?.prefix ? prefmt.prefix : '';
-		const suffix = prefmt?.suffix ? prefmt.suffix : '';
-
-		if (!v) {
-			button.disabled = true;
-			return true;
-		} else if (LC && (v !== v.toLowerCase())) {
-			button.disabled = true;
-			return _('Expecting: %s').format(_('Lowercase only'));
-		} else if (uci.get(this.config, v)) {
-			button.disabled = true;
-			return _('Expecting: %s').format(_('unique UCI identifier'));
-		} else if (uci.get(this.config, prefix + v + suffix)) {
-			button.disabled = true;
-			return _('Expecting: %s').format(_('unique identifier'));
-		} else {
-			button.disabled = null;
-			return true;
-		}
-	}, 'blur', 'keyup');
-
-	return el;
-}
-
-function handleAdd(prefmt, ev, name) {
-	const prefix = prefmt?.prefix ? prefmt.prefix : '';
-	const suffix = prefmt?.suffix ? prefmt.suffix : '';
-
-	return form.GridSection.prototype.handleAdd.apply(this, [ ev, prefix + name + suffix ]);
-}
-
 function handleGenKey(option) {
 	const section_id = this.section.section;
 	const type = this.section.getOption('type').formvalue(section_id);
@@ -1241,8 +1238,6 @@ return baseclass.extend({
 	updateStatus,
 	getDashURL,
 	renderResDownload,
-	renderSectionAdd,
-	handleAdd,
 	handleGenKey,
 	handleReload,
 	handleRemoveIdles,

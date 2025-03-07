@@ -312,6 +312,51 @@ const CBIGridSection = form.GridSection.extend({
 	}
 });
 
+const CBIhandleImport = baseclass.extend(/** @lends hm.handleImport.prototype */ {
+	__init__(map, section, title, description) {
+		this.map = map;
+		this.section = section;
+		this.title = title ?? '';
+		this.description = description ?? '';
+		this.placeholder = '';
+
+		this.handleFn = this.handleFn.bind(this.section);
+	},
+
+	handleFn(textarea, save) {
+		if (save) {
+			return uci.save()
+				.then(L.bind(this.map.load, this.map))
+				.then(L.bind(this.map.reset, this.map))
+				.then(L.ui.hideModal)
+				.catch(() => {});
+		} else
+			return ui.hideModal();
+	},
+
+	render() {
+		const textarea = new ui.Textarea('', {
+			placeholder: this.placeholder
+		});
+
+		ui.showModal(this.title, [
+			E('p', this.description),
+			textarea.render(),
+			E('div', { class: 'right' }, [
+				E('button', {
+					class: 'btn',
+					click: ui.hideModal
+				}, [ _('Cancel') ]),
+				' ',
+				E('button', {
+					class: 'btn cbi-button-action',
+					click: ui.createHandlerFn(this, 'handleFn', textarea)
+				}, [ _('Import') ])
+			])
+		]);
+	}
+});
+
 const CBIDynamicList = form.DynamicList.extend({
 	__name__: 'CBI.DynamicList',
 
@@ -1211,6 +1256,7 @@ return baseclass.extend({
 
 	/* Prototype */
 	GridSection: CBIGridSection,
+	handleImport: CBIhandleImport,
 	DynamicList: CBIDynamicList,
 	GenValue: CBIGenValue,
 	ListValue: CBIListValue,

@@ -586,6 +586,16 @@ function generateRand(type, length) {
 	};
 }
 
+function json2yaml(object, command) {
+	const callJson2Yaml = rpc.declare({
+		object: 'luci.fchomo',
+		method: 'json2yaml',
+		params: ['content', 'command'],
+		expect: { '': {} }
+	});
+
+	return callJson2Yaml(typeof object === 'string' ? object : JSON.stringify(object), command).then(res => res.result);
+}
 function yaml2json(content, command) {
 	const callYaml2Json = rpc.declare({
 		object: 'luci.fchomo',
@@ -1279,6 +1289,7 @@ return baseclass.extend({
 	calcStringMD5,
 	decodeBase64Str,
 	generateRand,
+	json2yaml,
 	yaml2json,
 	isEmpty,
 	removeBlankAttrs,

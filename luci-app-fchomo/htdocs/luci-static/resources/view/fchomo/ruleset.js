@@ -176,7 +176,7 @@ return view.extend({
 								let sid = uci.add(data[0], 'ruleset', config.id);
 								config.id = null;
 								Object.keys(config).forEach((k) => {
-									uci.set(data[0], sid, k, config[k] || '');
+									uci.set(data[0], sid, k, config[k] ?? '');
 								});
 								imported_count++;
 								if (config.type === 'file')

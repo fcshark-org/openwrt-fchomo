@@ -18,7 +18,7 @@ const map_of_rule_provider = {
 	//payload: 'payload',
 };
 
-function parseRulesetYaml(id, obj) {
+function parseRulesetYaml(field, id, obj) {
 	if (hm.isEmpty(obj))
 		return null;
 
@@ -30,7 +30,7 @@ function parseRulesetYaml(id, obj) {
 
 	// value rocessing
 	config = Object.assign(config, {
-		id: `_import_${id}`,
+		id: hm.calcStringMD5(String.format('%s:%s', field, id)),
 		label: '%s %s'.format(id, _('(Imported)')),
 		...(config.proxy ? {
 			proxy: hm.preset_outbound.full.map(([key, label]) => key).includes(config.proxy) ? config.proxy : hm.calcStringMD5(config.proxy)
@@ -147,9 +147,10 @@ return view.extend({
 		s.hm_lowcase_only = false;
 		/* Import mihomo config and Import rule-set links and Remove idle files start */
 		s.handleYamlImport = function() {
+			const field = 'rule-providers';
 			const o = new hm.handleImport(this.map, this, _('Import mihomo config'),
 				_('Please type <code>%s</code> fields of mihomo config.</br>')
-					.format('rule-providers'));
+					.format(field));
 			o.placeholder = 'rule-providers:\n' +
 							'  google:\n' +
 							'    type: http\n' +
@@ -163,20 +164,20 @@ return view.extend({
 							'  ...'
 			o.handleFn = L.bind(function(textarea, save) {
 				const content = textarea.getValue().trim();
-				const command = '.["rule-providers"] | ' + hm.payload2text;
+				const command = `.["${field}"] | ` + hm.payload2text;
 				return hm.yaml2json(content, command).then((res) => {
 					//alert(JSON.stringify(res, null, 2));
 					let imported_count = 0;
 					let type_file_count = 0;
 					if (!hm.isEmpty(res)) {
 						for (let id in res) {
-							let config = parseRulesetYaml(id, res[id]);
+							let config = parseRulesetYaml(field, id, res[id]);
 							//alert(JSON.stringify(config, null, 2));
 							if (config) {
 								let sid = uci.add(data[0], 'ruleset', config.id);
 								config.id = null;
 								Object.keys(config).forEach((k) => {
-									uci.set(data[0], sid, k, config[k] || '');
+									uci.set(data[0], sid, k, config[k] ?? '');
 								});
 								imported_count++;
 								if (config.type === 'file')

@@ -345,9 +345,9 @@ const CBIGenValue = form.Value.extend({
 			node.classList.add('control-group');
 
 		(node.querySelector('.control-group') || node).appendChild(E('button', {
-			'class': 'cbi-button cbi-button-add',
-			'title': _('Generate'),
-			'click': ui.createHandlerFn(this, handleGenKey, this.hm_asymmetric || this.option)
+			class: 'cbi-button cbi-button-add',
+			title: _('Generate'),
+			click: ui.createHandlerFn(this, handleGenKey, this.hm_asymmetric || this.option)
 		}, [ _('Generate') ]));
 
 		return node;
@@ -395,12 +395,12 @@ const CBITextValue = form.TextValue.extend({
 const UIDynamicList = ui.DynamicList.extend({
 	addItem(dl, value, text, flash) {
 		if (this.options.allowduplicates) {
-			const new_item = E('div', { 'class': flash ? 'item flash' : 'item', 'tabindex': 0, 'draggable': !less_24_10 }, [
+			const new_item = E('div', { class: flash ? 'item flash' : 'item', tabindex: 0, draggable: !less_24_10 }, [
 				E('span', {}, [ text ?? value ]),
 				E('input', {
-					'type': 'hidden',
-					'name': this.options.name,
-					'value': value })]);
+					type: 'hidden',
+					name: this.options.name,
+					value: value })]);
 
 			const ai = dl.querySelector('.add-item');
 			ai.parentNode.insertBefore(new_item, ai);
@@ -711,15 +711,15 @@ function renderStatus(ElId, isRunning, instance, noGlobal) {
 
 	return E([
 		E('button', {
-			'class': 'cbi-button cbi-button-apply' + (noGlobal ? ' hidden' : ''),
-			'click': ui.createHandlerFn(this, handleReload, instance)
+			class: 'cbi-button cbi-button-apply' + (noGlobal ? ' hidden' : ''),
+			click: ui.createHandlerFn(this, handleReload, instance)
 		}, [ _('Reload') ]),
 		updateStatus(E('span', { id: ElId, style: 'border: unset; font-style: italic; font-weight: bold' }), isRunning ? true : false),
 		E('a', {
-			'class': 'cbi-button cbi-button-apply %s'.format(visible ? '' : 'hidden'),
-			'href': visible ? getDashURL(isRunning) : '',
-			'target': '_blank',
-			'rel': 'noreferrer noopener'
+			class: 'cbi-button cbi-button-apply %s'.format(visible ? '' : 'hidden'),
+			href: visible ? getDashURL(isRunning) : '',
+			target: '_blank',
+			rel: 'noreferrer noopener'
 		}, [ _('Open Dashboard') ])
 	]);
 }

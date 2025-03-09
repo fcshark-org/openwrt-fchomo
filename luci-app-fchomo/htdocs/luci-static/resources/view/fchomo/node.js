@@ -816,9 +816,126 @@ return view.extend({
 		ss.hm_prefmt = hm.glossary[ss.sectiontype].prefmt;
 		ss.hm_field  = hm.glossary[ss.sectiontype].field;
 		ss.hm_lowcase_only = false;
-		/* Remove idle files start */
+		/* Import mihomo config and Remove idle files start */
+		ss.handleYamlImport = function() {
+			const section_type = this.sectiontype;
+			const field = this.hm_field;
+			const o = new hm.handleImport(this.map, this, _('Import mihomo config'),
+				_('Please type <code>%s</code> fields of mihomo config.</br>')
+					.format(field));
+			o.placeholder = 'proxy-providers:\n' +
+							'  provider1:\n' +
+							'    type: http\n' +
+							'    url: "http://test.com"\n' +
+							'    path: ./proxy_providers/provider1.yaml\n' +
+							'    interval: 3600\n' +
+							'    proxy: DIRECT\n' +
+							'    size-limit: 0\n' +
+							'    header:\n' +
+							'      User-Agent:\n' +
+							'      - "Clash/v1.18.0"\n' +
+							'      - "mihomo/1.18.3"\n' +
+							'      Accept:\n' +
+							"      - 'application/vnd.github.v3.raw'\n" +
+							'      Authorization:\n' +
+							"      - 'token 1231231'\n" +
+							'    health-check:\n' +
+							'      enable: true\n' +
+							'      interval: 600\n' +
+							'      timeout: 5000\n' +
+							'      lazy: true\n' +
+							'      url: https://cp.cloudflare.com/generate_204\n' +
+							'      expected-status: 204\n' +
+							'    override:\n' +
+							'      tfo: false\n' +
+							'      mptcp: false\n' +
+							'      udp: true\n' +
+							'      udp-over-tcp: false\n' +
+							'      down: "50 Mbps"\n' +
+							'      up: "10 Mbps"\n' +
+							'      skip-cert-verify: true\n' +
+							'      dialer-proxy: proxy\n' +
+							'      interface-name: tailscale0\n' +
+							'      routing-mark: 233\n' +
+							'      ip-version: ipv4-prefer\n' +
+							'      additional-prefix: "[provider1]"\n' +
+							'      additional-suffix: "test"\n' +
+							'      proxy-name:\n' +
+							'        - pattern: "test"\n' +
+							'          target: "TEST"\n' +
+							'        - pattern: "IPLC-(.*?)倍"\n' +
+							'          target: "iplc x $1"\n' +
+							'    filter: "(?i)港|hk|hongkong|hong kong"\n' +
+							'    exclude-filter: "xxx"\n' +
+							'    exclude-type: "ss|http"\n' +
+							'  provider2:\n' +
+							'    type: inline\n' +
+							'    dialer-proxy: proxy\n' +
+							'    payload:\n' +
+							'      - name: "ss1"\n' +
+							'        type: ss\n' +
+							'        server: test.server.com\n' +
+							'        port: 443\n' +
+							'        cipher: chacha20-ietf-poly1305\n' +
+							'        password: "password"\n' +
+							'  test:\n' +
+							'    type: file\n' +
+							'    path: /test.yaml\n' +
+							'    health-check:\n' +
+							'      enable: true\n' +
+							'      interval: 36000\n' +
+							'      url: https://cp.cloudflare.com/generate_204\n' +
+							'  ...'
+			o.handleFn = L.bind(function(textarea, save) {
+				const content = textarea.getValue().trim();
+				const command = `.["${field}"]`;
+				return hm.yaml2json(content.replace(/(\s*payload:)/g, "$1 |-") /* payload to text */, command).then((res) => {
+					//alert(JSON.stringify(res, null, 2));
+					let imported_count = 0;
+					let type_file_count = 0;
+					if (!hm.isEmpty(res)) {
+						for (let name in res) {
+							let config = parseProviderYaml(field, name, res[name]);
+							//alert(JSON.stringify(config, null, 2));
+							if (config) {
+								let sid = uci.add(data[0], section_type, config.id);
+								delete config.id;
+								Object.keys(config).forEach((k) => {
+									uci.set(data[0], sid, k, config[k] ?? '');
+								});
+								imported_count++;
+								if (config.type === 'file')
+									type_file_count++;
+							}
+						}
+
+						if (imported_count === 0)
+							ui.addNotification(null, E('p', _('No valid %s found.').format(_('Provider'))));
+						else {
+							ui.addNotification(null, E('p', [
+								_('Successfully imported %s %s of total %s.')
+									.format(imported_count, _('Provider'), Object.keys(res).length),
+								E('br'),
+								type_file_count ? _("%s Provider of type '%s' need to be filled in manually.")
+									.format(type_file_count, 'file') : ''
+							]));
+						}
+					}
+
+					return hm.handleImport.prototype.handleFn.call(this, textarea, imported_count);
+				});
+			}, this);
+
+			return o.render();
+		}
 		ss.renderSectionAdd = function(/* ... */) {
 			let el = hm.GridSection.prototype.renderSectionAdd.apply(this, arguments);
+
+			el.appendChild(E('button', {
+				'class': 'cbi-button cbi-button-add',
+				'title': _('mihomo config'),
+				'click': ui.createHandlerFn(this, 'handleYamlImport')
+			}, [ _('Import mihomo config') ]));
 
 			el.appendChild(E('button', {
 				'class': 'cbi-button cbi-button-add',
@@ -828,7 +945,7 @@ return view.extend({
 
 			return el;
 		}
-		/* Remove idle files end */
+		/* Import mihomo config and Remove idle files end */
 
 		ss.tab('field_general', _('General fields'));
 		ss.tab('field_override', _('Override fields'));

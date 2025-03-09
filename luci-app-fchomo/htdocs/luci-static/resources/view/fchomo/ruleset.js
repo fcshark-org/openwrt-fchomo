@@ -40,7 +40,7 @@ function parseRulesetYaml(field, id, obj) {
 	return config;
 }
 
-function parseRulesetLink(uri) {
+function parseRulesetLink(section_type, uri) {
 	let config,
 		filefmt = new RegExp(/^(text|yaml|mrs)$/),
 		filebehav = new RegExp(/^(domain|ipcidr|classical)$/),
@@ -90,7 +90,7 @@ function parseRulesetLink(uri) {
 					behavior: behavior,
 					id: hm.calcStringMD5(String.format('file://%s%s', url.host, url.pathname))
 				};
-				hm.writeFile('ruleset', config.id, hm.decodeBase64Str(filler));
+				hm.writeFile(section_type, config.id, hm.decodeBase64Str(filler));
 			}
 
 			break;
@@ -147,6 +147,7 @@ return view.extend({
 		s.hm_lowcase_only = false;
 		/* Import mihomo config and Import rule-set links and Remove idle files start */
 		s.handleYamlImport = function() {
+			const section_type = this.sectiontype;
 			const field = 'rule-providers';
 			const o = new hm.handleImport(this.map, this, _('Import mihomo config'),
 				_('Please type <code>%s</code> fields of mihomo config.</br>')
@@ -174,7 +175,7 @@ return view.extend({
 							let config = parseRulesetYaml(field, id, res[id]);
 							//alert(JSON.stringify(config, null, 2));
 							if (config) {
-								let sid = uci.add(data[0], 'ruleset', config.id);
+								let sid = uci.add(data[0], section_type, config.id);
 								config.id = null;
 								Object.keys(config).forEach((k) => {
 									uci.set(data[0], sid, k, config[k] ?? '');
@@ -205,6 +206,7 @@ return view.extend({
 			return o.render();
 		}
 		s.handleLinkImport = function() {
+			const section_type = this.sectiontype;
 			const o = new hm.handleImport(this.map, this, _('Import rule-set links'),
 				_('Supports rule-set links of type: <code>%s</code> and format: <code>%s</code>.</br>')
 					.format('file, http, inline', 'text, yaml, mrs') +
@@ -222,9 +224,9 @@ return view.extend({
 						(!pre.includes(cur) && pre.push(cur), pre), []);
 
 					input_links.forEach((l) => {
-						let config = parseRulesetLink(l);
+						let config = parseRulesetLink(section_type, l);
 						if (config) {
-							let sid = uci.add(data[0], 'ruleset', config.id);
+							let sid = uci.add(data[0], section_type, config.id);
 							config.id = null;
 							Object.keys(config).forEach((k) => {
 								uci.set(data[0], sid, k, config[k] || '');

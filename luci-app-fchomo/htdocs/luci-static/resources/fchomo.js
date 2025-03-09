@@ -108,9 +108,6 @@ const glossary = {
 	},
 };
 
-const payload2text = 'with(.[] | select(.payload); ' +
-					 ".payload |= map(\"- '\\(.)'\") | .payload |= join(\"\\n\"))"; // payload to text
-
 const health_checkurls = [
 	['https://cp.cloudflare.com'],
 	['https://www.gstatic.com/generate_204']
@@ -1302,7 +1299,6 @@ return baseclass.extend({
 	dashrepos,
 	dashrepos_urlparams,
 	glossary,
-	payload2text,
 	health_checkurls,
 	inbound_type,
 	ip_version,

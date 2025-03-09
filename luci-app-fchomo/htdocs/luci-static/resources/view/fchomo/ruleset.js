@@ -165,8 +165,8 @@ return view.extend({
 							'  ...'
 			o.handleFn = L.bind(function(textarea, save) {
 				const content = textarea.getValue().trim();
-				const command = `.["${field}"] | ` + hm.payload2text;
-				return hm.yaml2json(content, command).then((res) => {
+				const command = `.["${field}"]`;
+				return hm.yaml2json(content.replace(/(\s*payload:)/g, "$1 |-") /* payload to text */, command).then((res) => {
 					//alert(JSON.stringify(res, null, 2));
 					let imported_count = 0;
 					let type_file_count = 0;
@@ -176,7 +176,7 @@ return view.extend({
 							//alert(JSON.stringify(config, null, 2));
 							if (config) {
 								let sid = uci.add(data[0], section_type, config.id);
-								config.id = null;
+								delete config.id;
 								Object.keys(config).forEach((k) => {
 									uci.set(data[0], sid, k, config[k] ?? '');
 								});

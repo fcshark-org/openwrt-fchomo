@@ -32,7 +32,7 @@ return view.extend({
 		ss.sortable = true;
 		ss.nodescriptions = true;
 		ss.hm_modaltitle = [ _('Node'), _('Add a Node') ];
-		ss.hm_prefmt = { 'prefix': 'node_', 'suffix': '' };
+		ss.hm_prefmt = hm.glossary[ss.sectiontype].prefmt;
 		ss.hm_lowcase_only = true;
 
 		ss.tab('field_general', _('General fields'));
@@ -812,7 +812,7 @@ return view.extend({
 		ss.sortable = true;
 		ss.nodescriptions = true;
 		ss.hm_modaltitle = [ _('Provider'), _('Add a provider') ];
-		ss.hm_prefmt = { 'prefix': 'sub_', 'suffix': '' };
+		ss.hm_prefmt = hm.glossary[ss.sectiontype].prefmt;
 		ss.hm_lowcase_only = false;
 		/* Remove idle files start */
 		ss.renderSectionAdd = function(/* ... */) {
@@ -1079,7 +1079,7 @@ return view.extend({
 		ss.sortable = true;
 		ss.nodescriptions = true;
 		ss.hm_modaltitle = [ _('Proxy chain'), _('Add a proxy chain') ];
-		ss.hm_prefmt = { 'prefix': 'chain_', 'suffix': '' };
+		ss.hm_prefmt = hm.glossary[ss.sectiontype].prefmt;
 		ss.hm_lowcase_only = true;
 
 		so = ss.option(form.Value, 'label', _('Label'));

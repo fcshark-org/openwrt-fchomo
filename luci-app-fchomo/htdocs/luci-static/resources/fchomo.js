@@ -66,6 +66,48 @@ const dashrepos_urlparams = {
 	'metacubex/razord-meta': '?host=%s&port=%s&secret=%s'
 };
 
+const glossary = {
+	proxy_group: {
+		prefmt: 'group_%s',
+		field: 'proxy-groups',
+	},
+	rules: {
+		prefmt: '%s_host',
+		field: 'rules',
+	},
+	subrules: {
+		prefmt: '%s_subhost',
+		field: 'sub-rules',
+	},
+	dns_server: {
+		prefmt: 'dns_%s',
+	},
+	dns_policy: {
+		prefmt: '%s_domain',
+		//field: 'nameserver-policy',
+	},
+	node: {
+		prefmt: 'node_%s',
+		field: 'proxies',
+	},
+	provider: {
+		prefmt: 'sub_%s',
+		field: 'proxy-providers',
+	},
+	dialer_proxy: {
+		prefmt: 'chain_%s',
+		//field: 'dialer-proxy',
+	},
+	ruleset: {
+		prefmt: 'rule_%s',
+		field: 'rule-providers',
+	},
+	server: {
+		prefmt: 'server_%s',
+		field: 'listeners',
+	},
+};
+
 const payload2text = 'with(.[] | select(.payload); ' +
 					 ".payload |= map(\"- '\\(.)'\") | .payload |= join(\"\\n\"))"; // payload to text
 
@@ -274,7 +316,7 @@ const CBIGridSection = form.GridSection.extend({
 	},
 
 	renderSectionAdd(extra_class) {
-		const prefmt = this.hm_prefmt;
+		const prefmt = this.hm_prefmt || '%s';
 		const LC = this.hm_lowcase_only;
 
 		let el = form.GridSection.prototype.renderSectionAdd.call(this, extra_class),
@@ -282,8 +324,6 @@ const CBIGridSection = form.GridSection.extend({
 
 		ui.addValidator(nameEl, 'uciname', true, (v) => {
 			let button = el.querySelector('.cbi-section-create > .cbi-button-add');
-			const prefix = prefmt?.prefix ? prefmt.prefix : '';
-			const suffix = prefmt?.suffix ? prefmt.suffix : '';
 
 			if (!v) {
 				button.disabled = true;
@@ -294,7 +334,7 @@ const CBIGridSection = form.GridSection.extend({
 			} else if (uci.get(this.config, v)) {
 				button.disabled = true;
 				return _('Expecting: %s').format(_('unique UCI identifier'));
-			} else if (uci.get(this.config, prefix + v + suffix)) {
+			} else if (uci.get(this.config, prefmt.format(v))) {
 				button.disabled = true;
 				return _('Expecting: %s').format(_('unique identifier'));
 			} else {
@@ -307,11 +347,9 @@ const CBIGridSection = form.GridSection.extend({
 	},
 
 	handleAdd(ev, name) {
-		const prefmt = this.hm_prefmt;
-		const prefix = prefmt?.prefix ? prefmt.prefix : '';
-		const suffix = prefmt?.suffix ? prefmt.suffix : '';
+		const prefmt = this.hm_prefmt || '%s';
 
-		return form.GridSection.prototype.handleAdd.call(this, ev, prefix + name + suffix);
+		return form.GridSection.prototype.handleAdd.call(this, ev, prefmt.format(name));
 	}
 });
 
@@ -1263,6 +1301,7 @@ return baseclass.extend({
 	stunserver,
 	dashrepos,
 	dashrepos_urlparams,
+	glossary,
 	payload2text,
 	health_checkurls,
 	inbound_type,

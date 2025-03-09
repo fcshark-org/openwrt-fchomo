@@ -187,11 +187,11 @@ return view.extend({
 						}
 
 						if (imported_count === 0)
-							ui.addNotification(null, E('p', _('No valid rule-set found.')));
+							ui.addNotification(null, E('p', _('No valid %s found.').format(_('rule-set'))));
 						else {
 							ui.addNotification(null, E('p', [
-								_('Successfully imported %s rule-set of total %s.')
-									.format(imported_count, Object.keys(res).length),
+								_('Successfully imported %s %s of total %s.')
+									.format(imported_count, _('rule-set'), Object.keys(res).length),
 								E('br'),
 								type_file_count ? _("%s rule-set of type '%s' need to be filled in manually.")
 									.format(type_file_count, 'file') : ''
@@ -238,8 +238,8 @@ return view.extend({
 					if (imported_count === 0)
 						ui.addNotification(null, E('p', _('No valid rule-set link found.')));
 					else
-						ui.addNotification(null, E('p', _('Successfully imported %s rule-set of total %s.').format(
-							imported_count, input_links.length)));
+						ui.addNotification(null, E('p', _('Successfully imported %s %s of total %s.')
+							.format(imported_count, _('rule-set'), input_links.length)));
 				}
 
 				return hm.handleImport.prototype.handleFn.call(this, textarea, imported_count);

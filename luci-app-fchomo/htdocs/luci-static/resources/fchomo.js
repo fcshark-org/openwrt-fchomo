@@ -505,6 +505,12 @@ const UIDynamicList = ui.DynamicList.extend({
 });
 
 /* Method */
+function bool2str(value) {
+	if (typeof value !== 'boolean')
+		return null;
+	return value ? '1' : '0';
+}
+
 // thanks to homeproxy
 function calcStringMD5(e) {
 	/* Thanks to https://stackoverflow.com/a/41602636 */
@@ -624,6 +630,10 @@ function generateRand(type, length) {
 		default:
 			return null;
 	};
+}
+
+function getValue(obj, path) {
+	return path.split('.').reduce((acc, cur) => acc && acc[cur], obj);
 }
 
 function json2yaml(object, command) {
@@ -1327,9 +1337,11 @@ return baseclass.extend({
 	TextValue: CBITextValue,
 
 	/* Method */
+	bool2str,
 	calcStringMD5,
 	decodeBase64Str,
 	generateRand,
+	getValue,
 	json2yaml,
 	yaml2json,
 	isEmpty,

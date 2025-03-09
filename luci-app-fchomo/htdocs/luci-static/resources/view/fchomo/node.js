@@ -7,6 +7,68 @@
 'require fchomo as hm';
 'require tools.widgets as widgets';
 
+function parseProviderYaml(field, name, cfg) {
+	function calcID(field, name) {
+		return hm.calcStringMD5(String.format('%s:%s', field, name));
+	}
+
+	if (hm.isEmpty(cfg))
+		return null;
+
+	if (!cfg.type)
+		return null;
+
+	// key mapping
+	let config = hm.removeBlankAttrs({
+		type: cfg.type,
+		...(cfg.type === 'inline' ? {
+			//dialer_proxy: cfg["dialer-proxy"],
+			payload: cfg.payload, // string: array
+		} : {
+			id: cfg.path,
+			url: cfg.url,
+			size_limit: cfg["size-limit"],
+			interval: cfg.interval,
+			proxy: cfg.proxy,
+			header: cfg.header ? JSON.stringify(cfg.header, null, 2) : null, // string: object
+			health_enable: hm.bool2str(hm.getValue(cfg, "health-check.enable")), // bool
+			health_url: hm.getValue(cfg, "health-check.url"),
+			health_interval: hm.getValue(cfg, "health-check.interval"),
+			health_timeout: hm.getValue(cfg, "health-check.timeout"),
+			health_lazy: hm.bool2str(hm.getValue(cfg, "health-check.lazy")), // bool
+			health_expected_status: hm.getValue(cfg, "health-check.expected-status"),
+			override_prefix: hm.getValue(cfg, "override.additional-prefix"),
+			override_suffix: hm.getValue(cfg, "override.additional-suffix"),
+			override_replace: (hm.getValue(cfg, "override.proxy-name") || []).map((obj) => JSON.stringify(obj)), // array.string: array.object
+			override_tfo: hm.bool2str(hm.getValue(cfg, "override.tfo")), // bool
+			override_mptcp: hm.bool2str(hm.getValue(cfg, "override.mptcp")), // bool
+			override_udp: hm.bool2str(hm.getValue(cfg, "override.udp")), // bool
+			override_uot: hm.bool2str(hm.getValue(cfg, "override.udp-over-tcp")), // bool
+			override_up: hm.getValue(cfg, "override.up"),
+			override_down: hm.getValue(cfg, "override.down"),
+			override_skip_cert_verify: hm.bool2str(hm.getValue(cfg, "override.skip-cert-verify")), // bool
+			//override_dialer_proxy: hm.getValue(cfg, "override.dialer-proxy"),
+			override_interface_name: hm.getValue(cfg, "override.interface-name"),
+			override_routing_mark: hm.getValue(cfg, "override.routing-mark"),
+			override_ip_version: hm.getValue(cfg, "override.ip-version"),
+			filter: [cfg.filter], // array: string
+			exclude_filter: [cfg["exclude-filter"]], // array.string: string
+			exclude_type: [cfg["exclude-type"]] // array.string: string
+		})
+	});
+
+	// value rocessing
+	config = Object.assign(config, {
+		id: calcID(field, name),
+		label: '%s %s'.format(name, _('(Imported)')),
+		...(config.proxy ? {
+			proxy: hm.preset_outbound.full.map(([key, label]) => key).includes(config.proxy) ? config.proxy : calcID(hm.glossary["proxy_group"].field, config.proxy)
+		} : {}),
+	});
+
+	return config;
+}
+
 return view.extend({
 	load() {
 		return Promise.all([

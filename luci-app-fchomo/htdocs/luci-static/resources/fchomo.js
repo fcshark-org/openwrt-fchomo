@@ -35,6 +35,23 @@ const monospacefonts = [
 	'monospace'
 ];
 
+const checkurls = [
+	['https://www.baidu.com', _('Baidu')],
+	['https://s1.music.126.net/style/favicon.ico', _('163Music')],
+	['https://www.google.com/generate_204', _('Google')],
+	['https://github.com', _('GitHub')],
+	['https://www.youtube.com', _('YouTube')]
+];
+
+const stunserver = [
+	['stun.fitauto.ru:3478'],
+	['stun.hot-chilli.net:3478'],
+	['stun.pure-ip.com:3478'],
+	['stun.voipgate.com:3478'],
+	['stun.voipia.net:3478'],
+	['stunserver2024.stunprotocol.org:3478']
+];
+
 const dashrepos = [
 	['zephyruso/zashboard', _('zashboard')],
 	['metacubex/metacubexd', _('metacubexd')],
@@ -49,21 +66,13 @@ const dashrepos_urlparams = {
 	'metacubex/razord-meta': '?host=%s&port=%s&secret=%s'
 };
 
-const checkurls = [
-	['https://www.baidu.com', _('Baidu')],
-	['https://s1.music.126.net/style/favicon.ico', _('163Music')],
-	['https://www.google.com/generate_204', _('Google')],
-	['https://github.com', _('GitHub')],
-	['https://www.youtube.com', _('YouTube')]
-];
+const payload2text = 'with(.[] | select(.payload); ' +
+					 ".payload |= map(\"- '\\(.)'\") | .payload |= join(\"\\n\"))"; // payload to text
 
 const health_checkurls = [
 	['https://cp.cloudflare.com'],
 	['https://www.gstatic.com/generate_204']
 ];
-
-const payload2text = 'with(.[] | select(.payload); ' +
-					 ".payload |= map(\"- '\\(.)'\") | .payload |= join(\"\\n\"))"; // payload to text
 
 const inbound_type = [
 	['http', _('HTTP')],
@@ -203,12 +212,6 @@ const rules_logical_payload_count = {
 	//'SUB-RULE': 0,
 };
 
-const trojan_cipher_methods = [
-	['aes-128-gcm', _('aes-128-gcm')],
-	['aes-256-gcm', _('aes-256-gcm')],
-	['chacha20-ietf-poly1305', _('chacha20-ietf-poly1305')]
-];
-
 const shadowsocks_cipher_methods = [
 	/* Stream */
 	['none', _('none')],
@@ -237,13 +240,10 @@ const shadowsocks_cipher_length = {
 	'2022-blake3-chacha20-poly1305': 32
 };
 
-const stunserver = [
-	['stun.fitauto.ru:3478'],
-	['stun.hot-chilli.net:3478'],
-	['stun.pure-ip.com:3478'],
-	['stun.voipgate.com:3478'],
-	['stun.voipia.net:3478'],
-	['stunserver2024.stunprotocol.org:3478']
+const trojan_cipher_methods = [
+	['aes-128-gcm', _('aes-128-gcm')],
+	['aes-256-gcm', _('aes-256-gcm')],
+	['chacha20-ietf-poly1305', _('chacha20-ietf-poly1305')]
 ];
 
 const tls_client_fingerprints = [
@@ -1259,11 +1259,12 @@ return baseclass.extend({
 	less_24_10,
 	pr7558_merged,
 	monospacefonts,
+	checkurls,
+	stunserver,
 	dashrepos,
 	dashrepos_urlparams,
-	checkurls,
-	health_checkurls,
 	payload2text,
+	health_checkurls,
 	inbound_type,
 	ip_version,
 	load_balance_strategy,
@@ -1274,10 +1275,9 @@ return baseclass.extend({
 	rules_type,
 	rules_logical_type,
 	rules_logical_payload_count,
-	trojan_cipher_methods,
 	shadowsocks_cipher_methods,
 	shadowsocks_cipher_length,
-	stunserver,
+	trojan_cipher_methods,
 	tls_client_fingerprints,
 	vless_flow,
 

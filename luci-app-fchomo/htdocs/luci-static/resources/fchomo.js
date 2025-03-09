@@ -62,6 +62,9 @@ const health_checkurls = [
 	['https://www.gstatic.com/generate_204']
 ];
 
+const payload2text = 'with(.[] | select(.payload); ' +
+					 ".payload |= map(\"- '\\(.)'\") | .payload |= join(\"\\n\"))"; // payload to text
+
 const inbound_type = [
 	['http', _('HTTP')],
 	['socks', _('SOCKS')],
@@ -338,10 +341,12 @@ const CBIhandleImport = baseclass.extend(/** @lends hm.handleImport.prototype */
 		const textarea = new ui.Textarea('', {
 			placeholder: this.placeholder
 		});
+		const textareaEl = textarea.render();
+		textareaEl.querySelector('textarea').style.fontFamily = monospacefonts.join(',');
 
 		ui.showModal(this.title, [
 			E('p', this.description),
-			textarea.render(),
+			textareaEl,
 			E('div', { class: 'right' }, [
 				E('button', {
 					class: 'btn',
@@ -584,6 +589,27 @@ function generateRand(type, length) {
 		default:
 			return null;
 	};
+}
+
+function json2yaml(object, command) {
+	const callJson2Yaml = rpc.declare({
+		object: 'luci.fchomo',
+		method: 'json2yaml',
+		params: ['content', 'command'],
+		expect: { '': {} }
+	});
+
+	return callJson2Yaml(typeof object === 'string' ? object : JSON.stringify(object), command).then(res => res.result);
+}
+function yaml2json(content, command) {
+	const callYaml2Json = rpc.declare({
+		object: 'luci.fchomo',
+		method: 'yaml2json',
+		params: ['content', 'command'],
+		expect: { '': {} }
+	});
+
+	return callYaml2Json(content, command).then(res => res.result);
 }
 
 function isEmpty(res) {
@@ -1237,6 +1263,7 @@ return baseclass.extend({
 	dashrepos_urlparams,
 	checkurls,
 	health_checkurls,
+	payload2text,
 	inbound_type,
 	ip_version,
 	load_balance_strategy,
@@ -1268,6 +1295,8 @@ return baseclass.extend({
 	calcStringMD5,
 	decodeBase64Str,
 	generateRand,
+	json2yaml,
+	yaml2json,
 	isEmpty,
 	removeBlankAttrs,
 	getFeatures,

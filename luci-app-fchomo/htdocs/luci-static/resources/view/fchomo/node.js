@@ -870,10 +870,10 @@ return view.extend({
 				.format('https://wiki.metacubex.one/config/proxy-providers/content/', _('Contents')));
 		so.placeholder = _('Content will not be verified, Please make sure you enter it correctly.');
 		so.load = function(section_id) {
-			return L.resolveDefault(hm.readFile('provider', section_id), '');
+			return L.resolveDefault(hm.readFile(this.section.sectiontype, section_id), '');
 		}
-		so.write = L.bind(hm.writeFile, so, 'provider');
-		so.remove = L.bind(hm.writeFile, so, 'provider');
+		so.write = L.bind(hm.writeFile, so, so.section.sectiontype);
+		so.remove = L.bind(hm.writeFile, so, so.section.sectiontype);
 		so.rmempty = false;
 		so.retain = true;
 		so.depends('type', 'file');

@@ -350,7 +350,49 @@ const CBIGridSection = form.GridSection.extend({
 	}
 });
 
-const CBIhandleImport = baseclass.extend(/** @lends hm.handleImport.prototype */ {
+const CBIDynamicList = form.DynamicList.extend({
+	__name__: 'CBI.DynamicList',
+
+	renderWidget(section_id, option_index, cfgvalue) {
+		const value = (cfgvalue != null) ? cfgvalue : this.default;
+		const choices = this.transformChoices();
+		const items = L.toArray(value);
+
+		const widget = new UIDynamicList(items, choices, {
+			id: this.cbid(section_id),
+			sort: this.keylist,
+			allowduplicates: this.allowduplicates,
+			optional: this.optional || this.rmempty,
+			datatype: this.datatype,
+			placeholder: this.placeholder,
+			validate: L.bind(this.validate, this, section_id),
+			disabled: (this.readonly != null) ? this.readonly : this.map.readonly
+		});
+
+		return widget.render();
+	}
+});
+
+const CBIGenValue = form.Value.extend({
+	__name__: 'CBI.GenValue',
+
+	renderWidget(/* ... */) {
+		let node = form.Value.prototype.renderWidget.apply(this, arguments);
+
+		if (!this.password)
+			node.classList.add('control-group');
+
+		(node.querySelector('.control-group') || node).appendChild(E('button', {
+			class: 'cbi-button cbi-button-add',
+			title: _('Generate'),
+			click: ui.createHandlerFn(this, handleGenKey, this.hm_asymmetric || this.option)
+		}, [ _('Generate') ]));
+
+		return node;
+	}
+});
+
+const CBIHandleImport = baseclass.extend(/** @lends hm.HandleImport.prototype */ {
 	__init__(map, section, title, description) {
 		this.map = map;
 		this.section = section;
@@ -396,48 +438,6 @@ const CBIhandleImport = baseclass.extend(/** @lends hm.handleImport.prototype */
 				}, [ _('Import') ])
 			])
 		]);
-	}
-});
-
-const CBIDynamicList = form.DynamicList.extend({
-	__name__: 'CBI.DynamicList',
-
-	renderWidget(section_id, option_index, cfgvalue) {
-		const value = (cfgvalue != null) ? cfgvalue : this.default;
-		const choices = this.transformChoices();
-		const items = L.toArray(value);
-
-		const widget = new UIDynamicList(items, choices, {
-			id: this.cbid(section_id),
-			sort: this.keylist,
-			allowduplicates: this.allowduplicates,
-			optional: this.optional || this.rmempty,
-			datatype: this.datatype,
-			placeholder: this.placeholder,
-			validate: L.bind(this.validate, this, section_id),
-			disabled: (this.readonly != null) ? this.readonly : this.map.readonly
-		});
-
-		return widget.render();
-	}
-});
-
-const CBIGenValue = form.Value.extend({
-	__name__: 'CBI.GenValue',
-
-	renderWidget(/* ... */) {
-		let node = form.Value.prototype.renderWidget.apply(this, arguments);
-
-		if (!this.password)
-			node.classList.add('control-group');
-
-		(node.querySelector('.control-group') || node).appendChild(E('button', {
-			class: 'cbi-button cbi-button-add',
-			title: _('Generate'),
-			click: ui.createHandlerFn(this, handleGenKey, this.hm_asymmetric || this.option)
-		}, [ _('Generate') ]));
-
-		return node;
 	}
 });
 
@@ -1330,9 +1330,9 @@ return baseclass.extend({
 
 	/* Prototype */
 	GridSection: CBIGridSection,
-	handleImport: CBIhandleImport,
 	DynamicList: CBIDynamicList,
 	GenValue: CBIGenValue,
+	HandleImport: CBIHandleImport,
 	ListValue: CBIListValue,
 	RichMultiValue: CBIRichMultiValue,
 	StaticList: CBIStaticList,

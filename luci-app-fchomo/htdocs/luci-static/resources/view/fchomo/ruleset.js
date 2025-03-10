@@ -149,7 +149,7 @@ return view.extend({
 		s.handleYamlImport = function() {
 			const section_type = this.sectiontype;
 			const field = this.hm_field;
-			const o = new hm.handleImport(this.map, this, _('Import mihomo config'),
+			const o = new hm.HandleImport(this.map, this, _('Import mihomo config'),
 				_('Please type <code>%s</code> fields of mihomo config.</br>')
 					.format(field));
 			o.placeholder = 'rule-providers:\n' +
@@ -210,7 +210,7 @@ return view.extend({
 						}
 					}
 
-					return hm.handleImport.prototype.handleFn.call(this, textarea, imported_count);
+					return hm.HandleImport.prototype.handleFn.call(this, textarea, imported_count);
 				});
 			}, o);
 
@@ -218,7 +218,7 @@ return view.extend({
 		}
 		s.handleLinkImport = function() {
 			const section_type = this.sectiontype;
-			const o = new hm.handleImport(this.map, this, _('Import rule-set links'),
+			const o = new hm.HandleImport(this.map, this, _('Import rule-set links'),
 				_('Supports rule-set links of type: <code>%s</code> and format: <code>%s</code>.</br>')
 					.format('file, http, inline', 'text, yaml, mrs') +
 					_('Please refer to <a href="%s" target="_blank">%s</a> for link format standards.')
@@ -253,7 +253,7 @@ return view.extend({
 							.format(imported_count, _('rule-set'), input_links.length)));
 				}
 
-				return hm.handleImport.prototype.handleFn.call(this, textarea, imported_count);
+				return hm.HandleImport.prototype.handleFn.call(this, textarea, imported_count);
 			}, o);
 
 			return o.render();

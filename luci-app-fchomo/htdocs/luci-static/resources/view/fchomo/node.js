@@ -878,7 +878,7 @@ return view.extend({
 		ss.handleYamlImport = function() {
 			const section_type = this.sectiontype;
 			const field = this.hm_field;
-			const o = new hm.handleImport(this.map, this, _('Import mihomo config'),
+			const o = new hm.HandleImport(this.map, this, _('Import mihomo config'),
 				_('Please type <code>%s</code> fields of mihomo config.</br>')
 					.format(field));
 			o.placeholder = 'proxy-providers:\n' +
@@ -980,7 +980,7 @@ return view.extend({
 						}
 					}
 
-					return hm.handleImport.prototype.handleFn.call(this, textarea, imported_count);
+					return hm.HandleImport.prototype.handleFn.call(this, textarea, imported_count);
 				});
 			}, o);
 

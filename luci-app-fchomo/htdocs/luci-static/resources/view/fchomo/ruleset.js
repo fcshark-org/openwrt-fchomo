@@ -7,10 +7,6 @@
 'require fchomo as hm';
 
 function parseRulesetYaml(field, name, cfg) {
-	function calcID(field, name) {
-		return hm.calcStringMD5(String.format('%s:%s', field, name));
-	}
-
 	if (hm.isEmpty(cfg))
 		return null;
 
@@ -33,10 +29,10 @@ function parseRulesetYaml(field, name, cfg) {
 
 	// value rocessing
 	config = Object.assign(config, {
-		id: calcID(field, name),
+		id: this.calcID(field, name),
 		label: '%s %s'.format(name, _('(Imported)')),
 		...(config.proxy ? {
-			proxy: hm.preset_outbound.full.map(([key, label]) => key).includes(config.proxy) ? config.proxy : calcID(hm.glossary["proxy_group"].field, config.proxy)
+			proxy: hm.preset_outbound.full.map(([key, label]) => key).includes(config.proxy) ? config.proxy : this.calcID(hm.glossary["proxy_group"].field, config.proxy)
 		} : {}),
 	});
 
@@ -187,7 +183,7 @@ return view.extend({
 					let type_file_count = 0;
 					if (!hm.isEmpty(res)) {
 						for (let name in res) {
-							let config = parseRulesetYaml(field, name, res[name]);
+							let config = parseRulesetYaml.call(this, field, name, res[name]);
 							//alert(JSON.stringify(config, null, 2));
 							if (config) {
 								let sid = uci.add(data[0], section_type, config.id);
@@ -216,7 +212,7 @@ return view.extend({
 
 					return hm.handleImport.prototype.handleFn.call(this, textarea, imported_count);
 				});
-			}, this);
+			}, o);
 
 			return o.render();
 		}
@@ -258,7 +254,7 @@ return view.extend({
 				}
 
 				return hm.handleImport.prototype.handleFn.call(this, textarea, imported_count);
-			}, this);
+			}, o);
 
 			return o.render();
 		}

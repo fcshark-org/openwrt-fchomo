@@ -357,8 +357,10 @@ const CBIhandleImport = baseclass.extend(/** @lends hm.handleImport.prototype */
 		this.title = title ?? '';
 		this.description = description ?? '';
 		this.placeholder = '';
+	},
 
-		this.handleFn = this.handleFn.bind(this.section);
+	calcID(field, name) {
+		return calcStringMD5(String.format('%s:%s', field, name));
 	},
 
 	handleFn(textarea, save) {

@@ -8,16 +8,13 @@
 'require tools.widgets as widgets';
 
 function parseProviderYaml(field, name, cfg) {
-	if (hm.isEmpty(cfg))
-		return null;
-
 	if (!cfg.type)
 		return null;
 
 	// key mapping
 	let config = hm.removeBlankAttrs({
-		id: this.calcID(field, name),
-		label: '%s %s'.format(name, _('(Imported)')),
+		id: cfg.hm_id,
+		label: cfg.hm_label,
 		type: cfg.type,
 		...(cfg.type === 'inline' ? {
 			//dialer_proxy: cfg["dialer-proxy"],
@@ -868,7 +865,6 @@ return view.extend({
 		ss.hm_lowcase_only = false;
 		/* Import mihomo config and Remove idle files start */
 		ss.handleYamlImport = function() {
-			const section_type = this.sectiontype;
 			const field = this.hm_field;
 			const o = new hm.HandleImport(this.map, this, _('Import mihomo config'),
 				_('Please type <code>%s</code> fields of mihomo config.</br>')
@@ -941,45 +937,11 @@ return view.extend({
 							'      interval: 36000\n' +
 							'      url: https://cp.cloudflare.com/generate_204\n' +
 							'  ...'
-			o.handleFn = L.bind(function(textarea, save) {
-				const content = textarea.getValue().trim();
-				const command = `.["${field}"]`;
-				return hm.yaml2json(content.replace(/(\s*payload:)/g, "$1 |-") /* payload to text */, command).then((res) => {
-					//alert(JSON.stringify(res, null, 2));
-					let imported_count = 0;
-					let type_file_count = 0;
-					if (!hm.isEmpty(res)) {
-						for (let name in res) {
-							let config = parseProviderYaml.call(this, field, name, res[name]);
-							//alert(JSON.stringify(config, null, 2));
-							if (config) {
-								let sid = uci.add(data[0], section_type, config.id);
-								delete config.id;
-								Object.keys(config).forEach((k) => {
-									uci.set(data[0], sid, k, config[k] ?? '');
-								});
-								imported_count++;
-								if (config.type === 'file')
-									type_file_count++;
-							}
-						}
+			o.parseYaml = function(field, name, cfg) {
+				let config = hm.HandleImport.prototype.parseYaml.call(this, field, name, cfg);
 
-						if (imported_count === 0)
-							ui.addNotification(null, E('p', _('No valid %s found.').format(_('Provider'))));
-						else {
-							ui.addNotification(null, E('p', [
-								_('Successfully imported %s %s of total %s.')
-									.format(imported_count, _('Provider'), Object.keys(res).length),
-								E('br'),
-								type_file_count ? _("%s Provider of type '%s' need to be filled in manually.")
-									.format(type_file_count, 'file') : ''
-							]));
-						}
-					}
-
-					return hm.HandleImport.prototype.handleFn.call(this, textarea, imported_count);
-				});
-			}, o);
+				return config ? parseProviderYaml.call(this, field, name, config) : config;
+			};
 
 			return o.render();
 		}

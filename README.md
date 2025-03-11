@@ -32,6 +32,47 @@
 
 ![global](assets/img/global.png "global")
 
+## Simplified architecture diagram
+
+<details><summary>Expand/Collapse</summary>
+
+``` mermaid
+flowchart TD
+  subgraph Firewall
+    direction TB
+    subgraph fw_inpot[Input]; rawin[Raw traffic]; end
+    subgraph fw_outpot[Output]; lo; direct[Direct]; mihomoin[Mihomo in]; end
+    rawin --firewall--> flow{Subnet/Local traffic ?}
+    flow --Subnet--> acl_listen
+    flow --Local--> proxy_router{Proxy routerself ?}
+      proxy_router --Yes--> acl_dst
+      proxy_router --No --> direct
+    subgraph acl[Access Control]
+      direction TB
+      acl_listen{Src-interface filter} --> dns_hijack
+      acl_listen --> direct
+      dns_hijack{dport is 53 ?} --Redirect to dnsmasq--> lo
+      dns_hijack --No --> acl_src
+      acl_src{Src-address filter} --> acl_dst
+      acl_src --> direct
+      acl_dst{Dst-address filter} --> acl_dport
+      acl_dst --> direct
+      acl_dport{Dst-port filter} --> mihomoin
+      acl_dport --> direct
+    end
+  end
+  subgraph DNS
+    direction TB
+    subgraph dns_inpot[Input]; dnsreq[Any DNS request to **local:53**]; end
+    subgraph dns_outpot[Output]; mihomodns[Minomo DNS]; otherdns[Other DNS]; end
+    dnsreq <--> dnsmasq[DNSmasq]
+    dnsmasq <--Upstearm--> mihomodns
+    dnsmasq <--Upstearm--> otherdns
+    dnsmasq-full --Set ipset--> e[NFTables direct/proxy/cn/gfw ipset]
+  end
+```
+</details>
+
 ## Releases
 
 You can find the prebuilt-ipks [here](https://fantastic-packages.github.io/packages/)

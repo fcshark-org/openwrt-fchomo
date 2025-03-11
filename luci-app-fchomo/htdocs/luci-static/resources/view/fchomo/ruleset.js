@@ -14,26 +14,20 @@ function parseRulesetYaml(field, name, cfg) {
 		return null;
 
 	// key mapping
-	const map_of_rule_provider = {
-		//type: 'type',
-		//behavior: 'behavior',
-		//format: 'format',
-		//url: 'url',
-		"size-limit": 'size_limit',
-		//interval: 'interval',
-		//proxy: 'proxy',
-		path: 'id',
-		//payload: 'payload', // array: string
-	};
-	let config = Object.fromEntries(Object.entries(cfg).map(([key, value]) => [map_of_rule_provider[key] ?? key, value]));
-
-	// value rocessing
-	config = Object.assign(config, {
+	let config = hm.removeBlankAttrs({
 		id: this.calcID(field, name),
 		label: '%s %s'.format(name, _('(Imported)')),
-		...(config.proxy ? {
-			proxy: hm.preset_outbound.full.map(([key, label]) => key).includes(config.proxy) ? config.proxy : this.calcID(hm.glossary["proxy_group"].field, config.proxy)
-		} : {}),
+		type: cfg.type,
+		format: cfg.format,
+		behavior: cfg.behavior,
+		...(cfg.type === 'inline' ? {
+			payload: cfg.payload, // string: array
+		} : {
+			url: cfg.url,
+			size_limit: cfg["size-limit"],
+			interval: cfg.interval,
+			proxy: cfg.proxy ? hm.preset_outbound.full.map(([key, label]) => key).includes(cfg.proxy) ? cfg.proxy : this.calcID(hm.glossary["proxy_group"].field, cfg.proxy) : null,
+		})
 	});
 
 	return config;
@@ -165,6 +159,12 @@ return view.extend({
 							'  alidns:\n' +
 							'    type: file\n' +
 							'    path: ./rule2.yaml\n' +
+							'    behavior: classical\n' +
+							'  google2:\n' +
+							'    type: http\n' +
+							'    path: ./rule3.yaml\n' +
+							'    url: "https://raw.githubusercontent.com/../Google.yaml"\n' +
+							'    proxy: proxy\n' +
 							'    behavior: classical\n' +
 							'  rule4:\n' +
 							'    type: inline\n' +

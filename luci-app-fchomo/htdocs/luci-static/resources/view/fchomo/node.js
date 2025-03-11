@@ -16,16 +16,17 @@ function parseProviderYaml(field, name, cfg) {
 
 	// key mapping
 	let config = hm.removeBlankAttrs({
+		id: this.calcID(field, name),
+		label: '%s %s'.format(name, _('(Imported)')),
 		type: cfg.type,
 		...(cfg.type === 'inline' ? {
 			//dialer_proxy: cfg["dialer-proxy"],
 			payload: cfg.payload, // string: array
 		} : {
-			id: cfg.path,
 			url: cfg.url,
 			size_limit: cfg["size-limit"],
 			interval: cfg.interval,
-			proxy: cfg.proxy,
+			proxy: cfg.proxy ? hm.preset_outbound.full.map(([key, label]) => key).includes(cfg.proxy) ? cfg.proxy : this.calcID(hm.glossary["proxy_group"].field, cfg.proxy) : null,
 			header: cfg.header ? JSON.stringify(cfg.header, null, 2) : null, // string: object
 			health_enable: hm.bool2str(hm.getValue(cfg, "health-check.enable")), // bool
 			health_url: hm.getValue(cfg, "health-check.url"),
@@ -51,15 +52,6 @@ function parseProviderYaml(field, name, cfg) {
 			exclude_filter: [cfg["exclude-filter"]], // array.string: string
 			exclude_type: [cfg["exclude-type"]] // array.string: string
 		})
-	});
-
-	// value rocessing
-	config = Object.assign(config, {
-		id: this.calcID(field, name),
-		label: '%s %s'.format(name, _('(Imported)')),
-		...(config.proxy ? {
-			proxy: hm.preset_outbound.full.map(([key, label]) => key).includes(config.proxy) ? config.proxy : this.calcID(hm.glossary["proxy_group"].field, config.proxy)
-		} : {}),
 	});
 
 	return config;
@@ -936,6 +928,11 @@ return view.extend({
 							'        port: 443\n' +
 							'        cipher: chacha20-ietf-poly1305\n' +
 							'        password: "password"\n' +
+							'  provider3:\n' +
+							'    type: http\n' +
+							'    url: "http://test.com"\n' +
+							'    path: ./proxy_providers/provider3.yaml\n' +
+							'    proxy: proxy\n' +
 							'  test:\n' +
 							'    type: file\n' +
 							'    path: /test.yaml\n' +

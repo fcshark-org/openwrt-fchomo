@@ -25,12 +25,14 @@ function parseProviderYaml(field, name, cfg) {
 			interval: cfg.interval,
 			proxy: cfg.proxy ? hm.preset_outbound.full.map(([key, label]) => key).includes(cfg.proxy) ? cfg.proxy : this.calcID(hm.glossary["proxy_group"].field, cfg.proxy) : null,
 			header: cfg.header ? JSON.stringify(cfg.header, null, 2) : null, // string: object
+			/* Health fields */
 			health_enable: hm.bool2str(hm.getValue(cfg, "health-check.enable")), // bool
 			health_url: hm.getValue(cfg, "health-check.url"),
 			health_interval: hm.getValue(cfg, "health-check.interval"),
 			health_timeout: hm.getValue(cfg, "health-check.timeout"),
 			health_lazy: hm.bool2str(hm.getValue(cfg, "health-check.lazy")), // bool
 			health_expected_status: hm.getValue(cfg, "health-check.expected-status"),
+			/* Override fields */
 			override_prefix: hm.getValue(cfg, "override.additional-prefix"),
 			override_suffix: hm.getValue(cfg, "override.additional-suffix"),
 			override_replace: (hm.getValue(cfg, "override.proxy-name") || []).map((obj) => JSON.stringify(obj)), // array.string: array.object
@@ -45,6 +47,7 @@ function parseProviderYaml(field, name, cfg) {
 			override_interface_name: hm.getValue(cfg, "override.interface-name"),
 			override_routing_mark: hm.getValue(cfg, "override.routing-mark"),
 			override_ip_version: hm.getValue(cfg, "override.ip-version"),
+			/* General fields */
 			filter: [cfg.filter], // array: string
 			exclude_filter: [cfg["exclude-filter"]], // array.string: string
 			exclude_type: [cfg["exclude-type"]] // array.string: string

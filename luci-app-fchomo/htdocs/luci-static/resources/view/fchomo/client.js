@@ -227,6 +227,7 @@ function parseRules(rule) {
 	// https://github.com/muink/mihomo/blob/8e6eb70e714d44f26ba407adbd7b255762f48b97/rules/parser.go#L12
 	rule = rule.split(',');
 	let ruleName = rule[0].toUpperCase(),
+		logical_payload,
 		payload,
 		target,
 		params = [],
@@ -246,7 +247,11 @@ function parseRules(rule) {
 
 	if (hm.rules_logical_type.map(o => o[0]).includes(ruleName)) {
 		target = rule.pop();
-		payload = rule.slice(1).join(',');
+		logical_payload = rule.slice(1).join(',').match(/^\(\(.*\)\)$/); // LOGIC_TYPE,((payload1),(payload2))
+		if (logical_payload)
+			logical_payload = logical_payload[0].slice(2, -2).split('),(');
+		else
+			return null;
 	} else if (hm.rules_type.map(o => o[0]).includes(ruleName)) {
 		if (l < 2) return null; // error: format invalid
 		else if (ruleName === 'MATCH') l = 2;
@@ -262,6 +267,28 @@ function parseRules(rule) {
 	// make entry
 	let entry = new RulesEntry();
 	entry.type = ruleName;
+	// parse payload
+	if (logical_payload)
+		for (let i=0; i < logical_payload.length; i++) {
+			let type, factor, deny;
+
+			// deny
+			deny = logical_payload[i].match(/^NOT,\(\((.*)\)\)$/);
+			if (deny)
+				[type, factor] = deny[1].split(',');
+			else
+				[type, factor] = logical_payload[i].split(',');
+
+			if (type === 'RULE-SET')
+				factor = this.calcID(hm.glossary["ruleset"].field, factor);
+
+			entry.setPayload(i, {type: type.toUpperCase(), factor: factor, deny: deny ? true : null});
+		}
+	else if (payload)
+		if (ruleName === 'RULE-SET')
+			entry.setPayload(0, {factor: this.calcID(hm.glossary["ruleset"].field, payload)});
+		else
+			entry.setPayload(0, {factor: payload});
 	params.forEach((param) => entry.setParam(param, true));
 	if (subrule)
 		entry.subrule = subrule;

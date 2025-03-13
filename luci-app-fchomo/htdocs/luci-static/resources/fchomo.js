@@ -167,7 +167,8 @@ const preset_outbound = {
 		['REJECT'],
 		['REJECT-DROP'],
 		['PASS'],
-		['COMPATIBLE']
+		['COMPATIBLE'],
+		['GLOBAL']
 	],
 	direct: [
 		['', _('null')],

@@ -236,9 +236,9 @@ function parseRules(rule) {
 	let l = rule.length;
 
 	if (ruleName === 'SUB-RULE') {
-		subrule = rule.slice(1).join(',').match(/^\(.*\)/); // SUB-RULE,(payload),subrule
+		subrule = rule.slice(1).join(',').match(/^\((.*)\)/); // SUB-RULE,(payload),subrule
 		if (subrule) {
-			[rule, subrule] = [subrule[0].slice(1, -1).split(',').concat('DIRECT'), rule.pop()];
+			[rule, subrule] = [subrule[1].split(',').concat('DIRECT'), rule.pop()];
 			ruleName = rule[0].toUpperCase();
 			l = rule.length;
 		} else
@@ -247,9 +247,9 @@ function parseRules(rule) {
 
 	if (hm.rules_logical_type.map(o => o[0]).includes(ruleName)) {
 		target = rule.pop();
-		logical_payload = rule.slice(1).join(',').match(/^\(\(.*\)\)$/); // LOGIC_TYPE,((payload1),(payload2))
+		logical_payload = rule.slice(1).join(',').match(/^\(\((.*)\)\)$/); // LOGIC_TYPE,((payload1),(payload2))
 		if (logical_payload)
-			logical_payload = logical_payload[0].slice(2, -2).split('),(');
+			logical_payload = logical_payload[1].split('),(');
 		else
 			return null;
 	} else if (hm.rules_type.map(o => o[0]).includes(ruleName)) {

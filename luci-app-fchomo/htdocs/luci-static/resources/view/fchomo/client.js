@@ -818,7 +818,7 @@ return view.extend({
 			o.parseYaml = function(field, name, cfg) {
 				let config = hm.HandleImport.prototype.parseYaml.call(this, field, name, cfg);
 
-				return config ? parseProxyGroupYaml.call(this, field, name, config) : config;
+				return config ? parseProxyGroupYaml.call(this, field, name, config) : null;
 			};
 
 			return o.render();
@@ -1075,7 +1075,7 @@ return view.extend({
 			o.parseYaml = function(field, name, cfg) {
 				let config = hm.HandleImport.prototype.parseYaml.call(this, field, name, cfg);
 
-				return config ? parseRulesYaml.call(this, field, name, config) : config;
+				return config ? parseRulesYaml.call(this, field, name, config) : null;
 			};
 
 			return o.render();
@@ -1162,7 +1162,7 @@ return view.extend({
 			o.parseYaml = function(field, name, cfg) {
 				let config = hm.HandleImport.prototype.parseYaml.call(this, field, name, cfg);
 
-				return config ? parseSubrulesYaml.call(this, field, name, config) : config;
+				return config ? parseSubrulesYaml.call(this, field, name, config) : null;
 			};
 
 			return o.render();

@@ -476,6 +476,7 @@ return view.extend({
 		so.value('', _('none'));
 		so.value('obfs', _('obfs-simple'));
 		//so.value('v2ray-plugin', _('v2ray-plugin'));
+		//so.value('gost-plugin', _('gost-plugin'));
 		so.value('shadow-tls', _('shadow-tls'));
 		so.value('restls', _('restls'));
 		so.depends('type', 'ss');

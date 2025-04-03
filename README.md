@@ -57,7 +57,8 @@ flowchart TD
       acl_src --> direct
       acl_dst{Dst-address filter} --> acl_dport
       acl_dst --> direct
-      acl_dport{Dst-port filter} --> mihomoin
+      acl_dport{Dst-port filter
+Always redirect port 53} --> mihomoin
       acl_dport --> direct
     end
   end

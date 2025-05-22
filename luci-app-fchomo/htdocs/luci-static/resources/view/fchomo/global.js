@@ -598,7 +598,7 @@ return view.extend({
 
 		so = ss.option(form.DynamicList, 'external_controller_cors_allow_origins', _('CORS Allow origins'),
 			_('CORS allowed origins, <code>*</code> will be used if empty.'));
-		so.placeholder = 'https://yacd.metacubex.one';
+		so.placeholder = 'https://board.zash.run.place';
 
 		so = ss.option(form.Flag, 'external_controller_cors_allow_private_network', _('CORS Allow private network'),
 			_('Allow access from private network.</br>' +

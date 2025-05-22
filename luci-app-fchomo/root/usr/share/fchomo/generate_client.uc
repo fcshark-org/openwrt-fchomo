@@ -585,6 +585,10 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		alpn: cfg.tls_alpn, // Array
 		"skip-cert-verify": strToBool(cfg.tls_skip_cert_verify),
 		"client-fingerprint": cfg.tls_client_fingerprint,
+		"ech-opts": cfg.tls_ech === '1' ? {
+			enable: true,
+			config: cfg.tls_ech_config
+		} : null,
 		"reality-opts": cfg.tls_reality === '1' ? {
 			"public-key": cfg.tls_reality_public_key,
 			"short-id": cfg.tls_reality_short_id,

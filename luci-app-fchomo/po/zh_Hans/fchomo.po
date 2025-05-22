@@ -595,6 +595,11 @@ msgstr "下载成功。"
 msgid "Dual stack"
 msgstr "双栈"
 
+#: htdocs/luci-static/resources/view/fchomo/node.js:643
+#: htdocs/luci-static/resources/view/fchomo/server.js:369
+msgid "ECH config"
+msgstr "ECH 配置"
+
 #: htdocs/luci-static/resources/view/fchomo/client.js:1065
 msgid "ECS override"
 msgstr "强制覆盖 ECS"
@@ -666,6 +671,10 @@ msgid ""
 msgstr ""
 "为出站连接启用 <a target=\"_blank\" href=\"%s\" rel=\"noreferrer "
 "noopener\">IP4P</a> 转换"
+
+#: htdocs/luci-static/resources/view/fchomo/node.js:637
+msgid "Enable ECH"
+msgstr "启用 ECH"
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:753
 msgid "Enable TCP Brutal"
@@ -2320,6 +2329,10 @@ msgstr "让客户端使用 BBR 流控算法。"
 #: htdocs/luci-static/resources/view/fchomo/node.js:368
 msgid "The %s address used by local machine in the Wireguard network."
 msgstr "WireGuard 网络中使用的本机 %s 地址。"
+
+#: htdocs/luci-static/resources/view/fchomo/node.js:644
+msgid "The ECH parameter of SVCB/HTTPS record. Leave empty to resolve via DNS."
+msgstr "SVCB/HTTPS 记录的 ECH 参数。留空则通过 DNS 解析。"
 
 #: htdocs/luci-static/resources/view/fchomo/global.js:322
 msgid "The default value is 2:00 every day."

@@ -585,6 +585,11 @@ msgstr ""
 msgid "Dual stack"
 msgstr ""
 
+#: htdocs/luci-static/resources/view/fchomo/node.js:643
+#: htdocs/luci-static/resources/view/fchomo/server.js:369
+msgid "ECH config"
+msgstr ""
+
 #: htdocs/luci-static/resources/view/fchomo/client.js:1065
 msgid "ECS override"
 msgstr ""
@@ -651,6 +656,10 @@ msgstr ""
 msgid ""
 "Enable <a target=\"_blank\" href=\"%s\" rel=\"noreferrer noopener\">IP4P</a> "
 "conversion for outbound connections"
+msgstr ""
+
+#: htdocs/luci-static/resources/view/fchomo/node.js:637
+msgid "Enable ECH"
 msgstr ""
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:753
@@ -2291,6 +2300,10 @@ msgstr ""
 #: htdocs/luci-static/resources/view/fchomo/node.js:361
 #: htdocs/luci-static/resources/view/fchomo/node.js:368
 msgid "The %s address used by local machine in the Wireguard network."
+msgstr ""
+
+#: htdocs/luci-static/resources/view/fchomo/node.js:644
+msgid "The ECH parameter of SVCB/HTTPS record. Leave empty to resolve via DNS."
 msgstr ""
 
 #: htdocs/luci-static/resources/view/fchomo/global.js:322

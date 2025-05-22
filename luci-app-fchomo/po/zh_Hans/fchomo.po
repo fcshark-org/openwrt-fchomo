@@ -600,6 +600,10 @@ msgstr "双栈"
 msgid "ECH config"
 msgstr "ECH 配置"
 
+#: htdocs/luci-static/resources/view/fchomo/server.js:363
+msgid "ECH key"
+msgstr "ECH 密钥"
+
 #: htdocs/luci-static/resources/view/fchomo/client.js:1065
 msgid "ECS override"
 msgstr "强制覆盖 ECS"

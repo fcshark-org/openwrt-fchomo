@@ -590,6 +590,10 @@ msgstr ""
 msgid "ECH config"
 msgstr ""
 
+#: htdocs/luci-static/resources/view/fchomo/server.js:363
+msgid "ECH key"
+msgstr ""
+
 #: htdocs/luci-static/resources/view/fchomo/client.js:1065
 msgid "ECS override"
 msgstr ""

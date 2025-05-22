@@ -375,7 +375,7 @@ return view.extend({
 
 		o = s.taboption('field_tls', hm.GenValue, 'tls_reality_private_key', _('REALITY private key'));
 		const tls_reality_public_key = 'tls_reality_public_key';
-		o.hm_asymmetric = {
+		o.hm_options = {
 			type: 'reality-keypair',
 			result: {
 				private_key: o.option,

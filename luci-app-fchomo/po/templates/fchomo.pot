@@ -64,6 +64,15 @@ msgstr ""
 msgid "API DoH service"
 msgstr ""
 
+#: htdocs/luci-static/resources/view/fchomo/global.js:569
+msgid "API ECH config"
+msgstr ""
+
+#: htdocs/luci-static/resources/view/fchomo/global.js:555
+#: htdocs/luci-static/resources/view/fchomo/server.js:363
+msgid "API ECH key"
+msgstr ""
+
 #: htdocs/luci-static/resources/view/fchomo/global.js:588
 msgid "API HTTP port"
 msgstr ""
@@ -2304,6 +2313,12 @@ msgstr ""
 
 #: htdocs/luci-static/resources/view/fchomo/server.js:307
 msgid "The server public key, in PEM format."
+msgstr ""
+
+#: htdocs/luci-static/resources/view/fchomo/global.js:570
+#: htdocs/luci-static/resources/view/fchomo/server.js:370
+msgid ""
+"This ECH parameter needs to be added to the SVCB/HTTPS record of the domain."
 msgstr ""
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:570

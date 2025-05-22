@@ -71,6 +71,15 @@ msgstr ""
 msgid "API DoH service"
 msgstr "API DoH 服务器"
 
+#: htdocs/luci-static/resources/view/fchomo/global.js:569
+msgid "API ECH config"
+msgstr "API ECH 配置"
+
+#: htdocs/luci-static/resources/view/fchomo/global.js:555
+#: htdocs/luci-static/resources/view/fchomo/server.js:363
+msgid "API ECH key"
+msgstr "API ECH 密钥"
+
 #: htdocs/luci-static/resources/view/fchomo/global.js:588
 msgid "API HTTP port"
 msgstr "API HTTP 端口"
@@ -2333,6 +2342,12 @@ msgstr "服务端私钥，需要 PEM 格式。"
 #: htdocs/luci-static/resources/view/fchomo/server.js:307
 msgid "The server public key, in PEM format."
 msgstr "服务端公钥，需要 PEM 格式。"
+
+#: htdocs/luci-static/resources/view/fchomo/global.js:570
+#: htdocs/luci-static/resources/view/fchomo/server.js:370
+msgid ""
+"This ECH parameter needs to be added to the SVCB/HTTPS record of the domain."
+msgstr "此 ECH 参数需要添加到域名的 SVCB/HTTPS 记录中。"
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:570
 #: htdocs/luci-static/resources/view/fchomo/node.js:984

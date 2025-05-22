@@ -586,7 +586,8 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		"client-fingerprint": cfg.tls_client_fingerprint,
 		"reality-opts": cfg.tls_reality === '1' ? {
 			"public-key": cfg.tls_reality_public_key,
-			"short-id": cfg.tls_reality_short_id
+			"short-id": cfg.tls_reality_short_id,
+			"support-x25519mlkem768": strToBool(cfg.tls_reality_support_x25519mlkem768)
 		} : null,
 
 		/* Transport fields */

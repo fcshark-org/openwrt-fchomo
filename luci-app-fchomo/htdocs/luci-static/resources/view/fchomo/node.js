@@ -659,6 +659,12 @@ return view.extend({
 		so.depends('tls_reality', '1');
 		so.modalonly = true;
 
+		so = ss.taboption('field_tls', form.Flag, 'tls_reality_support_x25519mlkem768', _('REALITY X25519MLKEM768 PQC support'),
+			_('Requires server support.'));
+		so.default = so.disabled;
+		so.depends('tls_reality', '1');
+		so.modalonly = true;
+
 		/* Transport fields */
 		so = ss.taboption('field_general', form.Flag, 'transport_enabled', _('Transport'));
 		so.default = so.disabled;

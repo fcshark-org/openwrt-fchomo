@@ -1815,6 +1815,10 @@ msgstr ""
 msgid "REALITY"
 msgstr ""
 
+#: htdocs/luci-static/resources/view/fchomo/node.js:662
+msgid "REALITY X25519MLKEM768 PQC support"
+msgstr ""
+
 #: htdocs/luci-static/resources/view/fchomo/server.js:373
 msgid "REALITY certificate issued to"
 msgstr ""

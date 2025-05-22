@@ -1842,6 +1842,10 @@ msgstr "快速重載"
 msgid "REALITY"
 msgstr "REALITY"
 
+#: htdocs/luci-static/resources/view/fchomo/node.js:662
+msgid "REALITY X25519MLKEM768 PQC support"
+msgstr "REALITY X25519MLKEM768 後量子加密支援"
+
 #: htdocs/luci-static/resources/view/fchomo/server.js:373
 msgid "REALITY certificate issued to"
 msgstr "REALITY 證書頒發給"

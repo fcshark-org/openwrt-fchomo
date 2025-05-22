@@ -2320,7 +2320,7 @@ msgid "The %s address used by local machine in the Wireguard network."
 msgstr ""
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:644
-msgid "The ECH parameter of SVCB/HTTPS record. Leave empty to resolve via DNS."
+msgid "The ECH parameter of the SVCB/HTTPS record for the domain. Leave empty to resolve via DNS."
 msgstr ""
 
 #: htdocs/luci-static/resources/view/fchomo/global.js:322

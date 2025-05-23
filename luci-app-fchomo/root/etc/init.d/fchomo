@@ -131,8 +131,9 @@ start_service() {
 		if [ ! -e "$RUN_DIR/mihomo-c.yaml" ]; then
 			log "Error: failed to generate client configuration."
 			return 1
-		elif ! "$PROG" -t -d "$HM_DIR" -f "$RUN_DIR/mihomo-c.yaml" >/dev/null 2>>"$LOG_PATH"; then
+		elif ! "$PROG" -t -d "$HM_DIR" -f "$RUN_DIR/mihomo-c.yaml" >/dev/null; then
 			log "Error: wrong client configuration detected."
+			"$PROG" -t -d "$HM_DIR" -f "$RUN_DIR/mihomo-c.yaml" >>"$LOG_PATH"
 			return 1
 		fi
 		echo > "$RUN_DIR/mihomo-c.log"
@@ -288,8 +289,9 @@ start_service() {
 		if [ ! -e "$RUN_DIR/mihomo-s.yaml" ]; then
 			log "Error: failed to generate server configuration."
 			return 1
-		elif ! "$PROG" -t -d "$HM_DIR" -f "$RUN_DIR/mihomo-s.yaml" >/dev/null 2>>"$LOG_PATH"; then
+		elif ! "$PROG" -t -d "$HM_DIR" -f "$RUN_DIR/mihomo-s.yaml" >/dev/null; then
 			log "Error: wrong server configuration detected."
+			"$PROG" -t -d "$HM_DIR" -f "$RUN_DIR/mihomo-s.yaml" >>"$LOG_PATH"
 			return 1
 		fi
 		echo > "$RUN_DIR/mihomo-s.log"

@@ -95,7 +95,7 @@ class DNSAddress {
 
 	toString() {
 		return this.addr + (this.params.size === 0 ? '' : '#' +
-			['detour', 'h3', 'ecs', 'ecs-override'].map((k) => {
+			['detour', 'h3', 'skip-cert-verify', 'ecs', 'ecs-override', 'disable-ipv4', 'disable-ipv6'].map((k) => {
 				return this.params.has(k) ? '%s=%s'.format(k, encodeURI(this.params.get(k))) : null;
 			}).filter(v => v).join('&')
 		);
@@ -1422,6 +1422,25 @@ return view.extend({
 		so.write = function() {};
 		so.modalonly = true;
 
+		so = ss.option(form.Flag, 'skip-cert-verify', _('Skip cert verify'),
+			_('Donot verifying server certificate.') +
+			'<br/>' +
+			_('This is <strong>DANGEROUS</strong>, your traffic is almost like <strong>PLAIN TEXT</strong>! Use at your own risk!'));
+		so.default = so.disabled;
+		so.load = function(section_id) {
+			return boolToFlag(new DNSAddress(uci.get(data[0], section_id, 'address')).parseParam('skip-cert-verify') ? true : false);
+		}
+		so.onchange = function(ev, section_id, value) {
+			let UIEl = this.section.getUIElement(section_id, 'address');
+
+			let newvalue = new DNSAddress(UIEl.getValue()).setParam('skip-cert-verify', flagToBool(value) || null).toString();
+
+			UIEl.node.previousSibling.innerText = newvalue;
+			UIEl.setValue(newvalue);
+		}
+		so.write = function() {};
+		so.modalonly = true;
+
 		so = ss.option(form.Value, 'ecs', _('EDNS Client Subnet'));
 		so.datatype = 'cidr';
 		so.load = function(section_id) {
@@ -1454,6 +1473,38 @@ return view.extend({
 		}
 		so.write = function() {};
 		so.depends({'ecs': /.+/});
+		so.modalonly = true;
+
+		so = ss.option(form.Flag, 'disable-ipv4', _('Discard A responses'));
+		so.default = so.disabled;
+		so.load = function(section_id) {
+			return boolToFlag(new DNSAddress(uci.get(data[0], section_id, 'address')).parseParam('disable-ipv4') ? true : false);
+		}
+		so.onchange = function(ev, section_id, value) {
+			let UIEl = this.section.getUIElement(section_id, 'address');
+
+			let newvalue = new DNSAddress(UIEl.getValue()).setParam('disable-ipv4', flagToBool(value) || null).toString();
+
+			UIEl.node.previousSibling.innerText = newvalue;
+			UIEl.setValue(newvalue);
+		}
+		so.write = function() {};
+		so.modalonly = true;
+
+		so = ss.option(form.Flag, 'disable-ipv6', _('Discard AAAA responses'));
+		so.default = so.disabled;
+		so.load = function(section_id) {
+			return boolToFlag(new DNSAddress(uci.get(data[0], section_id, 'address')).parseParam('disable-ipv6') ? true : false);
+		}
+		so.onchange = function(ev, section_id, value) {
+			let UIEl = this.section.getUIElement(section_id, 'address');
+
+			let newvalue = new DNSAddress(UIEl.getValue()).setParam('disable-ipv6', flagToBool(value) || null).toString();
+
+			UIEl.node.previousSibling.innerText = newvalue;
+			UIEl.setValue(newvalue);
+		}
+		so.write = function() {};
 		so.modalonly = true;
 		/* DNS server END */
 

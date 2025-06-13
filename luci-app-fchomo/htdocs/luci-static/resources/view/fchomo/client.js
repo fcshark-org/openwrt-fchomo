@@ -1358,17 +1358,15 @@ return view.extend({
 			// https://github.com/muink/mihomo/blob/43f21c0b412b7a8701fe7a2ea6510c5b985a53d6/config/config.go#L1211C8-L1211C14
 			if (value.match(/^https?:\/\//)){
 				this.section.getUIElement(section_id, 'h3').node.querySelector('input').disabled = null;
-				this.section.getUIElement(section_id, 'ecs').node.querySelector('input').disabled = null;
-				this.section.getUIElement(section_id, 'ecs-override').node.querySelector('input').disabled = null;
 			} else {
 				let UIEl = this.section.getUIElement(section_id, 'address');
 
-				let newvalue = new DNSAddress(UIEl.getValue()).setParam('h3').setParam('ecs').setParam('ecs-override').toString();
+				let newvalue = new DNSAddress(UIEl.getValue()).setParam('h3').toString();
 
 				UIEl.node.previousSibling.innerText = newvalue;
 				UIEl.setValue(newvalue);
 
-				['h3', 'ecs', 'ecs-override'].forEach((opt) => {
+				['h3'].forEach((opt) => {
 					let UIEl = this.section.getUIElement(section_id, opt);
 					UIEl.setValue('');
 					UIEl.node.querySelector('input').disabled = 'true';

@@ -546,6 +546,14 @@ msgstr "禁用 UDP"
 msgid "Disable safe path check"
 msgstr "禁用安全路径检查"
 
+#: htdocs/luci-static/resources/view/fchomo/client.js:1476
+msgid "Discard A responses"
+msgstr "丢弃 A 响应"
+
+#: htdocs/luci-static/resources/view/fchomo/client.js:1492
+msgid "Discard AAAA responses"
+msgstr "丢弃 AAAA 响应"
+
 #: htdocs/luci-static/resources/view/fchomo/client.js:750
 msgid ""
 "Do not resolve the domain connection to IP for this match.</br>Only works "
@@ -2354,8 +2362,8 @@ msgstr "WireGuard 网络中使用的本机 %s 地址。"
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:644
 msgid ""
-"The ECH parameter of the HTTPS record for the domain. Leave empty to "
-"resolve via DNS."
+"The ECH parameter of the HTTPS record for the domain. Leave empty to resolve "
+"via DNS."
 msgstr "域名的 HTTPS 记录的 ECH 参数。留空则通过 DNS 解析。"
 
 #: htdocs/luci-static/resources/view/fchomo/global.js:322
@@ -2380,12 +2388,12 @@ msgstr "服务端私钥，需要 PEM 格式。"
 msgid "The server public key, in PEM format."
 msgstr "服务端公钥，需要 PEM 格式。"
 
-#: htdocs/luci-static/resources/view/fchomo/global.js:570
-#: htdocs/luci-static/resources/view/fchomo/server.js:380
-msgid ""
-"This ECH parameter needs to be added to the HTTPS record of the domain."
+#: htdocs/luci-static/resources/view/fchomo/global.js:593
+#: htdocs/luci-static/resources/view/fchomo/server.js:403
+msgid "This ECH parameter needs to be added to the HTTPS record of the domain."
 msgstr "此 ECH 参数需要添加到域名的 HTTPS 记录中。"
 
+#: htdocs/luci-static/resources/view/fchomo/client.js:1426
 #: htdocs/luci-static/resources/view/fchomo/node.js:632
 #: htdocs/luci-static/resources/view/fchomo/node.js:1161
 msgid ""

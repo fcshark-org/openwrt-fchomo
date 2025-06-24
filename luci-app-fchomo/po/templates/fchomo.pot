@@ -538,6 +538,14 @@ msgstr ""
 msgid "Disable safe path check"
 msgstr ""
 
+#: htdocs/luci-static/resources/view/fchomo/client.js:1476
+msgid "Discard A responses"
+msgstr ""
+
+#: htdocs/luci-static/resources/view/fchomo/client.js:1492
+msgid "Discard AAAA responses"
+msgstr ""
+
 #: htdocs/luci-static/resources/view/fchomo/client.js:750
 msgid ""
 "Do not resolve the domain connection to IP for this match.</br>Only works "
@@ -2325,8 +2333,8 @@ msgstr ""
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:644
 msgid ""
-"The ECH parameter of the HTTPS record for the domain. Leave empty to "
-"resolve via DNS."
+"The ECH parameter of the HTTPS record for the domain. Leave empty to resolve "
+"via DNS."
 msgstr ""
 
 #: htdocs/luci-static/resources/view/fchomo/global.js:322
@@ -2351,12 +2359,12 @@ msgstr ""
 msgid "The server public key, in PEM format."
 msgstr ""
 
-#: htdocs/luci-static/resources/view/fchomo/global.js:570
-#: htdocs/luci-static/resources/view/fchomo/server.js:380
-msgid ""
-"This ECH parameter needs to be added to the HTTPS record of the domain."
+#: htdocs/luci-static/resources/view/fchomo/global.js:593
+#: htdocs/luci-static/resources/view/fchomo/server.js:403
+msgid "This ECH parameter needs to be added to the HTTPS record of the domain."
 msgstr ""
 
+#: htdocs/luci-static/resources/view/fchomo/client.js:1426
 #: htdocs/luci-static/resources/view/fchomo/node.js:632
 #: htdocs/luci-static/resources/view/fchomo/node.js:1161
 msgid ""

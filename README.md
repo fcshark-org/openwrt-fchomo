@@ -86,7 +86,9 @@ You can find the prebuilt-ipks [here](https://fantastic-packages.github.io/packa
 
 If you have trouble downloading resource files after initial installation, you can upload the [initial resource pack][].
 
-## Example
+## Example config
+
+Used to override `/etc/config/fchomo`
 
 [bypasscn](./luci-app-fchomo/docs/example/bypasscn.config)</br>
 [gfwlist](./luci-app-fchomo/docs/example/gfwlist.config)

@@ -70,4 +70,9 @@ uci -q batch <<-EOF >"/dev/null"
 	commit firewall
 EOF
 
+if ! uci -q get dhcp.@dnsmasq[0].cache_rr|grep -q '\bANY\b'; then
+	uci add_list dhcp.@dnsmasq[0].cache_rr="ANY"
+	uci commit dhcp
+fi
+
 exit 0

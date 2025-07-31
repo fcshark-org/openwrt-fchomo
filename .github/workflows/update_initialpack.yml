@@ -23,7 +23,7 @@ jobs:
         mkdir -p initialpack/$resdir/
         pushd initialpack
         # Dashboard
-        dashrepo='metacubex/metacubexd'
+        dashrepo='zephyruso/zashboard'
         dashrepoid="$(echo -n "$dashrepo" | sed 's|\W|_|g' | tr 'A-Z' 'a-z')"
         if ! $wget "https://codeload.github.com/$dashrepo/tar.gz/refs/heads/gh-pages" -O "$resdir/$dashrepoid.tgz" || ! tar -tzf "$resdir/$dashrepoid.tgz" >/dev/null; then
           >&2 echo "[$dashrepo] download failed."

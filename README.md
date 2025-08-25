@@ -19,7 +19,7 @@
 
 ## Requirements
 
-- OpenWrt >= 23.05
+- OpenWrt >= 24.10
 - firewall4
 
 ## Known issues

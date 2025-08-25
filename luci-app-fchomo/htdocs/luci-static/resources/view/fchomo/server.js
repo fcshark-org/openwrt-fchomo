@@ -95,9 +95,9 @@ return view.extend({
 
 		o = s.taboption('field_general', form.Value, 'port', _('Listen port') + ' / ' + _('Ports pool'));
 		o.datatype = 'or(port, portrange)';
-		//o.placeholder = '1080,2079-2080,3080'; // Incompatible with firewall
+		//o.placeholder = '1080,2079-2080,3080'; // fw4 does not support port lists with commas
 		o.rmempty = false;
-		//o.validate = L.bind(hm.validateCommonPort, o); // Incompatible with firewall
+		//o.validate = L.bind(hm.validateCommonPort, o); // fw4 does not support port lists with commas
 
 		// dev: Features under development
 		// rule

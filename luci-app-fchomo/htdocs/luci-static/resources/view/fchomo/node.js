@@ -228,6 +228,13 @@ return view.extend({
 		so.depends('type', 'mieru');
 		so.modalonly = true;
 
+		so = ss.taboption('field_general', form.ListValue, 'mieru_handshake_mode', _('Handshake mode'));
+		so.default = 'HANDSHAKE_STANDARD';
+		so.value('HANDSHAKE_STANDARD');
+		so.value('HANDSHAKE_NO_WAIT');
+		so.depends('type', 'mieru');
+		so.modalonly = true;
+
 		/* Snell fields */
 		so = ss.taboption('field_general', form.Value, 'snell_psk', _('Pre-shared key'));
 		so.password = true;

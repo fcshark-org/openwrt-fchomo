@@ -510,6 +510,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		"port-range": cfg.mieru_port_range,
 		transport: cfg.mieru_transport,
 		multiplexing: cfg.mieru_multiplexing,
+		"handshake-mode": cfg.mieru_handshake_mode,
 
 		/* Snell */
 		psk: cfg.snell_psk,

@@ -551,6 +551,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		"global-padding": cfg.type === 'vmess' ? (cfg.vmess_global_padding === '0' ? false : true) : null,
 		"authenticated-length": strToBool(cfg.vmess_authenticated_length),
 		"packet-encoding": cfg.vmess_packet_encoding,
+		encryption: cfg.vless_encryption,
 
 		/* WireGuard */
 		ip: cfg.wireguard_ip,

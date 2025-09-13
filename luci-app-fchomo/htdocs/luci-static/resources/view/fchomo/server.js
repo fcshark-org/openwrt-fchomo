@@ -315,7 +315,7 @@ return view.extend({
 				if (['tuic', 'hysteria2'].includes(type) && !`${tls_alpn.getValue()}`)
 					tls_alpn.setValue('h3');
 			} else {
-				tls.disabled = null;
+				tls.removeAttribute('disabled');
 			}
 
 			// Force disabled
@@ -323,7 +323,7 @@ return view.extend({
 				tls_reality.checked = null;
 				tls_reality.disabled = true;
 			} else {
-				tls_reality.disabled = null;
+				tls_reality.removeAttribute('disabled');
 			}
 
 			return true;

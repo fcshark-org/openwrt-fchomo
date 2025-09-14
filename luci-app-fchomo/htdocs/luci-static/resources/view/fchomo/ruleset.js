@@ -260,7 +260,8 @@ return view.extend({
 				['input', this.option],
 				['select', 'type'],
 				['select', 'behavior'],
-				['select', 'format']
+				['select', 'format'],
+				['textarea', '_editer']
 			], ...arguments);
 		}
 

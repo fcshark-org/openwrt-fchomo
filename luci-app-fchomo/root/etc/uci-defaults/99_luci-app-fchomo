@@ -22,7 +22,7 @@ if [ ! -s "/etc/fchomo/resources/direct_list.yaml" ]; then
 	EOF
 fi
 # ruleset symlink
-ln -sf /etc/fchomo/resources/direct_list.yaml /etc/fchomo/ruleset/rule_fchomo_direct_list
+ln -sf /var/run/fchomo/direct_list.yaml /etc/fchomo/ruleset/rule_fchomo_direct_list
 # ruleset config
 if ! uci -q get fchomo.rule_fchomo_direct_list >/dev/null; then
 	uci -q batch <<-EOF >/dev/null
@@ -83,7 +83,7 @@ if [ ! -s "/etc/fchomo/resources/proxy_list.yaml" ]; then
 	EOF
 fi
 # ruleset symlink
-ln -sf /etc/fchomo/resources/proxy_list.yaml /etc/fchomo/ruleset/rule_fchomo_proxy_list
+ln -sf /var/run/fchomo/proxy_list.yaml /etc/fchomo/ruleset/rule_fchomo_proxy_list
 # ruleset config
 if ! uci -q get fchomo.rule_fchomo_proxy_list >/dev/null; then
 	uci -q batch <<-EOF >/dev/null

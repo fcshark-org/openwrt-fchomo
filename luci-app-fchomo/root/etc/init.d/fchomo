@@ -450,6 +450,10 @@ stop_client() {
 	nft delete table inet fchomo 2>"/dev/null"
 	echo 2>"/dev/null" > "$RUN_DIR/fchomo_post.nft"
 
+	# Remove runtime ruleset
+	echo 2>"/dev/null" > "$RUN_DIR/direct_list.yaml"
+	echo 2>"/dev/null" > "$RUN_DIR/proxy_list.yaml"
+
 	# Remove DNSMasq servers
 	rm -rf "$DNSMASQ_DIR/../dnsmasq-fchomo.conf" "$DNSMASQ_DIR/../00-dnsmasq-fchomo.conf" "$DNSMASQ_DIR" # no bash, no {,00-}dnsmasq-fchomo.conf
 

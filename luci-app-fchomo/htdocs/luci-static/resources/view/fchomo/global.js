@@ -145,7 +145,7 @@ return view.extend({
 				const playButton = mapEl.querySelector('.cbi-map-descr > img');
 				const audio = mapEl.querySelector('.cbi-map-descr > audio');
 
-				playButton.addEventListener('click', function() {
+				playButton.addEventListener('click', () => {
 					if (audio.paused)
 						audio.play();
 				});

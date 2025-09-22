@@ -1095,6 +1095,89 @@ function renderVlessEncryption(s, uciconfig) {
 		write: function() {}
 	});
 
+	class VlessEncryption {
+		// https://github.com/muink/mihomo/blob/7917f24f428e40ac20b8b8f953b02cf59d1be334/transport/vless/encryption/factory.go#L64
+		// https://github.com/muink/mihomo/blob/7917f24f428e40ac20b8b8f953b02cf59d1be334/transport/vless/encryption/factory.go#L12
+		constructor(payload) {
+			this.input = payload || '';
+			try {
+				let content = JSON.parse(this.input.trim());
+				Object.keys(content).forEach(key => this[key] = content[key]);
+			} catch {}
+
+			this.method ||= vless_encryption.methods[0][0];
+			this.xormode ||= vless_encryption.xormodes[0][0];
+			this.ticket ||= vless_encryption.tickets[0][0];
+			this.rtt ||= vless_encryption.rtts[0][0];
+			this.paddings ||= [];
+			this.keypairs ||= [];
+		}
+
+		setKey(key, value) {
+			this[key] = value;
+
+			return this
+		}
+
+		_toMihomo(payload, side) {
+			if (!['server', 'client'].includes(side))
+				throw new Error(`Unknown side: '${side}'`);
+
+			let required = [
+				payload.method,
+				payload.xormode,
+				side === 'server' ? payload.ticket : side === 'client' ? payload.rtt : null
+			].join('.');
+
+			return required +
+				(isEmpty(payload.paddings) ? '' : '.' + payload.paddings.join('.')) + // Optional
+				(isEmpty(payload.keypairs) ? '' : '.' + payload.keypairs.map(e => e[side]).join('.')); // Required
+		}
+
+		toString(format, side) {
+			format ||= 'json';
+
+			let payload = removeBlankAttrs({
+				method: this.method,
+				xormode: this.xormode,
+				ticket: this.ticket,
+				rtt: this.rtt,
+				paddings: this.paddings || [],
+				keypairs: this.keypairs || []
+			});
+
+			if (format === 'json')
+				return JSON.stringify(payload);
+			else if (format === 'mihomo')
+				return this._toMihomo(payload, side);
+			else
+				throw new Error(`Unknown format: '${format}'`);
+		}
+	}
+
+	let initRequired = function(o, key, uciconfig) {
+		o.load = function(section_id) {
+			return new VlessEncryption(uci.get(uciconfig, section_id, 'vless_encryption_hmpayload'))[key];
+		}
+		o.onchange = function(ev, section_id, value) {
+			let UIEl = this.section.getUIElement(section_id, 'vless_encryption_hmpayload');
+			let newentry = new VlessEncryption(UIEl.getValue()).setKey(key, value);
+
+			UIEl.setValue(newentry.toString());
+
+			[
+				['server', '_vless_encryption_decryption'],
+				['client', '_vless_encryption_encryption']
+			].forEach(([side, option]) => {
+				UIEl = this.section.getUIElement(section_id, option);
+				UIEl.setValue(newentry.toString('mihomo', side));
+			});
+		}
+		o.write = function() {};
+		o.rmempty = false;
+		o.modalonly = true;
+	}
+
 	let o;
 
 	o = s.taboption('field_vless_encryption', form.Value, 'vless_encryption_hmpayload', _('Payload'));
@@ -1119,22 +1202,18 @@ function renderVlessEncryption(s, uciconfig) {
 	vless_encryption.methods.forEach((res) => {
 		o.value.apply(o, res);
 	})
-	o.write = function() {};
-	o.rmempty = false;
 	o.depends('vless_decryption', '1');
 	//o.depends('vless_encryption', '1');
-	o.modalonly = true;
+	initRequired(o, 'method', uciconfig);
 
 	o = s.taboption('field_vless_encryption', form.RichListValue, 'vless_encryption_xormode', _('XOR mode'));
 	o.default = vless_encryption.xormodes[0][0];
 	vless_encryption.xormodes.forEach((res) => {
 		o.value.apply(o, res);
 	})
-	o.write = function() {};
-	o.rmempty = false;
 	o.depends('vless_decryption', '1');
 	//o.depends('vless_encryption', '1');
-	o.modalonly = true;
+	initRequired(o, 'xormode', uciconfig);
 
 	o = s.taboption('field_vless_encryption', CBIRichValue, 'vless_encryption_ticket', _('Server') +' '+ _('RTT'));
 	o.default = vless_encryption.tickets[0][0];
@@ -1150,21 +1229,17 @@ function renderVlessEncryption(s, uciconfig) {
 
 		return true;
 	}
-	o.write = function() {};
-	o.rmempty = false;
 	o.depends('vless_decryption', '1');
-	o.modalonly = true;
+	initRequired(o, 'ticket', uciconfig);
 
 	o = s.taboption('field_vless_encryption', form.ListValue, 'vless_encryption_rtt', _('Client') +' '+ _('RTT'));
 	o.default = vless_encryption.rtts[0][0];
 	vless_encryption.rtts.forEach((res) => {
 		o.value.apply(o, res);
 	})
-	o.write = function() {};
-	o.rmempty = false;
 	o.depends('vless_decryption', '1');
 	//o.depends('vless_encryption', '1');
-	o.modalonly = true;
+	initRequired(o, 'rtt', uciconfig);
 
 	o = s.taboption('field_vless_encryption', !pr7558_merged ? CBIDynamicList : form.DynamicList, 'vless_encryption_paddings', _('Paddings'), // @pr7558_merged
 		_('The server and client can set different padding parameters.') + '</br>' +
@@ -1183,10 +1258,10 @@ function renderVlessEncryption(s, uciconfig) {
 		return true;
 	}
 	o.allowduplicates = true;
-	o.write = function() {};
 	o.depends('vless_decryption', '1');
 	//o.depends('vless_encryption', '1');
-	o.modalonly = true;
+	initRequired(o, 'paddings', uciconfig);
+	o.rmempty = true; // Forced
 
 	o = s.taboption('field_vless_encryption', CBIGenText, 'vless_encryption_keypairs', _('Keypairs'));
 	o.placeholder = '[\n  {\n    "type": "vless-x25519",\n    "server": "cP5Oy9MOpTaBKKE17Pfd56mbb1CIfp5EMpyBYqr2EG8",\n    "client": "khEcQMT8j41xWmGYKpZtQ4vd8_9VWyFVmmCDIhRJ-Uk"\n  },\n  {\n    "type": "vless-mlkem768",\n    "server": "UHPx3nf-FVxF95byAw0YG025aQNw9HxKej-MiG5AhTcdW_WFpHlTVYQU5NHmXP6tmljSnB2iPmSQ29fisGxEog",\n    "client": "h4sdZgCc5-ZefvQ8mZmReOWQdxYb0mwngMdl7pKhYEZZpGWHUPKAmxug87Bgj3GqSHs195QeVpxfrMLNB5J..."\n  },\n  ...\n]';
@@ -1258,12 +1333,37 @@ function renderVlessEncryption(s, uciconfig) {
 
 		return node;
 	}
-	o.validate = validateJson;
-	o.write = function() {};
-	o.rmempty =	false;
 	o.depends('vless_decryption', '1');
 	//o.depends('vless_encryption', '1');
-	o.modalonly = true;
+	initRequired(o, 'keypairs', uciconfig);
+	o.load = function(section_id) {
+		return JSON.stringify(new VlessEncryption(uci.get(uciconfig, section_id, 'vless_encryption_hmpayload')).keypairs, null, 2);
+	}
+	o.onchange = null; // Forced
+	o.validate = function(section_id, value) {
+		let result = validateJson.apply(this, arguments);
+
+		if (result === true) {
+			let arr = JSON.parse(value.trim());
+			if (Array.isArray(arr) && arr.length >= 1) {
+				let UIEl = this.section.getUIElement(section_id, 'vless_encryption_hmpayload');
+				let newentry = new VlessEncryption(UIEl.getValue()).setKey('keypairs', JSON.parse(value.trim()));
+
+				UIEl.setValue(newentry.toString());
+
+				[
+					['server', '_vless_encryption_decryption'],
+					['client', '_vless_encryption_encryption']
+				].forEach(([side, option]) => {
+					UIEl = this.section.getUIElement(section_id, option);
+					UIEl.setValue(newentry.toString('mihomo', side));
+				});
+			} else
+				return _('Expecting: %s').format(_('least one keypair required'));
+			return true;
+		} else
+			return result;
+	}
 }
 
 function handleGenKey(option) {

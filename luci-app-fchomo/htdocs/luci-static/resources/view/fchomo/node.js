@@ -493,6 +493,7 @@ return view.extend({
 		//so.value('gost-plugin', _('gost-plugin'));
 		so.value('shadow-tls', _('shadow-tls'));
 		so.value('restls', _('restls'));
+		//so.value('kcptun', _('kcptun'));
 		so.depends('type', 'ss');
 		so.modalonly = true;
 

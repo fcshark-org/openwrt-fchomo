@@ -209,8 +209,8 @@ return view.extend({
 		so.modalonly = true;
 
 		/* Mieru fields */
-		so = ss.taboption('field_general', form.Value, 'mieru_port_range', _('Port range'));
-		so.datatype = 'portrange';
+		so = ss.taboption('field_general', form.DynamicList, 'mieru_ports', _('Ports pool'));
+		so.datatype = 'or(port, portrange)';
 		so.depends('type', 'mieru');
 		so.modalonly = true;
 

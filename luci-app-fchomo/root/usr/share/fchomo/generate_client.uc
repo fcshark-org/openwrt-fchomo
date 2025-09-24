@@ -591,6 +591,8 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		fingerprint: cfg.tls_fingerprint,
 		alpn: cfg.tls_alpn, // Array
 		"skip-cert-verify": strToBool(cfg.tls_skip_cert_verify),
+		certificate: cfg.tls_cert_path, // mTLS
+		"private-key": cfg.tls_key_path, // mTLS
 		"client-fingerprint": cfg.tls_client_fingerprint,
 		"ech-opts": cfg.tls_ech === '1' ? {
 			enable: true,

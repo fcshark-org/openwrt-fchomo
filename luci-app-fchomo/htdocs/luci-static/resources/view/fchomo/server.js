@@ -343,7 +343,7 @@ return view.extend({
 		o.modalonly = true;
 
 		o = s.taboption('field_tls', form.Value, 'tls_cert_path', _('Certificate path'),
-			_('The server public key, in PEM format.'));
+			_('The %s public key, in PEM format.').format(_('Server')));
 		o.value('/etc/fchomo/certs/server_publickey.pem');
 		o.depends({tls: '1', tls_reality: '0'});
 		o.rmempty = false;
@@ -358,7 +358,7 @@ return view.extend({
 		o.modalonly = true;
 
 		o = s.taboption('field_tls', form.Value, 'tls_key_path', _('Key path'),
-			_('The server private key, in PEM format.'));
+			_('The %s private key, in PEM format.').format(_('Server')));
 		o.value('/etc/fchomo/certs/server_privatekey.pem');
 		o.rmempty = false;
 		o.depends({tls: '1', tls_cert_path: /.+/});

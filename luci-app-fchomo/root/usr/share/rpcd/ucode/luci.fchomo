@@ -385,9 +385,11 @@ const methods = {
 			switch (filename) {
 			case 'client_ca':
 			case 'server_publickey':
+			case 'client_publickey':
 				return writeCertificate(filename, false);
 				break;
 			case 'server_privatekey':
+			case 'client_privatekey':
 				return writeCertificate(filename, true);
 				break;
 			default:

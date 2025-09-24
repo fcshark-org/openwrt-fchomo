@@ -140,6 +140,12 @@ start_service() {
 					| .[] | sub("(^)", ":")' \
 				"$RUN_DIR/mihomo-c.yaml" | tr -d '\n'
 			)"
+			export SAFE_PATHS="$SAFE_PATHS$( # mTLS
+				yq '[.proxies[] | select(.certificate // .private-key) | [.certificate, .private-key][]]
+					| .[] |= sub("(/[^/]+$)", "") | unique | map(select(. != null))
+					| .[] | sub("(^)", ":")' \
+				"$RUN_DIR/mihomo-c.yaml" | tr -d '\n'
+			)"
 
 			if ! "$PROG" -t -d "$HM_DIR" -f "$RUN_DIR/mihomo-c.yaml" >/dev/null; then
 				log "Error: wrong client configuration detected."

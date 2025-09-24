@@ -1049,9 +1049,9 @@ function renderVlessEncryption(s, uciconfig) {
 			['1rtt', _('1-RTT only.')]
 		],
 		paddings: [
-			['100-111-1111', '100-111-1111: ' + _('After the 1-RTT client/server hello, padding randomly 111 to 1111 bytes with 100% probability.')],
-			['75-0-111', '75-0-111: ' + _('Wait a random 0 to 111 milliseconds with 75% probability.')],
-			['50-0-3333', '50-0-3333: ' + _('Send padding randomly 0 to 3333 bytes with 50% probability.')]
+			['100-111-1111', '100-111-1111: ' + _('After the 1-RTT client/server hello, padding randomly 111-1111 bytes with 100% probability.')],
+			['75-0-111', '75-0-111: ' + _('Wait a random 0-111 milliseconds with 75% probability.')],
+			['50-0-3333', '50-0-3333: ' + _('Send padding randomly 0-3333 bytes with 50% probability.')]
 		],
 		keypairs: {
 			types: [

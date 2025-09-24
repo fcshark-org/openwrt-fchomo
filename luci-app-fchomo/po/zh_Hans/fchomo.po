@@ -35,12 +35,12 @@ msgstr "-- 请选择 --"
 
 #: htdocs/luci-static/resources/fchomo.js:1048
 msgid "0-RTT reuse."
-msgstr ""
+msgstr "0-RTT 重用。"
 
 #: htdocs/luci-static/resources/fchomo.js:1045
 #: htdocs/luci-static/resources/fchomo.js:1049
 msgid "1-RTT only."
-msgstr ""
+msgstr "仅限 1-RTT。"
 
 #: htdocs/luci-static/resources/fchomo.js:38
 msgid "163Music"
@@ -167,9 +167,10 @@ msgstr "地址"
 
 #: htdocs/luci-static/resources/fchomo.js:1052
 msgid ""
-"After the 1-RTT client/server hello, padding randomly 111 to 1111 bytes with "
+"After the 1-RTT client/server hello, padding randomly 111-1111 bytes with "
 "100% probability."
 msgstr ""
+"在 1-RTT client/server hello 之后，以 100% 的概率随机填充 111-1111 字节。"
 
 #: htdocs/luci-static/resources/view/fchomo/global.js:514
 msgid "Aging time of NAT map maintained by client.</br>"
@@ -435,7 +436,7 @@ msgstr "连接检查"
 
 #: htdocs/luci-static/resources/fchomo.js:1088
 msgid "Content copied to clipboard!"
-msgstr ""
+msgstr "内容已复制到剪贴板！"
 
 #: htdocs/luci-static/resources/view/fchomo/client.js:598
 #: htdocs/luci-static/resources/view/fchomo/node.js:1060
@@ -456,7 +457,7 @@ msgstr ""
 
 #: htdocs/luci-static/resources/fchomo.js:1090
 msgid "Copy"
-msgstr ""
+msgstr "复制"
 
 #: htdocs/luci-static/resources/view/fchomo/global.js:166
 msgid "Core version"
@@ -680,7 +681,7 @@ msgstr "编辑器"
 
 #: htdocs/luci-static/resources/fchomo.js:1039
 msgid "Eliminate encryption header characteristics"
-msgstr ""
+msgstr "消除加密头特征"
 
 #: htdocs/luci-static/resources/view/fchomo/client.js:809
 #: htdocs/luci-static/resources/view/fchomo/client.js:906
@@ -760,7 +761,7 @@ msgstr "启用混淆将使服务器与标准的 QUIC 连接不兼容，失去 HT
 
 #: htdocs/luci-static/resources/fchomo.js:1200
 msgid "Encryption method"
-msgstr ""
+msgstr "加密方法"
 
 #: htdocs/luci-static/resources/view/fchomo/global.js:519
 msgid "Endpoint-Independent NAT"
@@ -876,7 +877,7 @@ msgstr "无法执行 \"/etc/init.d/fchomo %s %s\" 原因: %s"
 
 #: htdocs/luci-static/resources/fchomo.js:1390
 msgid "Failed to generate %s, error: %s."
-msgstr ""
+msgstr "生成 %s 失败，错误：%s。"
 
 #: htdocs/luci-static/resources/fchomo.js:1770
 msgid "Failed to upload %s, error: %s."
@@ -1297,6 +1298,7 @@ msgid ""
 "In the order of one <code>Padding-Length</code> and one <code>Padding-"
 "Interval</code>, infinite concatenation."
 msgstr ""
+"按照一个 <code>Padding-Length</code> 一个 <code>Padding-Interval</code> 的顺序，无限连接。"
 
 #: htdocs/luci-static/resources/view/fchomo/global.js:449
 msgid "Inbound"
@@ -1349,7 +1351,7 @@ msgstr "证书路径"
 
 #: htdocs/luci-static/resources/fchomo.js:1266
 msgid "Keypairs"
-msgstr ""
+msgstr "密钥对"
 
 #: htdocs/luci-static/resources/view/fchomo/client.js:896
 #: htdocs/luci-static/resources/view/fchomo/client.js:1130
@@ -1600,7 +1602,7 @@ msgstr "原生"
 
 #: htdocs/luci-static/resources/fchomo.js:1038
 msgid "Native appearance"
-msgstr ""
+msgstr "原生外观"
 
 #: htdocs/luci-static/resources/view/fchomo/global.js:443
 msgid "No Authentication IP ranges"
@@ -1738,7 +1740,7 @@ msgstr "填充方案"
 
 #: htdocs/luci-static/resources/fchomo.js:1244
 msgid "Paddings"
-msgstr ""
+msgstr "填充 (Paddings)"
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:129
 #: htdocs/luci-static/resources/view/fchomo/node.js:202
@@ -2008,7 +2010,7 @@ msgstr "留空将使用随机令牌。"
 
 #: htdocs/luci-static/resources/fchomo.js:1040
 msgid "Randomized traffic characteristics"
-msgstr ""
+msgstr "随机化流量特征"
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:1342
 #: htdocs/luci-static/resources/view/fchomo/node.js:1364
@@ -2088,7 +2090,7 @@ msgstr "请求超时"
 #: htdocs/luci-static/resources/fchomo.js:1048
 #: htdocs/luci-static/resources/view/fchomo/node.js:694
 msgid "Requires server support."
-msgstr ""
+msgstr "需要服务器支持。"
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:466
 msgid "Reserved field bytes"
@@ -2237,13 +2239,13 @@ msgid "Select Dashboard"
 msgstr "选择面板"
 
 #: htdocs/luci-static/resources/fchomo.js:1054
-msgid "Send padding randomly 0 to 3333 bytes with 50% probability."
-msgstr ""
+msgid "Send padding randomly 0-3333 bytes with 50% probability."
+msgstr "以 50% 的概率发送随机 0-3333 字节的填充。"
 
 #: htdocs/luci-static/resources/fchomo.js:1043
 #: htdocs/luci-static/resources/fchomo.js:1044
 msgid "Send random ticket of 300s-600s duration for client 0-RTT reuse."
-msgstr ""
+msgstr "发送 300-600 秒的随机票证，以供客户端 0-RTT 重用。"
 
 #: htdocs/luci-static/resources/fchomo.js:1218
 #: htdocs/luci-static/resources/view/fchomo/server.js:59
@@ -2479,7 +2481,7 @@ msgstr "默认值为每天 2:00。"
 #: htdocs/luci-static/resources/fchomo.js:1247
 msgid ""
 "The first padding must have a probability of 100% and at least 35 bytes."
-msgstr ""
+msgstr "首个填充必须为 100% 的概率并且至少 35 字节。"
 
 #: htdocs/luci-static/resources/view/fchomo/client.js:1659
 msgid "The matching <code>%s</code> will be deemed as not-poisoned."
@@ -2493,7 +2495,7 @@ msgstr "匹配 <code>%s</code> 的将被视为已被投毒污染。"
 
 #: htdocs/luci-static/resources/fchomo.js:1245
 msgid "The server and client can set different padding parameters."
-msgstr ""
+msgstr "服务器和客户端可以设置不同的填充参数。"
 
 #: htdocs/luci-static/resources/view/fchomo/server.js:360
 msgid "The server private key, in PEM format."
@@ -2769,11 +2771,11 @@ msgstr ""
 #: htdocs/luci-static/resources/view/fchomo/node.js:91
 #: htdocs/luci-static/resources/view/fchomo/server.js:65
 msgid "Vless Encryption fields"
-msgstr ""
+msgstr "Vless Encryption 字段"
 
 #: htdocs/luci-static/resources/fchomo.js:1053
-msgid "Wait a random 0 to 111 milliseconds with 75% probability."
-msgstr ""
+msgid "Wait a random 0-111 milliseconds with 75% probability."
+msgstr "以 75% 的概率等待随机 0-111 毫秒。"
 
 #: htdocs/luci-static/resources/fchomo.js:70
 msgid "Warning"
@@ -2814,7 +2816,7 @@ msgstr "WireGuard 要求 base64 编码的私钥。"
 
 #: htdocs/luci-static/resources/fchomo.js:1209
 msgid "XOR mode"
-msgstr ""
+msgstr "XOR 模式"
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:419
 msgid "Xudp (Xray-core)"
@@ -2877,7 +2879,7 @@ msgstr "cubic"
 #: htdocs/luci-static/resources/fchomo.js:1189
 #: htdocs/luci-static/resources/view/fchomo/server.js:300
 msgid "decryption"
-msgstr ""
+msgstr "decryption"
 
 #: htdocs/luci-static/resources/view/fchomo/global.js:799
 msgid "dnsmasq selects upstream on its own. (may affect CDN accuracy)"
@@ -2890,7 +2892,7 @@ msgstr "Hysteria 下载速率"
 #: htdocs/luci-static/resources/fchomo.js:1194
 #: htdocs/luci-static/resources/view/fchomo/node.js:560
 msgid "encryption"
-msgstr ""
+msgstr "encryption"
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:709
 #: htdocs/luci-static/resources/view/fchomo/node.js:720
@@ -2916,7 +2918,7 @@ msgstr ""
 
 #: htdocs/luci-static/resources/fchomo.js:1362
 msgid "least one keypair required"
-msgstr ""
+msgstr "至少需要一对密钥"
 
 #: htdocs/luci-static/resources/fchomo.js:55
 msgid "metacubexd"

@@ -19,7 +19,7 @@ function wGET(url, header, filepath) {
 	let ua = 'Wget/1.21 (FullCombo Shark!)';
 
 	if (header) {
-		header = json(trim(header) || {});
+		header = json(trim(header) || '{}');
 
 		header = join(' ', filter(map(keys(header), (k) => {
 			let v = join(', ', type(header[k]) === 'array' ? filter(header[k], v => v) : []);

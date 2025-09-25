@@ -1860,7 +1860,7 @@ msgstr "优先 IPv6"
 #: htdocs/luci-static/resources/view/fchomo/global.js:524
 msgid ""
 "Prevent ICMP loopback issues in some cases. Ping will not show real delay."
-msgstr "在某些情况下防止 ICMP 环回问题。Ping 不会显示实际延迟。"
+msgstr "防止某些情况下的 ICMP 环回问题。Ping 不会显示实际延迟。"
 
 #: htdocs/luci-static/resources/view/fchomo/global.js:727
 #: htdocs/luci-static/resources/view/fchomo/global.js:744

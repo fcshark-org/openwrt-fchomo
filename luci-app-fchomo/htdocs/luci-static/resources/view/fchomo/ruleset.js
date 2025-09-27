@@ -247,7 +247,7 @@ return view.extend({
 
 		o = s.option(form.Value, 'label', _('Label'));
 		o.load = L.bind(hm.loadDefaultLabel, o);
-		o.validate = L.bind(hm.validateUniqueValue, o);
+		o.validate = function(/* ... */) { return hm.validateUniqueValue.apply(this, arguments) }
 		o.modalonly = true;
 
 		o = s.option(form.Flag, 'enabled', _('Enable'));

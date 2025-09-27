@@ -424,12 +424,12 @@ return view.extend({
 		so = ss.option(form.Value, 'keep_alive_interval', _('TCP-Keep-Alive interval'),
 			_('In seconds. <code>%s</code> will be used if empty.').format('30'));
 		so.placeholder = '30';
-		so.validate = L.bind(hm.validateTimeDuration, so);
+		so.validate = hm.validateTimeDuration;
 
 		so = ss.option(form.Value, 'keep_alive_idle', _('TCP-Keep-Alive idle timeout'),
 			_('In seconds. <code>%s</code> will be used if empty.').format('600'));
 		so.placeholder = '600';
-		so.validate = L.bind(hm.validateTimeDuration, so);
+		so.validate = hm.validateTimeDuration;
 
 		/* Global Authentication */
 		o = s.taboption('general', form.SectionValue, '_global', form.NamedSection, 'global', 'fchomo', _('Global Authentication'));
@@ -438,7 +438,7 @@ return view.extend({
 		so = ss.option(form.DynamicList, 'authentication', _('User Authentication'));
 		so.datatype = 'list(string)';
 		so.placeholder = 'user1:pass1';
-		so.validate = L.bind(hm.validateAuth, so);
+		so.validate = hm.validateAuth;
 
 		so = ss.option(form.DynamicList, 'skip_auth_prefixes', _('No Authentication IP ranges'));
 		so.datatype = 'list(cidr)';
@@ -514,7 +514,7 @@ return view.extend({
 			_('Aging time of NAT map maintained by client.</br>') +
 			_('In seconds. <code>%s</code> will be used if empty.').format('300'));
 		so.placeholder = '300';
-		so.validate = L.bind(hm.validateTimeDuration, so);
+		so.validate = hm.validateTimeDuration;
 
 		so = ss.option(form.Flag, 'tun_endpoint_independent_nat', _('Endpoint-Independent NAT'),
 			_('Performance may degrade slightly, so it is not recommended to enable on when it is not needed.'));
@@ -826,7 +826,7 @@ return view.extend({
 			if (!res[0].match(/_udpport$/))
 				so.value.apply(so, res);
 		})
-		so.validate = L.bind(hm.validateCommonPort, so);
+		so.validate = hm.validateCommonPort;
 
 		so = ss.taboption('routing_control', hm.RichMultiValue, 'routing_udpport', _('Routing ports') + ' (UDP)',
 			_('Specify target ports to be proxied. Multiple ports must be separated by commas.'));
@@ -835,7 +835,7 @@ return view.extend({
 			if (!res[0].match(/_tcpport$/))
 				so.value.apply(so, res);
 		})
-		so.validate = L.bind(hm.validateCommonPort, so);
+		so.validate = hm.validateCommonPort;
 
 		so = ss.taboption('routing_control', form.ListValue, 'routing_mode', _('Routing mode'),
 			_('Routing mode of the traffic enters mihomo via firewall rules.'));

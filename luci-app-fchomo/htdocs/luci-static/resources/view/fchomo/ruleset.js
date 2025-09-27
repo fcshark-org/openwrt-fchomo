@@ -345,7 +345,7 @@ return view.extend({
 		o.modalonly = true;
 
 		o = s.option(form.Value, 'url', _('Rule set URL'));
-		o.validate = L.bind(hm.validateUrl, o);
+		o.validate = hm.validateUrl;
 		o.rmempty = false;
 		o.depends('type', 'http');
 		o.modalonly = true;
@@ -353,13 +353,13 @@ return view.extend({
 		o = s.option(form.Value, 'size_limit', _('Size limit'),
 			_('In bytes. <code>%s</code> will be used if empty.').format('0'));
 		o.placeholder = '0';
-		o.validate = L.bind(hm.validateBytesize, o);
+		o.validate = hm.validateBytesize;
 		o.depends('type', 'http');
 
 		o = s.option(form.Value, 'interval', _('Update interval'),
 			_('In seconds. <code>%s</code> will be used if empty.').format('259200'));
 		o.placeholder = '259200';
-		o.validate = L.bind(hm.validateTimeDuration, o);
+		o.validate = hm.validateTimeDuration;
 		o.depends('type', 'http');
 
 		o = s.option(form.ListValue, 'proxy', _('Proxy group'),

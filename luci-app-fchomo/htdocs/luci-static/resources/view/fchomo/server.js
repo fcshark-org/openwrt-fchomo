@@ -227,7 +227,7 @@ return view.extend({
 		o.datatype = 'or(port, portrange)';
 		//o.placeholder = '1080,2079-2080,3080'; // @fw4 does not support port lists with commas
 		o.rmempty = false;
-		//o.validate = L.bind(hm.validateCommonPort, o); // @fw4 does not support port lists with commas
+		//o.validate = hm.validateCommonPort; // @fw4 does not support port lists with commas
 
 		// @dev: Features under development
 		// @rule
@@ -236,13 +236,13 @@ return view.extend({
 		/* HTTP / SOCKS fields */
 		/* hm.validateAuth */
 		o = s.taboption('field_general', form.Value, 'username', _('Username'));
-		o.validate = L.bind(hm.validateAuthUsername, o);
+		o.validate = hm.validateAuthUsername;
 		o.depends({type: /^(http|socks|mixed|trojan|anytls|hysteria2)$/});
 		o.modalonly = true;
 
 		o = s.taboption('field_general', hm.GenValue, 'password', _('Password'));
 		o.password = true;
-		o.validate = L.bind(hm.validateAuthPassword, o);
+		o.validate = hm.validateAuthPassword;
 		o.rmempty = false;
 		o.depends({type: /^(http|socks|mixed|trojan|anytls|hysteria2)$/, username: /.+/});
 		o.depends({type: /^(tuic)$/, uuid: /.+/});
@@ -308,7 +308,7 @@ return view.extend({
 		/* Tuic fields */
 		o = s.taboption('field_general', hm.GenValue, 'uuid', _('UUID'));
 		o.rmempty = false;
-		o.validate = L.bind(hm.validateUUID, o);
+		o.validate = hm.validateUUID;
 		o.depends('type', 'tuic');
 		o.modalonly = true;
 
@@ -330,14 +330,14 @@ return view.extend({
 		o = s.taboption('field_general', form.Value, 'tuic_max_idle_time', _('Idle timeout'),
 			_('In seconds.'));
 		o.default = '15000';
-		o.validate = L.bind(hm.validateTimeDuration, o);
+		o.validate = hm.validateTimeDuration;
 		o.depends('type', 'tuic');
 		o.modalonly = true;
 
 		o = s.taboption('field_general', form.Value, 'tuic_authentication_timeout', _('Auth timeout'),
 			_('In seconds.'));
 		o.default = '1000';
-		o.validate = L.bind(hm.validateTimeDuration, o);
+		o.validate = hm.validateTimeDuration;
 		o.depends('type', 'tuic');
 		o.modalonly = true;
 
@@ -372,7 +372,7 @@ return view.extend({
 		/* VMess / VLESS fields */
 		o = s.taboption('field_general', hm.GenValue, 'vmess_uuid', _('UUID'));
 		o.rmempty = false;
-		o.validate = L.bind(hm.validateUUID, o);
+		o.validate = hm.validateUUID;
 		o.depends({type: /^(vmess|vless)$/});
 		o.modalonly = true;
 

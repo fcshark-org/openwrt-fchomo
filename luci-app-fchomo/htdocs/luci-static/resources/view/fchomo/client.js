@@ -975,14 +975,14 @@ return view.extend({
 		hm.health_checkurls.forEach((res) => {
 			so.value.apply(so, res);
 		})
-		so.validate = L.bind(hm.validateUrl, so);
+		so.validate = hm.validateUrl;
 		so.depends({type: 'select', '!reverse': true});
 		so.modalonly = true;
 
 		so = ss.taboption('field_health', form.Value, 'interval', _('Health check interval'),
 			_('In seconds. <code>%s</code> will be used if empty.').format('600'));
 		so.placeholder = '600';
-		so.validate = L.bind(hm.validateTimeDuration, so);
+		so.validate = hm.validateTimeDuration;
 		so.depends({type: 'select', '!reverse': true});
 		so.modalonly = true;
 
@@ -1235,7 +1235,7 @@ return view.extend({
 		so = ss.option(form.Value, 'group', _('Sub rule group'));
 		so.value('sub-rule1');
 		so.rmempty = false;
-		so.validate = L.bind(hm.validateAuthUsername, so);
+		so.validate = hm.validateAuthUsername;
 		so.editable = true;
 
 		renderRules(ss, data[0]);

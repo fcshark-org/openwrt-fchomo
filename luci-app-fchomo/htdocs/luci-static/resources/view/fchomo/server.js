@@ -13,7 +13,7 @@ const CBIDummyCopyValue = form.Value.extend({
 	readonly: true,
 
 	renderWidget: function(section_id, option_index, cfgvalue) {
-		let node = form.Value.prototype.renderWidget.apply(this, arguments);
+		let node = form.Value.prototype.renderWidget.call(this, section_id, option_index, cfgvalue);
 
 		node.classList.add('control-group');
 		node.firstChild.style.width = '30em';
@@ -573,7 +573,7 @@ return view.extend({
 			}
 		}
 		o.renderWidget = function(section_id, option_index, cfgvalue) {
-			let node = hm.TextValue.prototype.renderWidget.apply(this, arguments);
+			let node = hm.TextValue.prototype.renderWidget.call(this, section_id, option_index, cfgvalue);
 			const cbid = this.cbid(section_id) + '._keytype_select';
 			const selected = this.hm_options.type;
 
@@ -608,7 +608,7 @@ return view.extend({
 			return JSON.stringify(new VlessEncryption(uci.get(data[0], section_id, 'vless_encryption_hmpayload'))['keypairs'], null, 2);
 		}
 		o.validate = function(section_id, value) {
-			let result = hm.validateJson.apply(this, arguments);
+			let result = hm.validateJson.call(this, section_id, value);
 
 			if (result === true) {
 				let keypairs = JSON.parse(value.trim());
@@ -745,7 +745,7 @@ return view.extend({
 			}
 		}
 		o.renderWidget = function(section_id, option_index, cfgvalue) {
-			let node = hm.TextValue.prototype.renderWidget.apply(this, arguments);
+			let node = hm.TextValue.prototype.renderWidget.call(this, section_id, option_index, cfgvalue);
 			const cbid = this.cbid(section_id) + '._outer_sni';
 
 			node.appendChild(E('div',  { 'class': 'control-group' }, [

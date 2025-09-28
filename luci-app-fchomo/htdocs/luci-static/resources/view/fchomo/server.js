@@ -715,8 +715,8 @@ return view.extend({
 		o = s.taboption('field_tls', form.Value, 'tls_client_auth_cert_path', _('Client Auth Certificate path') + _(' (mTLS)'),
 			_('The %s public key, in PEM format.').format(_('Client')));
 		o.value('/etc/fchomo/certs/client_publickey.pem');
-		o.validate = function(section_id, value) {
-			return hm.validateMTLSClientAuth.call(this, 'tls_client_auth_type', section_id, value);
+		o.validate = function(/* ... */) {
+			return hm.validateMTLSClientAuth.call(this, 'tls_client_auth_type', ...arguments);
 		}
 		o.depends({tls: '1', type: /^(http|socks|mixed|vmess|vless|trojan|anytls|hysteria2|tuic)$/});
 		o.modalonly = true;

@@ -253,7 +253,7 @@ return view.extend({
 		o = s.option(form.Flag, 'enabled', _('Enable'));
 		o.default = o.enabled;
 		o.editable = true;
-		o.validate = function(section_id, value) {
+		o.validate = function(/* ... */) {
 			return hm.validatePresetIDs.call(this, [
 				['select', 'type'],
 				['select', 'behavior'],

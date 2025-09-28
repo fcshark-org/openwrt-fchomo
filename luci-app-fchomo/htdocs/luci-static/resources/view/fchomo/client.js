@@ -1135,7 +1135,7 @@ return view.extend({
 		so = ss.option(form.Flag, 'enabled', _('Enable'));
 		so.default = so.enabled;
 		so.editable = true;
-		so.validate = function(section_id, value) {
+		so.validate = function(/* ... */) {
 			let n = 0;
 
 			return hm.validatePresetIDs.call(this, [
@@ -1587,7 +1587,7 @@ return view.extend({
 		so = ss.option(form.Flag, 'enabled', _('Enable'));
 		so.default = so.enabled;
 		so.editable = true;
-		so.validate = function(section_id, value) {
+		so.validate = function(/* ... */) {
 			return hm.validatePresetIDs.call(this, [
 				['select', 'type'],
 				['', 'rule_set']

@@ -485,14 +485,18 @@ return view.extend({
 		so = ss.taboption('field_general', form.Value, 'wireguard_private_key', _('Private key'),
 			_('WireGuard requires base64-encoded private keys.'));
 		so.password = true;
-		so.validate = L.bind(hm.validateBase64Key, so, 44);
+		so.validate = function(/* ... */) {
+			return hm.validateBase64Key.call(this, 44, ...arguments);
+		}
 		so.rmempty = false;
 		so.depends('type', 'wireguard');
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', form.Value, 'wireguard_peer_public_key', _('Peer pubkic key'),
 			_('WireGuard peer public key.'));
-		so.validate = L.bind(hm.validateBase64Key, so, 44);
+		so.validate = function(/* ... */) {
+			return hm.validateBase64Key.call(this, 44, ...arguments);
+		}
 		so.rmempty = false;
 		so.depends('type', 'wireguard');
 		so.modalonly = true;
@@ -500,7 +504,9 @@ return view.extend({
 		so = ss.taboption('field_general', form.Value, 'wireguard_pre_shared_key', _('Pre-shared key'),
 			_('WireGuard pre-shared key.'));
 		so.password = true;
-		so.validate = L.bind(hm.validateBase64Key, so, 44);
+		so.validate = function(/* ... */) {
+			return hm.validateBase64Key.call(this, 44, ...arguments);
+		}
 		so.depends('type', 'wireguard');
 		so.modalonly = true;
 

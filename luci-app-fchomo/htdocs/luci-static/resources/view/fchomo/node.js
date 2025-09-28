@@ -636,13 +636,13 @@ return view.extend({
 		}
 
 		so = ss.taboption('field_vless_encryption', form.Value, 'vless_encryption_encryption', _('encryption'));
-		so.renderWidget = function(section_id, option_index, cfgvalue) {
+		so.renderWidget = function(/* ... */) {
 			let node = form.Value.prototype.renderWidget.apply(this, arguments);
 
 			node.firstChild.style.width = '30em';
 
 			return node;
-		},
+		}
 		so.rmempty = false;
 		so.depends('vless_encryption', '1');
 		so.modalonly = true;

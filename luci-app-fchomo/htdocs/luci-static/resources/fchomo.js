@@ -356,11 +356,11 @@ const vless_flow = [
 /* Prototype */
 const CBIGridSection = form.GridSection.extend({
 	modaltitle(/* ... */) {
-		return loadModalTitle.call(this, ...this.hm_modaltitle || [null,null], ...arguments)
+		return loadModalTitle.call(this, ...this.hm_modaltitle || [null,null], ...arguments);
 	},
 
 	sectiontitle(/* ... */) {
-		return loadDefaultLabel.call(this, ...arguments);
+		return loadDefaultLabel.apply(this, arguments);
 	},
 
 	renderSectionAdd(extra_class) {

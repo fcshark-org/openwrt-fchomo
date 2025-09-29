@@ -246,7 +246,7 @@ return view.extend({
 		/* Import mihomo config and Import rule-set links and Remove idle files end */
 
 		o = s.option(form.Value, 'label', _('Label'));
-		o.load = L.bind(hm.loadDefaultLabel, o);
+		o.load = hm.loadDefaultLabel;
 		o.validate = function(/* ... */) { return hm.validateUniqueValue.apply(this, arguments) }
 		o.modalonly = true;
 
@@ -369,12 +369,12 @@ return view.extend({
 			o.value.apply(o, res);
 		})
 		o.load = L.bind(hm.loadProxyGroupLabel, o, hm.preset_outbound.direct);
-		o.textvalue = L.bind(hm.textvalue2Value, o);
+		o.textvalue = hm.textvalue2Value;
 		//o.editable = true;
 		o.depends('type', 'http');
 
 		o = s.option(form.DummyValue, '_update');
-		o.cfgvalue = L.bind(hm.renderResDownload, o);
+		o.cfgvalue = hm.renderResDownload;
 		o.editable = true;
 		o.modalonly = false;
 		/* Rule set END */

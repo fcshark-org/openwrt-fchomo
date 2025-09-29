@@ -199,7 +199,7 @@ return view.extend({
 
 		/* General fields */
 		o = s.taboption('field_general', form.Value, 'label', _('Label'));
-		o.load = L.bind(hm.loadDefaultLabel, o);
+		o.load = hm.loadDefaultLabel;
 		o.validate = function(/* ... */) { return hm.validateUniqueValue.apply(this, arguments) }
 		o.modalonly = true;
 

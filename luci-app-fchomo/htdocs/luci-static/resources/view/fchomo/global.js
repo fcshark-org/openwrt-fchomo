@@ -304,7 +304,7 @@ return view.extend({
 					.format('https://raw.githubusercontent.com/fcshark-org/openwrt-fchomo/refs/heads/initialpack/initial.tgz'));
 			so.inputstyle = 'action';
 			so.inputtitle = _('Upload...');
-			so.onclick = L.bind(hm.uploadInitialPack, so);
+			so.onclick = hm.uploadInitialPack;
 		}
 
 		so = ss.option(form.Flag, 'auto_update', _('Auto update'),

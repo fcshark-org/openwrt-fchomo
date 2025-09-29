@@ -143,7 +143,7 @@ return view.extend({
 		ss.tab('field_dial', _('Dial fields'));
 
 		so = ss.taboption('field_general', form.Value, 'label', _('Label'));
-		so.load = L.bind(hm.loadDefaultLabel, so);
+		so.load = hm.loadDefaultLabel;
 		so.validate = function(/* ... */) { return hm.validateUniqueValue.apply(this, arguments) }
 		so.modalonly = true;
 
@@ -1168,7 +1168,7 @@ return view.extend({
 
 		/* General fields */
 		so = ss.taboption('field_general', form.Value, 'label', _('Label'));
-		so.load = L.bind(hm.loadDefaultLabel, so);
+		so.load = hm.loadDefaultLabel;
 		so.validate = function(/* ... */) { return hm.validateUniqueValue.apply(this, arguments) }
 		so.modalonly = true;
 
@@ -1246,7 +1246,7 @@ return view.extend({
 			so.value.apply(so, res);
 		})
 		so.load = L.bind(hm.loadProxyGroupLabel, so, hm.preset_outbound.direct);
-		so.textvalue = L.bind(hm.textvalue2Value, so);
+		so.textvalue = hm.textvalue2Value;
 		//so.editable = true;
 		so.depends('type', 'http');
 
@@ -1420,7 +1420,7 @@ return view.extend({
 		so.modalonly = true;
 
 		so = ss.option(form.DummyValue, '_update');
-		so.cfgvalue = L.bind(hm.renderResDownload, so);
+		so.cfgvalue = hm.renderResDownload;
 		so.editable = true;
 		so.modalonly = false;
 		/* Provider END */
@@ -1441,7 +1441,7 @@ return view.extend({
 		ss.hm_lowcase_only = true;
 
 		so = ss.option(form.Value, 'label', _('Label'));
-		so.load = L.bind(hm.loadDefaultLabel, so);
+		so.load = hm.loadDefaultLabel;
 		so.validate = function(/* ... */) { return hm.validateUniqueValue.apply(this, arguments) }
 		so.modalonly = true;
 
@@ -1453,7 +1453,7 @@ return view.extend({
 		so.value('node', _('Proxy Node'));
 		so.value('provider', _('Provider'));
 		so.default = 'node';
-		so.textvalue = L.bind(hm.textvalue2Value, so);
+		so.textvalue = hm.textvalue2Value;
 
 		so = ss.option(form.DummyValue, '_value', _('Value'));
 		so.load = function(section_id) {

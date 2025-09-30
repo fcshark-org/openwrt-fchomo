@@ -2740,6 +2740,18 @@ msgstr ""
 msgid "Upload..."
 msgstr ""
 
+#: htdocs/luci-static/resources/view/fchomo/client.js:1276
+msgid ""
+"Used to resolve domains that can be directly connected. Can use domestic DNS "
+"servers or ECS."
+msgstr ""
+
+#: htdocs/luci-static/resources/view/fchomo/client.js:1278
+msgid ""
+"Used to resolve domains you want to proxy. Recommended to configure %s for "
+"DNS servers."
+msgstr ""
+
 #: htdocs/luci-static/resources/view/fchomo/client.js:1260
 msgid "Used to resolve the domain of the DNS server. Must be IP."
 msgstr ""

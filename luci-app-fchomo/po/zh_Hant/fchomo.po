@@ -2778,6 +2778,18 @@ msgstr "上傳金鑰"
 msgid "Upload..."
 msgstr "上傳..."
 
+#: htdocs/luci-static/resources/view/fchomo/client.js:1276
+msgid ""
+"Used to resolve domains that can be directly connected. Can use domestic DNS "
+"servers or ECS."
+msgstr "用於解析可直連的網域。可使用國內 DNS 伺服器或 ECS。"
+
+#: htdocs/luci-static/resources/view/fchomo/client.js:1278
+msgid ""
+"Used to resolve domains you want to proxy. Recommended to configure %s for "
+"DNS servers."
+msgstr "用於解析想要代理的網域。建議為 DNS 伺服器配置%s。"
+
 #: htdocs/luci-static/resources/view/fchomo/client.js:1260
 msgid "Used to resolve the domain of the DNS server. Must be IP."
 msgstr "用於解析 DNS 伺服器的網域。必須是 IP。"

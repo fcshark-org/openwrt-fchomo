@@ -117,6 +117,22 @@ return view.extend({
 		let m, s, o, ss, so;
 
 		m = new form.Map('fchomo', _('Edit node'));
+		m.renderContents = function(/* ... */) {
+			let node = form.Map.prototype.renderContents.apply(this, arguments);
+
+			return node.then((mapEl) => {
+				const css = E('link', {
+					rel: 'stylesheet',
+					type: 'text/css',
+					href: '/luci-static/resources/view/fchomo/node.css'
+				}, []);
+
+				return E([
+					css,
+					mapEl
+				]);
+			});
+		}
 
 		s = m.section(form.NamedSection, 'global', 'fchomo');
 
@@ -1456,18 +1472,63 @@ return view.extend({
 
 			switch (type) {
 				case 'node':
-					return '%s » %s'.format(
+					return '%s ⇒ %s'.format(
 						uci.get(data[0], section_id, 'chain_head'),
 						detour
 					);
 				case 'provider':
-					return '%s » %s'.format(
+					return '%s ⇒ %s'.format(
 						uci.get(data[0], section_id, 'chain_head_sub'),
 						detour
 					);
 				default:
 					return null;
 			}
+		}
+		so.textvalue = function textvalue2Value(section_id) {
+			const cval = this.cfgvalue(section_id);
+			if (cval === null)
+				return null;
+
+			const COLOR_PALETTE = [
+				"red",
+				"orange",
+				//"yellow",
+				"green",
+				"blue",
+				"purple",
+			];
+
+			const chain = cval.split('⇒').map(t => t.trim());
+			//const container_id = this.cbid(section_id) + '.bubbles';
+
+			let curWrapper = null;
+			for (let i = 0; i < chain.length; i++) {
+				const value = chain[i];
+				const color = COLOR_PALETTE[i % COLOR_PALETTE.length]; // 使用 % 確保循環使用
+
+				const labelEl = E('span', {
+					class: 'bubble-label'
+				}, [ value ]);
+
+				const bubbleEl = E('div', {
+					class: 'bubble',
+					//id: container_id + `.${hm.toUciname(value)}`,
+					style: '' +
+						`border-color: var(--hm_color-${color}-border);` +
+						`background-color: var(--hm_color-${color}-bg);`
+				}, [ labelEl ]);
+
+				if (curWrapper)
+					bubbleEl.insertBefore(curWrapper, bubbleEl.firstChild);
+
+				curWrapper = bubbleEl;
+			}
+
+			return E('div', {
+				class: 'nested-bubbles-container',
+				//id: container_id
+			}, [ curWrapper ]);
 		}
 		so.modalonly = false;
 

@@ -1,56 +1,14 @@
 
-:root {
-	/* Color Palette START */
-	/* Red */
-	--hm_color-red-border: #e74c3c;
-	--hm_color-red-bg: #fff0f0;
-	/* Orange */
-	--hm_color-orange-border: #f39c12;
-	--hm_color-orange-bg: #fff8e1;
-	/* Yellow */
-	--hm_color-yellow-border: #f1c40f;
-	--hm_color-yellow-bg: #fffde7;
-	/* Green */
-	--hm_color-green-border: #2ecc71;
-	--hm_color-green-bg: #e8f8f5;
-	/* Blue */
-	--hm_color-blue-border: #3498db;
-	--hm_color-blue-bg: #ebf5fb;
-	/* Purple */
-	--hm_color-purple-border: #9b59b6;
-	--hm_color-purple-bg: #f5eef9;
-	/* Color Palette END */
-}
-
-:root[data-darkmode="true"] {
-	/* Color Palette START */
-	/* Red */
-	--hm_color-red-border: #ff8a80;
-	--hm_color-red-bg: #5c2020;
-	/* Orange */
-	--hm_color-orange-border: #ffb74d;
-	--hm_color-orange-bg: #6b4720;
-	/* Yellow */
-	--hm_color-yellow-border: #ffeb3b;
-	--hm_color-yellow-bg: #6b6020;
-	/* Green */
-	--hm_color-green-border: #80e8a8;
-	--hm_color-green-bg: #205c3b;
-	/* Blue */
-	--hm_color-blue-border: #80c8ff;
-	--hm_color-blue-bg: #20405c;
-	/* Purple */
-	--hm_color-purple-border: #c880ff;
-	--hm_color-purple-bg: #4d205c;
-	/* Color Palette END */
-}
-
+/*
+	bubbles style START
+*/
 .nested-bubbles-container {
 	padding: 0;
 }
 
 .bubble {
-	border: 2px solid;
+	/* border: 2px solid; */
+	border: 2px;
 	border-radius: 12px;
 	padding: 2px;
 	box-sizing: border-box;
@@ -91,3 +49,6 @@
 		margin-bottom: 8px;
 	}
 }
+/*
+	bubbles style END
+*/

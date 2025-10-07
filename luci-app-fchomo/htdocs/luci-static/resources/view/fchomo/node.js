@@ -5,7 +5,14 @@
 'require view';
 
 'require fchomo as hm';
+'require firewall as fw';
 'require tools.widgets as widgets';
+
+document.querySelector('head').appendChild(E('link', {
+	'rel': 'stylesheet',
+	'type': 'text/css',
+	'href': L.resource('view/fchomo/node.css')
+}));
 
 const CBIBubblesValue = form.DummyValue.extend({
 	__name__: 'CBI.BubblesValue',
@@ -36,33 +43,21 @@ const CBIBubblesValue = form.DummyValue.extend({
 		if (cval === null)
 			return null;
 
-		const COLOR_PALETTE = [
-			"red",
-			"orange",
-			//"yellow",
-			"green",
-			"blue",
-			"purple",
-		];
-
 		const chain = cval.split('⇒').map(t => t.trim());
 		//const container_id = this.cbid(section_id) + '.bubbles';
 
 		let curWrapper = null;
 		for (let i = 0; i < chain.length; i++) {
 			const value = chain[i];
-			const color = COLOR_PALETTE[i % COLOR_PALETTE.length]; // 使用 % 確保循環使用
 
 			const labelEl = E('span', {
 				class: 'bubble-label'
 			}, [ value ]);
 
 			const bubbleEl = E('div', {
-				class: 'bubble',
+				class: 'bubble zonebadge',
 				//id: container_id + `.${hm.toUciname(value)}`,
-				style: '' +
-					`border-color: var(--hm_color-${color}-border);` +
-					`background-color: var(--hm_color-${color}-bg);`
+				style: fw.getZoneColorStyle(value)
 			}, [ labelEl ]);
 
 			if (curWrapper)
@@ -75,6 +70,21 @@ const CBIBubblesValue = form.DummyValue.extend({
 			class: 'nested-bubbles-container',
 			//id: container_id
 		}, [ curWrapper ]);
+	},
+
+	hexToRgbArray(hex) {
+		// Remove the '#' if it exists
+		const shorthandRegex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
+		const result = shorthandRegex.exec(hex);
+
+		if (result)
+			return [
+				parseInt(result[1], 16),
+				parseInt(result[2], 16),
+				parseInt(result[3], 16)
+			];
+		else
+			return null;
 	}
 });
 
@@ -188,22 +198,6 @@ return view.extend({
 		let m, s, o, ss, so;
 
 		m = new form.Map('fchomo', _('Edit node'));
-		m.renderContents = function(/* ... */) {
-			let node = form.Map.prototype.renderContents.apply(this, arguments);
-
-			return node.then((mapEl) => {
-				const css = E('link', {
-					rel: 'stylesheet',
-					type: 'text/css',
-					href: '/luci-static/resources/view/fchomo/node.css'
-				}, []);
-
-				return E([
-					css,
-					mapEl
-				]);
-			});
-		}
 
 		s = m.section(form.NamedSection, 'global', 'fchomo');
 

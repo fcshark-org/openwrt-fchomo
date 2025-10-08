@@ -1,0 +1,54 @@
+
+/*
+	bubbles style START
+*/
+.nested-bubbles-container {
+	padding: 0;
+}
+
+.bubble {
+	/* border: 2px solid; */
+	border: 2px;
+	border-radius: 12px;
+	padding: 2px;
+	box-sizing: border-box;
+
+	/* Default compact width (for desktop, will be overwritten on mobile)*/
+	max-width: 100%;
+	width: fit-content;
+}
+
+.bubble-label {
+	display: inline-block;
+	padding: 2px 6px;
+	font-weight: bold;
+}
+
+/* Desktop platform style */
+@media (min-device-width: 600px) {
+	.bubble {
+		/* Enable Flexbox to align the label and inner bubble horizontally */
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+
+		/* The gap between the label and the inner bubble */
+		gap: 8px;
+	}
+}
+
+/* Mobile platform style */
+@media (max-device-width: 600px) {
+	.bubble {
+		/* Stack vertically, full width */
+		display: block;
+		width: 100%;
+		text-align: center;
+
+		/* The gap between the label and the inner bubble */
+		margin-bottom: 8px;
+	}
+}
+/*
+	bubbles style END
+*/

@@ -4,13 +4,27 @@
 */
 .nested-bubbles-container {
 	padding: 0;
+
+	/* Visual recognition */
+	/* https://github.com/openwrt/luci/blob/715f41e4c1033fc67724a32c6f1d33caba5357c6/themes/luci-theme-bootstrap/htdocs/luci-static/bootstrap/cascade.css#L2313 */
+	color: var(--text-color-high);
+	text-shadow: 0 1px 1px hsla(var(--background-color-high-hsl), 0.75);
+}
+
+/* Visual recognition */
+/* https://github.com/openwrt/luci/blob/715f41e4c1033fc67724a32c6f1d33caba5357c6/themes/luci-theme-bootstrap/htdocs/luci-static/bootstrap/cascade.css#L2210 */
+[data-darkmode="true"] .bubble[style] {
+	background: linear-gradient(
+		color-mix(in srgb, rgb(var(--zone-color-rgb)) 40%, var(--background-color-high)),
+		color-mix(in srgb, rgb(var(--zone-color-rgb)) 30%, var(--background-color-high))
+	) !important;
 }
 
 .bubble {
 	/* border: 2px solid; */
-	border: 2px;
-	border-radius: 12px;
+	border-radius: 6px;
 	padding: 2px;
+	margin: 2px;
 	box-sizing: border-box;
 
 	/* Default compact width (for desktop, will be overwritten on mobile)*/
@@ -20,7 +34,7 @@
 
 .bubble-label {
 	display: inline-block;
-	padding: 2px 6px;
+	padding: 0 6px;
 	font-weight: bold;
 }
 

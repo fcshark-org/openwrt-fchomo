@@ -55,7 +55,7 @@ const CBIBubblesValue = form.DummyValue.extend({
 			}, [ value ]);
 
 			const bubbleEl = E('div', {
-				class: 'bubble zonebadge',
+				class: 'bubble',
 				//id: container_id + `.${hm.toUciname(value)}`,
 				style: fw.getZoneColorStyle(value)
 			}, [ labelEl ]);

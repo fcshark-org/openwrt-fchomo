@@ -97,14 +97,14 @@ Used to override `/etc/config/fchomo`
 
 <details><summary>Direct</summary>
 
-1. add `Dst-address` to `Global > Access Control > Custom Direct list` (domain requires `dnsmasq-full`)
+1. (Optional) add `Dst-address` to `Global > Access Control > Custom Direct list` (domain requires `dnsmasq-full`)
 2. remove `Dst-port` on `Global > Access Control > Routing Control > Routing port (UDP)`
 3. accept input `Dst-port` on `Network > Firewall > Traffic Rules`, requires the upstream link is Fullcone
 </details>
 
 <details><summary>Proxy</summary>
 
-1. add `Dst-address` to `Global > Access Control > Custom Proxy list` (domain requires `dnsmasq-full`)
+1. (Optional) add `Dst-address` to `Global > Access Control > Custom Proxy list` (domain requires `dnsmasq-full`)
 2. add `Dst-port` on `Global > Access Control > Routing Control > Routing port (UDP)`
 3. add rule to `Client > Routing rule`, requires the dest `Proxy group` is Fullcone link
 </details>

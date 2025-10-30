@@ -78,10 +78,6 @@ Always redirect port 53} --> mihomoin
 
 You can find the prebuilt-ipks [here](https://fantastic-packages.github.io/packages/)
 
-## Compatibility with Nikki
-
-- FullCombo Shark! and Nikki can be installed on the same device, but cannot be started as clients at the same time.
-
 ## Installation
 
 If you have trouble downloading resource files after initial installation, you can upload the [initial resource pack][].

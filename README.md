@@ -9,8 +9,8 @@
 
 ## Features
 
-- Gateway level Transparent proxy
-- Gateway level FullCone NAT
+- Gateway Transparent proxy
+- Gateway FullCone NAT
 - Access control Whitelist/Blacklist
 - Routing control based on Port/IP/Domain
 - Complete DNS hijacking prevents any 53 port query behavior that bypasses the gateway

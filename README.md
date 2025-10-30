@@ -97,8 +97,8 @@ Used to override `/etc/config/fchomo`
 
 <details><summary>Direct</summary>
 
-1. (Optional) add `Dst-address` to `Global > Access Control > Custom Direct list` (domain requires `dnsmasq-full`)
-2. remove `Dst-port` on `Global > Access Control > Routing Control > Routing port (UDP)`
+1. add `Dst-address` to `Global > Access Control > Custom Direct list` (domain requires `dnsmasq-full`)
+2. (Optional) remove `Dst-port` on `Global > Access Control > Routing Control > Routing port (UDP)`
 3. accept input `Dst-port` on `Network > Firewall > Traffic Rules`, requires the upstream link is Fullcone
 </details>
 

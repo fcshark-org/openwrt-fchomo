@@ -345,8 +345,9 @@ return view.extend({
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', form.ListValue, 'mieru_transport', _('Transport'));
-		so.value('TCP');
 		so.default = 'TCP';
+		so.value('TCP');
+		so.value('UDP');
 		so.depends('type', 'mieru');
 		so.modalonly = true;
 

@@ -7,16 +7,15 @@
 
 'require fchomo as hm';
 
-const CBIDummyCopyValue = form.Value.extend({
-	__name__: 'CBI.DummyCopyValue',
+const CBICopyValue = form.Value.extend({
+	__name__: 'CBI.CopyValue',
 
 	readonly: true,
 
-	renderWidget: function(section_id, option_index, cfgvalue) {
+	renderWidget(section_id, option_index, cfgvalue) {
 		let node = form.Value.prototype.renderWidget.call(this, section_id, option_index, cfgvalue);
 
 		node.classList.add('control-group');
-		node.firstChild.style.width = '30em';
 
 		node.appendChild(E('button', {
 			class: 'cbi-button cbi-button-add',
@@ -36,6 +35,18 @@ const CBIDummyCopyValue = form.Value.extend({
 				return alert(_('Content copied to clipboard!'));
 			}, section_id)
 		}, [ _('Copy') ]));
+
+		return node;
+	}
+});
+
+const CBIDummyCopyValue = CBICopyValue.extend({
+	__name__: 'CBI.DummyCopyValue',
+
+	renderWidget(/* ... */) {
+		let node = CBICopyValue.prototype.renderWidget.apply(this, arguments);
+
+		node.firstChild.style.width = '30em';
 
 		return node;
 	},
@@ -371,7 +382,7 @@ return view.extend({
 		o.depends('type', 'sudoku');
 		o.modalonly = true;
 
-		o = s.taboption('field_general', form.Value, 'sudoku_client_key', _('Client key'));
+		o = s.taboption('field_general', CBICopyValue, 'sudoku_client_key', _('Client key'));
 		o.depends('type', 'sudoku');
 		o.modalonly = true;
 
@@ -874,7 +885,7 @@ return view.extend({
 		o.depends({tls: '1', type: /^(http|socks|mixed|vmess|vless|trojan|anytls|hysteria2|tuic)$/});
 		o.modalonly = true;
 
-		o = s.taboption('field_tls', form.Value, 'tls_ech_config', _('ECH config'),
+		o = s.taboption('field_tls', CBICopyValue, 'tls_ech_config', _('ECH config'),
 			_('This ECH parameter needs to be added to the HTTPS record of the domain.'));
 		o.placeholder = 'AEn+DQBFKwAgACABWIHUGj4u+PIggYXcR5JF0gYk3dCRioBW8uJq9H4mKAAIAAEAAQABAANAEnB1YmxpYy50bHMtZWNoLmRldgAA';
 		o.depends({tls: '1', type: /^(http|socks|mixed|vmess|vless|trojan|anytls|hysteria2|tuic)$/});
@@ -908,7 +919,7 @@ return view.extend({
 		o.depends('tls_reality', '1');
 		o.modalonly = true;
 
-		o = s.taboption('field_tls', form.Value, 'tls_reality_public_key', _('REALITY public key'));
+		o = s.taboption('field_tls', CBICopyValue, 'tls_reality_public_key', _('REALITY public key'));
 		o.depends('tls_reality', '1');
 		o.modalonly = true;
 

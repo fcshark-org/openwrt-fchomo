@@ -348,12 +348,6 @@ return view.extend({
 		o.depends('type', 'sudoku');
 		o.modalonly = true;
 
-		o = s.taboption('field_general', form.Value, 'sudoku_seed', _('Seed'),
-			_('Keep consistent with the %s.').format(_('Key')));
-		o.rmempty = false;
-		o.depends('type', 'sudoku');
-		o.modalonly = true;
-
 		o = s.taboption('field_general', form.Value, 'sudoku_handshake_timeout', _('Handshake timeout'));
 		o.datatype = 'uinteger';
 		o.placeholder = 5;

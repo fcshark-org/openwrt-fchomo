@@ -14,8 +14,8 @@ msgstr "%s 日誌"
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:1578
 #: htdocs/luci-static/resources/view/fchomo/node.js:1584
-msgid "(Destination)"
-msgstr "(落地)"
+msgid "Destination"
+msgstr "落地"
 
 #: htdocs/luci-static/resources/fchomo.js:594
 #: htdocs/luci-static/resources/view/fchomo/client.js:237
@@ -26,8 +26,8 @@ msgstr "(已導入)"
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:1600
 #: htdocs/luci-static/resources/view/fchomo/node.js:1606
-msgid "(Transit)"
-msgstr "(中轉)"
+msgid "Transit"
+msgstr "中轉"
 
 #: htdocs/luci-static/resources/view/fchomo/global.js:549
 #: htdocs/luci-static/resources/view/fchomo/global.js:555

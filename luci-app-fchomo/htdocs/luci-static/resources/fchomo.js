@@ -577,7 +577,7 @@ const CBIparseYaml = baseclass.extend(/** @lends hm.parseYaml.prototype */ {
 		return value ? '1' : '0';
 	},
 
-	getValue(obj, path) {
+	jq(obj, path) {
 		return path.split('.').reduce((acc, cur) => acc && acc[cur], obj);
 	},
 

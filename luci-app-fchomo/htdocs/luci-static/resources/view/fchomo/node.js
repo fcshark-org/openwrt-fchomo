@@ -96,8 +96,8 @@ const parseProviderYaml = hm.parseYaml.extend({
 
 		// key mapping // 2025/07/11
 		let config = hm.removeBlankAttrs({
-			id: cfg.hm_id,
-			label: cfg.hm_label,
+			id: this.id,
+			label: this.label,
 			type: cfg.type,
 			...(cfg.type === 'inline' ? {
 				//dialer_proxy: cfg["dialer-proxy"],

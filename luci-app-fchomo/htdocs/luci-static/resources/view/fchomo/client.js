@@ -15,8 +15,8 @@ const parseProxyGroupYaml = hm.parseYaml.extend({
 
 		// key mapping // 2025/02/13
 		let config = hm.removeBlankAttrs({
-			id: cfg.hm_id,
-			label: cfg.hm_label,
+			id: this.id,
+			label: this.label,
 			type: cfg.type,
 			groups: cfg.proxies ? cfg.proxies.map((grop) => hm.preset_outbound.full.map(([key, label]) => key).includes(grop) ? grop : this.calcID(hm.glossary["proxy_group"].field, grop)) : null, // array
 			use: cfg.use ? cfg.use.map((prov) => this.calcID(hm.glossary["provider"].field, prov)) : null, // array
@@ -236,8 +236,8 @@ const parseDNSYaml = hm.parseYaml.extend({
 
 		// key mapping // 2025/12/01
 		let config = {
-			id: this.calcID(this.field, cfg),
-			label: '%s %s'.format(cfg, _('(Imported)')),
+			id: this.id,
+			label: this.label,
 			address: addr.toString()
 		};
 
@@ -268,8 +268,8 @@ const parseDNSPolicyYaml = hm.parseYaml.extend({
 
 		// key mapping // 2025/12/01
 		let config = {
-			id: this.calcID(this.field, this.name),
-			label: '%s %s'.format(this.name, _('(Imported)')),
+			id: this.id,
+			label: this.label,
 			type: type,
 			...Object.fromEntries([[type, rules]]),
 			server: (Array.isArray(cfg) ? cfg : [cfg]).map((dns) => this.calcID(hm.glossary["dns_server"].field, dns)),
@@ -282,7 +282,6 @@ const parseDNSPolicyYaml = hm.parseYaml.extend({
 
 const parseRulesYaml = hm.parseYaml.extend({
 	key_mapping(cfg) {
-		let id = this.calcID(this.field, cfg);
 		let entry = this.parseRules(cfg); // 2025/07/11
 
 		if (!entry)
@@ -290,8 +289,8 @@ const parseRulesYaml = hm.parseYaml.extend({
 
 		// key mapping // 2025/07/11
 		let config = {
-			id: id,
-			label: '%s %s'.format(id.slice(0,7), _('(Imported)')),
+			id: this.id,
+			label: '%s %s'.format(this.id.slice(0,7), _('(Imported)')),
 			entry: entry
 		};
 
@@ -382,7 +381,7 @@ const parseSubrulesYaml = parseRulesYaml.extend({
 		if (!cfg)
 			return null;
 
-		let config = parseRulesYaml.prototype.key_mapping.call(this, cfg[2]);
+		let config = new parseRulesYaml(this.field, this.name, cfg[2]).output();
 
 		return config ? Object.assign(config, {group: cfg[1]}) : null;
 	}

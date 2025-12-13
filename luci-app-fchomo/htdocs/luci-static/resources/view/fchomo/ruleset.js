@@ -13,8 +13,8 @@ const parseRulesetYaml = hm.parseYaml.extend({
 
 		// key mapping // 2025/06/21
 		let config = hm.removeBlankAttrs({
-			id: cfg.hm_id,
-			label: cfg.hm_label,
+			id: this.id,
+			label: this.label,
 			type: cfg.type,
 			format: cfg.format,
 			behavior: cfg.behavior,

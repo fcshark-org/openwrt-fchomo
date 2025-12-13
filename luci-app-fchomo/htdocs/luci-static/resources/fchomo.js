@@ -554,8 +554,11 @@ const CBIparseYaml = baseclass.extend(/** @lends hm.parseYaml.prototype */ {
 			return null;
 
 		if (typeof cfg === 'object') {
-			cfg.hm_id = this.calcID(field, name ?? cfg.name);
-			cfg.hm_label = '%s %s'.format(name ?? cfg.name, _('(Imported)'));
+			this.id = this.calcID(field, name ?? cfg.name);
+			this.label = '%s %s'.format(name ?? cfg.name, _('(Imported)'));
+		} else {
+			this.id = this.calcID(field, name ?? cfg);
+			this.label = '%s %s'.format(name ?? cfg, _('(Imported)'));
 		}
 
 		this.field = field;

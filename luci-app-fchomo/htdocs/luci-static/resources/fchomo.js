@@ -548,6 +548,28 @@ const CBICopyValue = form.Value.extend({
 	}
 });
 
+const CBIparseYaml = baseclass.extend(/** @lends hm.parseYaml.prototype */ {
+	__init__(field, name, cfg) {
+		this.field = field;
+		this.name = name;
+		this.cfg = cfg;
+	},
+
+	bool2str(value) {
+		if (typeof value !== 'boolean')
+			return null;
+		return value ? '1' : '0';
+	},
+
+	getValue(obj, path) {
+		return path.split('.').reduce((acc, cur) => acc && acc[cur], obj);
+	},
+
+	output() {
+		return this.cfg;
+	}
+});
+
 const CBIHandleImport = baseclass.extend(/** @lends hm.HandleImport.prototype */ {
 	__init__(map, section, title, description) {
 		this.map = map;
@@ -701,12 +723,6 @@ const UIDynamicList = ui.DynamicList.extend({ // @less_25_12
 });
 
 /* Method */
-function bool2str(value) {
-	if (typeof value !== 'boolean')
-		return null;
-	return value ? '1' : '0';
-}
-
 /* thanks to homeproxy */
 function calcStringMD5(e) {
 	/* Thanks to https://stackoverflow.com/a/41602636 */
@@ -847,10 +863,6 @@ function generateRand(type, length) {
 		default:
 			return null;
 	};
-}
-
-function getValue(obj, path) {
-	return path.split('.').reduce((acc, cur) => acc && acc[cur], obj);
 }
 
 function json2yaml(object, command) {
@@ -1602,17 +1614,16 @@ return baseclass.extend({
 	GenValue: CBIGenValue,
 	GenText: CBIGenText,
 	CopyValue: CBICopyValue,
+	parseYaml: CBIparseYaml,
 	HandleImport: CBIHandleImport,
 
 	/* Method */
-	bool2str,
 	calcStringMD5,
 	decodeBase64Str,
 	encodeBase64Str,
 	decodeBase64Bin,
 	encodeBase64Bin,
 	generateRand,
-	getValue,
 	json2yaml,
 	yaml2json,
 	isEmpty,

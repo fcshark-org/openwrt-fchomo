@@ -550,9 +550,25 @@ const CBICopyValue = form.Value.extend({
 
 const CBIparseYaml = baseclass.extend(/** @lends hm.parseYaml.prototype */ {
 	__init__(field, name, cfg) {
+		if (isEmpty(cfg))
+			return null;
+
+		if (typeof cfg === 'object') {
+			cfg.hm_id = this.calcID(field, name ?? cfg.name);
+			cfg.hm_label = '%s %s'.format(name ?? cfg.name, _('(Imported)'));
+		}
+
 		this.field = field;
 		this.name = name;
-		this.cfg = cfg;
+		this.cfg = this.key_mapping(cfg);
+	},
+
+	key_mapping(cfg) {
+		return cfg;
+	},
+
+	calcID(field, name) {
+		return calcStringMD5(String.format('%s:%s', field, name));
 	},
 
 	bool2str(value) {
@@ -581,10 +597,6 @@ const CBIHandleImport = baseclass.extend(/** @lends hm.HandleImport.prototype */
 		this.overridecommand = '';
 	},
 
-	calcID(field, name) {
-		return calcStringMD5(String.format('%s:%s', field, name));
-	},
-
 	handleFn(textarea) {
 		const modaltitle = this.section.hm_modaltitle[0];
 		const field = this.section.hm_field;
@@ -602,7 +614,7 @@ const CBIHandleImport = baseclass.extend(/** @lends hm.HandleImport.prototype */
 			if (!isEmpty(res) && typeof res === 'object') {
 				if (Array.isArray(res))
 					res.forEach((cfg) => {
-						let config = this.parseYaml(field, null, cfg);
+						let config = new this.parseYaml(field, null, cfg).output();
 						//console.info(JSON.stringify(config, null, 2));
 						if (config) {
 							this.write(config);
@@ -611,7 +623,7 @@ const CBIHandleImport = baseclass.extend(/** @lends hm.HandleImport.prototype */
 					})
 				else
 					for (let name in res) {
-						let config = this.parseYaml(field, name, res[name]);
+						let config = new this.parseYaml(field, name, res[name]).output();
 						//console.info(JSON.stringify(config, null, 2));
 						if (config) {
 							this.write(config);
@@ -640,17 +652,7 @@ const CBIHandleImport = baseclass.extend(/** @lends hm.HandleImport.prototype */
 		});
 	},
 
-	parseYaml(field, name, cfg) {
-		if (isEmpty(cfg))
-			return null;
-
-		if (typeof cfg === 'object') {
-			cfg.hm_id = this.calcID(field, name ?? cfg.name);
-			cfg.hm_label = '%s %s'.format(name ?? cfg.name, _('(Imported)'));
-		}
-
-		return cfg;
-	},
+	parseYaml: CBIparseYaml,
 
 	render() {
 		const textarea = new ui.Textarea('', {

@@ -10,7 +10,7 @@ function parseRulesetYaml(field, name, cfg) {
 	if (!cfg.type)
 		return null;
 
-	// key mapping
+	// key mapping // 2025/06/21
 	let config = hm.removeBlankAttrs({
 		id: cfg.hm_id,
 		label: cfg.hm_label,

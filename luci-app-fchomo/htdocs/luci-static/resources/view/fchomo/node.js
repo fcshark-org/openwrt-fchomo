@@ -93,7 +93,7 @@ function parseProviderYaml(field, name, cfg) {
 	if (!cfg.type)
 		return null;
 
-	// key mapping
+	// key mapping // 2025/07/11
 	let config = hm.removeBlankAttrs({
 		id: cfg.hm_id,
 		label: cfg.hm_label,

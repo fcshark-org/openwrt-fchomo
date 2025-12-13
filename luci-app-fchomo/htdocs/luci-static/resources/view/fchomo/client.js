@@ -12,7 +12,7 @@ function parseProxyGroupYaml(field, name, cfg) {
 	if (!cfg.type)
 		return null;
 
-	// key mapping
+	// key mapping // 2025/02/13
 	let config = hm.removeBlankAttrs({
 		id: cfg.hm_id,
 		label: cfg.hm_label,
@@ -231,7 +231,7 @@ function parseDNSYaml(field, name, cfg) {
 	if (detour)
 		addr.setParam('detour', hm.preset_outbound.full.map(([key, label]) => key).includes(detour) ? detour : this.calcID(hm.glossary["proxy_group"].field, detour));
 
-	// key mapping
+	// key mapping // 2025/12/01
 	let config = {
 		id: this.calcID(field, cfg),
 		label: '%s %s'.format(cfg, _('(Imported)')),
@@ -261,7 +261,7 @@ function parseDNSPolicyYaml(field, name, cfg) {
 			break;
 	}
 
-	// key mapping
+	// key mapping // 2025/12/01
 	let config = {
 		id: this.calcID(field, name),
 		label: '%s %s'.format(name, _('(Imported)')),
@@ -352,12 +352,12 @@ function parseRules(rule) {
 }
 function parseRulesYaml(field, name, cfg) {
 	let id = this.calcID(field, cfg);
-	let entry = parseRules.call(this, cfg);
+	let entry = parseRules.call(this, cfg); // 2025/07/11
 
 	if (!entry)
 		return null;
 
-	// key mapping
+	// key mapping // 2025/07/11
 	let config = {
 		id: id,
 		label: '%s %s'.format(id.slice(0,7), _('(Imported)')),

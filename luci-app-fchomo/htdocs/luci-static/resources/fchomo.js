@@ -870,6 +870,28 @@ function generateRand(type, length) {
 	};
 }
 
+function shuffle(StrORArr) {
+	let arr;
+
+	if (typeof StrORArr === 'string')
+		arr = StrORArr.split('');
+	else if (Array.isArray(StrORArr))
+		arr = StrORArr;
+	else
+		throw new Error(`String or Array only`);
+
+    for (let i = arr.length - 1; i > 0; i--) {         // Traverse the array from back to front
+        const j = Math.floor(Math.random() * (i + 1)); // Generate a random index between 0 and i
+
+        [arr[i], arr[j]] = [arr[j], arr[i]];           // Swap positions
+    }
+
+	if (typeof StrORArr === 'string')
+		return arr.join('');
+	else if (Array.isArray(StrORArr))
+		return arr;
+}
+
 function json2yaml(object, command) {
 	const callJson2Yaml = rpc.declare({
 		object: 'luci.fchomo',
@@ -1166,6 +1188,8 @@ function handleGenKey(option) {
 
 		if (option === 'uuid' || option.match(/_uuid/))
 			required_method = 'uuid';
+		else if (option.match(/sudoku_custom_table/))
+			required_method = 'sudoku_custom_table';
 		else if (type === 'shadowsocks' && option === 'shadowsocks_password')
 			required_method = this.section.getOption('shadowsocks_chipher')?.formvalue(section_id);
 		else if (type === 'trojan' && option === 'trojan_ss_password')
@@ -1179,6 +1203,10 @@ function handleGenKey(option) {
 			/* UUID */
 			case 'uuid':
 				password = generateRand('uuid');
+				break;
+			/* SUDOKU CUSTOM TABLE */
+			case 'sudoku_custom_table':
+				password = shuffle('xxppvvvv');
 				break;
 			/* DEFAULT */
 			default:
@@ -1645,6 +1673,7 @@ return baseclass.extend({
 	decodeBase64Bin,
 	encodeBase64Bin,
 	generateRand,
+	shuffle,
 	json2yaml,
 	yaml2json,
 	isEmpty,

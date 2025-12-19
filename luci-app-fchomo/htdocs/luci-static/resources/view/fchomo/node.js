@@ -398,7 +398,7 @@ return view.extend({
 		so.depends('type', 'sudoku');
 		so.modalonly = true;
 
-		so = ss.taboption('field_general', form.Value, 'sudoku_custom_table', _('Custom byte layout'));
+		so = ss.taboption('field_general', form.DynamicList, 'sudoku_custom_tables', _('Custom byte layout'));
 		so.validate = hm.validateSudokuCustomTable;
 		so.depends('sudoku_table_type', 'prefer_entropy');
 		so.modalonly = true;

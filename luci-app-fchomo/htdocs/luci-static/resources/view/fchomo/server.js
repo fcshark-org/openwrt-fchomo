@@ -375,7 +375,18 @@ return view.extend({
 		o.depends('type', 'sudoku');
 		o.modalonly = true;
 
-		o = s.taboption('field_general', form.Value, 'sudoku_custom_table', _('Custom byte layout'));
+		o = s.taboption('field_general', form.DynamicList, 'sudoku_custom_tables', _('Custom byte layout'));
+		o.renderWidget = function(/* ... */) {
+			let node = form.DynamicList.prototype.renderWidget.apply(this, arguments);
+
+			(node.querySelector('.control-group') || node).appendChild(E('button', {
+				class: 'cbi-button cbi-button-positive',
+				title: _('Generate'),
+				click: ui.createHandlerFn(this, hm.handleGenKey, this.hm_options || this.option)
+			}, [ _('Generate') ]));
+
+			return node;
+		}
 		o.validate = hm.validateSudokuCustomTable;
 		o.depends('sudoku_table_type', 'prefer_entropy');
 		o.modalonly = true;

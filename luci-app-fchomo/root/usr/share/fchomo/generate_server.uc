@@ -112,6 +112,7 @@ uci.foreach(uciconf, uciserver, (cfg) => {
 		"padding-min": strToInt(cfg.sudoku_padding_min),
 		"padding-max": strToInt(cfg.sudoku_padding_max),
 		"table-type": cfg.sudoku_table_type,
+		"custom-table": cfg.sudoku_custom_table,
 		"handshake-timeout": strToInt(cfg.sudoku_handshake_timeout) ?? null,
 		"enable-pure-downlink": (cfg.sudoku_enable_pure_downlink === '0') ? false : null,
 

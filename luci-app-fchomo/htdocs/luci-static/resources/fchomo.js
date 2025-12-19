@@ -1438,6 +1438,22 @@ function validateShadowsocksPassword(encmode, section_id, value) {
 	return true;
 }
 
+function validateSudokuCustomTable(section_id, value) {
+	if (!value)
+		return true;
+
+	if (value.length !== 8)
+		return _('Expecting: %s').format(_('valid format: 2x, 2p, 4v'));
+
+	const counts = {};
+    for (const c of value)
+        counts[c] = (counts[c] || 0) + 1;
+    if (!(counts.x === 2 && counts.p === 2 && counts.v === 4))
+		return _('Expecting: %s').format(_('valid format: 2x, 2p, 4v'));
+
+	return true;
+}
+
 function validateUniqueValue(section_id, value) {
 	if (!value)
 		return _('Expecting: %s').format(_('non-empty value'));
@@ -1669,6 +1685,7 @@ return baseclass.extend({
 	validateMTLSClientAuth,
 	validatePresetIDs,
 	validateShadowsocksPassword,
+	validateSudokuCustomTable,
 	validateUniqueValue,
 	// file operations
 	lsDir,

@@ -375,6 +375,11 @@ return view.extend({
 		o.depends('type', 'sudoku');
 		o.modalonly = true;
 
+		o = s.taboption('field_general', form.Value, 'sudoku_custom_table', _('Custom byte layout'));
+		o.validate = hm.validateSudokuCustomTable;
+		o.depends('sudoku_table_type', 'prefer_entropy');
+		o.modalonly = true;
+
 		o = s.taboption('field_general', form.Value, 'sudoku_padding_min', _('Minimum padding'));
 		o.datatype = 'uinteger';
 		o.default = 1;

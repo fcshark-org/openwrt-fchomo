@@ -113,6 +113,7 @@ uci.foreach(uciconf, uciserver, (cfg) => {
 		"padding-max": strToInt(cfg.sudoku_padding_max),
 		"table-type": cfg.sudoku_table_type,
 		"handshake-timeout": strToInt(cfg.sudoku_handshake_timeout) ?? null,
+		"enable-pure-downlink": (cfg.sudoku_enable_pure_downlink === '0') ? false : null,
 
 		/* Tuic */
 		"congestion-controller": cfg.tuic_congestion_controller,

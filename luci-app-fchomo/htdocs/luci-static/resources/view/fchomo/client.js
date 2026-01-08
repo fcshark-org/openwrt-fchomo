@@ -321,7 +321,7 @@ const parseRulesYaml = hm.parseYaml.extend({
 				return null;
 		}
 
-		if (hm.rules_logical_type.map(o => o[0]).includes(ruleName)) {
+		if (hm.rules_logical_type.map(e => e[0] || e).includes(ruleName)) {
 			target = rule.pop();
 			logical_payload = rule.slice(1).join(',').match(/^\(\((.*)\)\)$/); // LOGIC_TYPE,((payload1),(payload2))
 			if (logical_payload)
@@ -682,9 +682,7 @@ function renderRules(s, uciconfig) {
 	}
 	o.validate = function(section_id, value) {
 		// params only available for types other than
-		// https://github.com/muink/mihomo/blob/8e6eb70e714d44f26ba407adbd7b255762f48b97/config/config.go#L1050
-		// https://github.com/muink/mihomo/blob/8e6eb70e714d44f26ba407adbd7b255762f48b97/rules/parser.go#L12
-		if (['GEOIP', 'IP-ASN', 'IP-CIDR', 'IP-CIDR6', 'IP-SUFFIX', 'RULE-SET'].includes(value)) {
+		if (hm.rules_type_allowparms.includes(value)) {
 			['no-resolve', 'src'].forEach((opt) => {
 				let UIEl = this.section.getUIElement(section_id, opt);
 				UIEl.node.querySelector('input').removeAttribute('disabled');

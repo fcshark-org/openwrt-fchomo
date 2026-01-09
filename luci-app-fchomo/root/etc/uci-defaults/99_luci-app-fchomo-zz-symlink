@@ -31,7 +31,7 @@ mk_config() {
 	local section_id=$(name_fmt $1 $2)
 	_add_val() { uci_add_list $CONF $section_id $_key "$1"; }
 
-	if ! uci_get $CONF $section_id; then
+	if ! uci_get $CONF $section_id >/dev/null; then
 		uci_add $CONF $1 $section_id
 		uci_set $CONF $section_id label "$3"
 		if [ -n "$4" ]; then

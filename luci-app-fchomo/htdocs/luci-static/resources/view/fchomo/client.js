@@ -297,52 +297,76 @@ const parseRulesYaml = hm.parseYaml.extend({
 		return config;
 	},
 
-	parseRules(rule) {
+	ParseRulePayload(ruleRaw, needTarget) {
 		// parse rules
-		// https://github.com/muink/mihomo/blob/8e6eb70e714d44f26ba407adbd7b255762f48b97/config/config.go#L1040-L1090
-		// https://github.com/muink/mihomo/blob/8e6eb70e714d44f26ba407adbd7b255762f48b97/rules/parser.go#L12
-		rule = rule.split(',');
-		let ruleName = rule[0].toUpperCase(),
-			logical_payload,
+		// https://github.com/muink/mihomo/blob/300eb8b12a75504c4bd4a6037d2f6503fd3b347f/rules/common/base.go#L48-L76
+		let item = ruleRaw.split(",");
+		let tp = item[0].toUpperCase(),
 			payload,
 			target,
-			params = [],
-			subrule;
+			params = [];
 
-		let l = rule.length;
+		if (item.length > 1) {
+			switch (tp) {
+				case "MATCH":
+					// MATCH doesn't contain payload and params
+					target = item[1];
+					break;
+				case "NOT":
+				case "OR":
+				case "AND":
+				case "SUB-RULE":
+				case "DOMAIN-REGEX":
+				case "PROCESS-NAME-REGEX":
+				case "PROCESS-PATH-REGEX":
+					// some type of rules that has comma in payload and don't need params
+					if (needTarget)
+						target = item.pop(); // don't have params so target must at the end of slices
+					payload = item.slice(1).join(",");
+					break;
+				default:
+					payload = item[1];
+					if (item.length > 2) {
+						if (needTarget) {
+							target = item[2];
+							if (item.length > 3)
+								params = item.slice(3);
+						} else
+							params = item.slice(2);
+					}
+			}
+		}
 
-		if (ruleName === 'SUB-RULE') {
-			subrule = rule.slice(1).join(',').match(/^\((.*)\)/); // SUB-RULE,(payload),subrule
-			if (subrule) {
-				[rule, subrule] = [subrule[1].split(',').concat('DIRECT'), rule.pop()];
-				ruleName = rule[0].toUpperCase();
-				l = rule.length;
-			} else
+		return [ tp, payload, target, params ];
+	},
+
+	ParseRule(tp, payload, target, params) {
+		// parse rules
+		// https://github.com/muink/mihomo/blob/300eb8b12a75504c4bd4a6037d2f6503fd3b347f/rules/parser.go#L12
+
+		// nested ParseRule
+		let logical_payload, subrule;
+
+		if (tp === 'SUB-RULE') {
+			payload = payload.match(/^\((.*)\)$/); // SUB-RULE,(payload),subrule
+			if (payload)
+				[tp, payload, target, params, subrule] = [...this.ParseRulePayload(payload[1], false), target];
+			else
 				return null;
 		}
 
-		if (hm.rules_logical_type.map(e => e[0] || e).includes(ruleName)) {
-			target = rule.pop();
-			logical_payload = rule.slice(1).join(',').match(/^\(\((.*)\)\)$/); // LOGIC_TYPE,((payload1),(payload2))
+		if (hm.rules_logical_type.map(e => e[0] || e).includes(tp)) {
+			logical_payload = payload.match(/^\(\((.*)\)\)$/); // LOGIC_TYPE,((payload1),(payload2),(payload3)),DIRECT
 			if (logical_payload)
 				logical_payload = logical_payload[1].split('),(');
 			else
 				return null;
-		} else if (hm.rules_type.map(o => o[0]).includes(ruleName)) {
-			if (l < 2) return null; // error: format invalid
-			else if (ruleName === 'MATCH') l = 2;
-			else if (l >= 3) {
-				l = 3;
-				payload = rule[1];
-			}
-			target = rule[l-1];
-			params = rule.slice(l);
-		} else
-			return null;
+		}
 
 		// make entry
 		let entry = new RulesEntry();
-		entry.type = ruleName;
+		entry.type = tp;
+
 		// parse payload
 		if (logical_payload)
 			for (let i=0; i < logical_payload.length; i++) {
@@ -361,17 +385,33 @@ const parseRulesYaml = hm.parseYaml.extend({
 				entry.setPayload(i, {type: type.toUpperCase(), factor: factor, deny: deny ? true : null});
 			}
 		else if (payload)
-			if (ruleName === 'RULE-SET')
+			if (tp === 'RULE-SET')
 				entry.setPayload(0, {factor: this.calcID(hm.glossary["ruleset"].field, payload)});
 			else
 				entry.setPayload(0, {factor: payload});
-		params.forEach((param) => entry.setParam(param, true));
+
+		// parse target/subrule
 		if (subrule)
 			entry.subrule = subrule;
 		else
 			entry.detour = hm.preset_outbound.full.map(([key, label]) => key).includes(target) ? target : this.calcID(hm.glossary["proxy_group"].field, target);
 
-		return entry.toString('json');
+		// parse params
+		params.forEach((param) => entry.setParam(param, true));
+
+		return entry;
+	},
+
+	parseRules(line) {
+		// parse rules
+		// https://github.com/muink/mihomo/blob/300eb8b12a75504c4bd4a6037d2f6503fd3b347f/config/config.go#L1038-L1062
+		let [tp, payload, target, params] = this.ParseRulePayload(line, true);
+		if (!target)
+			return null; // error: format invalid
+
+		let parsed = this.ParseRule(tp, payload, target, params);
+
+		return parsed.toString('json');
 	}
 });
 const parseSubrulesYaml = parseRulesYaml.extend({

@@ -421,7 +421,7 @@ const parseSubrulesYaml = parseRulesYaml.extend({
 		if (!cfg)
 			return null;
 
-		let config = new parseRulesYaml(this.field, this.name, cfg[2]).output();
+		let config = new parseRulesYaml(this.field, this.name, cfg[2]).output(); // 2024/08/05
 
 		return config ? Object.assign(config, {group: cfg[1]}) : null;
 	}
@@ -1128,16 +1128,27 @@ return view.extend({
 					.format(field));
 			o.placeholder = 'rules:\n' +
 							'- DOMAIN,ad.com,REJECT\n' +
+							'- DOMAIN-WILDCARD,*.google.com,auto\n' +
 							'- DOMAIN-REGEX,^abc.*com,auto\n' +
-							'- GEOSITE,youtube,PROXY\n' +
+							'- GEOSITE,youtube,GLOBAL\n' +
 							'- IP-CIDR,127.0.0.0/8,DIRECT,no-resolve\n' +
+							'- IP-CIDR6,2620:0:2d0:200::7/32,auto\n' +
 							'- IP-SUFFIX,8.8.8.8/24,auto\n' +
 							'- IP-ASN,13335,DIRECT\n' +
 							'- GEOIP,CN,DIRECT\n' +
+							'- SRC-GEOIP,cn,DIRECT\n' +
+							'- SRC-IP-ASN,9808,DIRECT\n' +
+							'- SRC-IP-CIDR,192.168.1.201/32,DIRECT\n' +
+							'- SRC-IP-SUFFIX,192.168.1.201/8,DIRECT\n' +
+							'- DST-PORT,80,DIRECT\n' +
+							'- SRC-PORT,7777,DIRECT\n' +
 							'- PROCESS-PATH,/usr/bin/wget,auto\n' +
 							'- PROCESS-PATH-REGEX,.*bin/wget,auto\n' +
+							'- PROCESS-PATH-REGEX,(?i).*Application\\\\chrome.*,GLOBAL\n' +
 							'- PROCESS-NAME,curl,auto\n' +
 							'- PROCESS-NAME-REGEX,curl$,auto\n' +
+							'- PROCESS-NAME-REGEX,(?i)Telegram,GLOBAL\n' +
+							'- PROCESS-NAME-REGEX,.*telegram.*,GLOBAL\n' +
 							'- UID,1001,DIRECT\n' +
 							'- NETWORK,udp,DIRECT\n' +
 							'- DSCP,4,DIRECT\n' +

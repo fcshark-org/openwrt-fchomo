@@ -24,10 +24,6 @@
 
 ## Known issues
 
-- The **Routing rule** and **Sub rule** of the old version LuCI app have been migrated from `mihomo` format to `json` format.\
-  If find `option oldentry` in `/etc/config/fchomo` file, the selected options may not be migrated correctly.\
-  You need to manually reset the selected config and remove the `oldentry` option when you are done.
-
 ## Screenshots
 
 ![global](assets/img/global.png "global")

@@ -255,7 +255,6 @@ config["geo-auto-update"] = false;
 
 /* TLS START */
 /* TLS settings */
-config["global-client-fingerprint"] = uci.get(uciconf, ucitls, 'global_client_fingerprint');
 config.tls = {
 	"certificate": uci.get(uciconf, ucitls, 'tls_cert_path'),
 	"private-key": uci.get(uciconf, ucitls, 'tls_key_path'),

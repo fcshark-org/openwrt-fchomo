@@ -335,7 +335,7 @@ const tls_client_fingerprints = [
 	['chrome'],
 	['firefox'],
 	['safari'],
-	['iOS'],
+	['ios'],
 	['android'],
 	['edge'],
 	['360'],

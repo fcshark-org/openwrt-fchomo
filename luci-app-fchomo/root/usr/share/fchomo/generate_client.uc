@@ -632,7 +632,8 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 				path: cfg.transport_path || '/',
 			} : null,
 			"grpc-opts": cfg.transport_type === 'grpc' ? {
-				"grpc-service-name": cfg.transport_grpc_servicename
+				"grpc-service-name": cfg.transport_grpc_servicename,
+				"grpc-user-agent": cfg.transport_grpc_useragent
 			} : null,
 			"ws-opts": cfg.transport_type === 'ws' ? {
 				path: cfg.transport_path || '/',

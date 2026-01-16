@@ -134,7 +134,7 @@
 {# Common function START #}
 {%- function render_acl_src(inchain, outchain): %}
 chain {{ inchain }} {
-		{% if (control_info.listen_interfaces): %}
+		{% if (!isEmpty(control_info.listen_interfaces)): %}
 		meta iifname != {{ array_to_nftarr(uniq([...control_info.listen_interfaces, ...['lo']])) }} counter return
 		{% endif %}
 		meta mark {{ self_mark }} counter return
@@ -400,7 +400,7 @@ table inet fchomo {
 		type nat hook prerouting priority dstnat + 5; policy accept;
 		{#- DNS hijack #}
 		{% if (dnsmasq_hijacked !== '1'): %}
-		{% if (control_info.listen_interfaces): %}
+		{% if (!isEmpty(control_info.listen_interfaces)): %}
 		meta iifname {{ array_to_nftarr(control_info.listen_interfaces) }}
 		{% endif %}
 		meta iifname != lo meta nfproto { {{ (global_ipv6 === '1') ? 'ipv4, ipv6' : 'ipv4' }} } meta l4proto { tcp, udp } th dport 53 counter redirect to :{{ dnsmasq_port }} comment "!{{ cfgname }}: DNS hijack (subnet)"

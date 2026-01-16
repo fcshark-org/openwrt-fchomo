@@ -658,14 +658,6 @@ msgstr "禁用 UDP"
 msgid "Disable safe path check"
 msgstr "禁用安全路径检查"
 
-#: htdocs/luci-static/resources/view/fchomo/client.js:1551
-msgid "Discard A responses"
-msgstr "丢弃 A 响应"
-
-#: htdocs/luci-static/resources/view/fchomo/client.js:1567
-msgid "Discard AAAA responses"
-msgstr "丢弃 AAAA 响应"
-
 #: htdocs/luci-static/resources/view/fchomo/client.js:798
 msgid ""
 "Do not resolve the domain connection to IP for this match.</br>Only works "
@@ -991,6 +983,15 @@ msgstr "後備过滤器"
 #: htdocs/luci-static/resources/view/fchomo/node.js:1596
 msgid "Filter nodes that meet keywords or regexps."
 msgstr "过滤匹配关键字或表达式的节点。"
+
+#: htdocs/luci-static/resources/view/fchomo/client.js:1583
+msgid "Filter record type:"
+msgstr "过滤记录类型："
+
+#: htdocs/luci-static/resources/view/fchomo/client.js:1551
+#: htdocs/luci-static/resources/view/fchomo/client.js:1567
+msgid "Filter record: %s"
+msgstr "过滤 %s 记录"
 
 #: htdocs/luci-static/resources/view/fchomo/client.js:1320
 msgid "Final DNS server"

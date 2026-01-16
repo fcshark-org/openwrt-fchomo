@@ -647,14 +647,6 @@ msgstr ""
 msgid "Disable safe path check"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/fchomo/client.js:1551
-msgid "Discard A responses"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/fchomo/client.js:1567
-msgid "Discard AAAA responses"
-msgstr ""
-
 #: htdocs/luci-static/resources/view/fchomo/client.js:798
 msgid ""
 "Do not resolve the domain connection to IP for this match.</br>Only works "
@@ -971,6 +963,15 @@ msgstr ""
 #: htdocs/luci-static/resources/view/fchomo/client.js:1082
 #: htdocs/luci-static/resources/view/fchomo/node.js:1596
 msgid "Filter nodes that meet keywords or regexps."
+msgstr ""
+
+#: htdocs/luci-static/resources/view/fchomo/client.js:1583
+msgid "Filter record type:"
+msgstr ""
+
+#: htdocs/luci-static/resources/view/fchomo/client.js:1551
+#: htdocs/luci-static/resources/view/fchomo/client.js:1567
+msgid "Filter record: %s"
 msgstr ""
 
 #: htdocs/luci-static/resources/view/fchomo/client.js:1320

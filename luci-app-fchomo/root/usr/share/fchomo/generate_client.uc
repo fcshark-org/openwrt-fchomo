@@ -780,7 +780,8 @@ uci.foreach(uciconf, ucirule, (cfg) => {
 			url: cfg.url,
 			"size-limit": bytesizeToByte(cfg.size_limit) || null,
 			interval: (cfg.type === 'http') ? durationToSecond(cfg.interval) ?? 259200 : null,
-			proxy: get_proxygroup(cfg.proxy)
+			proxy: get_proxygroup(cfg.proxy),
+			header: cfg.header ? json(cfg.header) : null
 		})
 	};
 });

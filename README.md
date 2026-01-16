@@ -37,7 +37,7 @@ flowchart TD
   subgraph Firewall
     direction TB
     subgraph fw_inpot[Input]; rawin[Raw traffic]; end
-    subgraph fw_outpot[Output]; lo; direct[Direct]; mihomoin[Mihomo in]; end
+    subgraph fw_outpot[Output]; lo; tun; direct[Direct]; mihomoin[Mihomo in]; end
     rawin --firewall--> flow{Subnet/Local traffic ?}
     flow --Subnet--> acl_listen
     flow --Local--> proxy_router{Proxy routerself ?}
@@ -45,12 +45,13 @@ flowchart TD
       proxy_router --No --> direct
     subgraph acl[Access Control]
       direction TB
-      acl_listen{Src-interface filter} --> dns_hijack
+      acl_listen{Src-interface filter} --> acl_src
       acl_listen --> direct
-      dns_hijack{dport is 53 ?} --Redirect to dnsmasq--> lo
-      dns_hijack --No --> acl_src
-      acl_src{Src-address filter} --> acl_dst
+      acl_src{Src-address filter} --> dns_hijack
       acl_src --> direct
+      dns_hijack{dport is 53 ?} --Redirect to dnsmasq--> lo
+      dns_hijack --Via TUN--> tun
+      dns_hijack --No --> acl_dst
       acl_dst{Dst-address filter} --> acl_dport
       acl_dst --> direct
       acl_dport{Dst-port filter

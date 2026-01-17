@@ -996,6 +996,11 @@ return view.extend({
 		so.depends('tls_ech', '1');
 		so.modalonly = true;
 
+		so = ss.taboption('field_tls', form.Value, 'tls_ech_query_server_name', _('ECH HTTPS record query servername'),
+			_('Overrides the domain name used for HTTPS record queries.'));
+		so.depends('tls_ech', '1');
+		so.modalonly = true;
+
 		// uTLS fields
 		so = ss.taboption('field_tls', form.ListValue, 'tls_client_fingerprint', _('Client fingerprint'));
 		so.default = hm.tls_client_fingerprints[0][0];

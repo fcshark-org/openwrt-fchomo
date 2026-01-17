@@ -612,7 +612,8 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		"client-fingerprint": cfg.tls_client_fingerprint,
 		"ech-opts": cfg.tls_ech === '1' ? {
 			enable: true,
-			config: cfg.tls_ech_config
+			config: cfg.tls_ech_config,
+			"query-server-name": cfg.tls_ech_query_server_name
 		} : null,
 		"reality-opts": cfg.tls_reality === '1' ? {
 			"public-key": cfg.tls_reality_public_key,

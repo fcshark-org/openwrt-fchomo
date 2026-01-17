@@ -94,7 +94,7 @@ const parseProviderYaml = hm.parseYaml.extend({
 		if (!cfg.type)
 			return null;
 
-		// key mapping // 2025/07/11
+		// key mapping // 2026/01/17
 		let config = hm.removeBlankAttrs({
 			id: this.id,
 			label: this.label,
@@ -265,7 +265,7 @@ return view.extend({
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', hm.TextValue, 'headers', _('HTTP header'));
-		so.placeholder = '{\n  "User-Agent": [\n    "Clash/v1.18.0",\n    "mihomo/1.18.3"\n  ],\n  "Authorization": [\n    //"token 1231231"\n  ]\n}';
+		so.placeholder = '{\n  "User-Agent": [\n    "mihomo/1.18.3"\n  ],\n  "Authorization": [\n    //"token 1231231"\n  ]\n}';
 		so.validate = hm.validateJson;
 		so.depends('type', 'http');
 		so.modalonly = true;
@@ -1105,6 +1105,7 @@ return view.extend({
 		so.modalonly = true;
 
 		so = ss.taboption('field_transport', form.Value, 'transport_grpc_useragent', _('gRPC User-Agent'));
+		so.placeholder = 'grpc-go/1.36.0';
 		so.depends({transport_enabled: '1', transport_type: 'grpc'});
 		so.modalonly = true;
 
@@ -1267,7 +1268,6 @@ return view.extend({
 							'    size-limit: 0\n' +
 							'    header:\n' +
 							'      User-Agent:\n' +
-							'      - "Clash/v1.18.0"\n' +
 							'      - "mihomo/1.18.3"\n' +
 							'      Accept:\n' +
 							"      - 'application/vnd.github.v3.raw'\n" +
@@ -1450,7 +1450,7 @@ return view.extend({
 
 		so = ss.taboption('field_general', hm.TextValue, 'header', _('HTTP header'),
 			_('Custom HTTP header.'));
-		so.placeholder = '{\n  "User-Agent": [\n    "Clash/v1.18.0",\n    "mihomo/1.18.3"\n  ],\n  "Accept": [\n    //"application/vnd.github.v3.raw"\n  ],\n  "Authorization": [\n    //"token 1231231"\n  ]\n}';
+		so.placeholder = '{\n  "User-Agent": [\n    "mihomo/1.18.3"\n  ],\n  "Accept": [\n    //"application/vnd.github.v3.raw"\n  ],\n  "Authorization": [\n    //"token 1231231"\n  ]\n}';
 		so.validate = hm.validateJson;
 		so.depends('type', 'http');
 		so.modalonly = true;

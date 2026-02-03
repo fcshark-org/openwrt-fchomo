@@ -654,10 +654,66 @@ return view.extend({
 		so.depends({type: /^(vmess|vless)$/});
 		so.modalonly = true;
 
+		/* Masque fields */
+		so = ss.taboption('field_general', form.Value, 'masque_private_key', _('Private key'),
+			_('Base64 encoded ECDSA private key on the NIST P-256 curve.'));
+		so.password = true;
+		so.validate = L.bind(hm.validateBase64Key, so, 164);
+		so.rmempty = false;
+		so.depends('type', 'masque');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.Value, 'masque_endpoint_public_key', _('Endpoint pubkic key'),
+			_('Base64 encoded ECDSA public key on the NIST P-256 curve.'));
+		so.validate = L.bind(hm.validateBase64Key, so, 124);
+		so.rmempty = false;
+		so.depends('type', 'masque');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.Value, 'masque_ip', _('Local address'),
+			_('The %s address used by local machine in the Cloudflare WARP network.').format('IPv4'));
+		so.datatype = 'ip4addr(1)';
+		so.placeholder = '172.16.0.2';
+		so.rmempty = false;
+		so.depends('type', 'masque');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.Value, 'masque_ipv6', _('Local IPv6 address'),
+			_('The %s address used by local machine in the Cloudflare WARP network.').format('IPv6'));
+		so.datatype = 'ip6addr(1)';
+		so.depends('type', 'masque');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.Value, 'masque_mtu', _('MTU'));
+		so.datatype = 'range(0,9000)';
+		so.placeholder = '1280';
+		so.depends('type', 'masque');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.Flag, 'masque_remote_dns_resolve', _('Remote DNS resolve'),
+			_('Force DNS remote resolution.'));
+		so.default = so.disabled;
+		so.depends('type', 'masque');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.DynamicList, 'masque_dns', _('DNS server'));
+		so.datatype = 'or(host, hostport)';
+		so.depends('masque_remote_dns_resolve', '1');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.ListValue, 'masque_congestion_controller', _('Congestion controller'));
+		so.value('', _('Keep default'));
+		so.value('cubic', _('cubic'));
+		so.value('new_reno', _('new_reno'));
+		so.value('bbr', _('bbr'));
+		so.depends('type', 'tuic');
+		so.modalonly = true;
+
 		/* WireGuard fields */
 		so = ss.taboption('field_general', form.Value, 'wireguard_ip', _('Local address'),
 			_('The %s address used by local machine in the Wireguard network.').format('IPv4'));
 		so.datatype = 'ip4addr(1)';
+		so.placeholder = '172.16.0.2';
 		so.rmempty = false;
 		so.depends('type', 'wireguard');
 		so.modalonly = true;
@@ -781,7 +837,7 @@ return view.extend({
 		/* Extra fields */
 		so = ss.taboption('field_general', form.Flag, 'udp', _('UDP'));
 		so.default = so.disabled;
-		so.depends({type: /^(direct|socks5|ss|mieru|vmess|vless|trojan|anytls|wireguard)$/});
+		so.depends({type: /^(direct|socks5|ss|mieru|vmess|vless|trojan|anytls|masque|wireguard)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', form.Flag, 'uot', _('UoT'),

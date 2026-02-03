@@ -169,6 +169,7 @@ const outbound_type = [
 	//['hysteria', _('Hysteria') + ' - ' + _('UDP')],
 	['hysteria2', _('Hysteria2') + ' - ' + _('UDP')],
 	['tuic', _('TUIC') + ' - ' + _('UDP')],
+	['masque', _('Masque') + ' - ' + _('UDP')], // https://blog.cloudflare.com/post-quantum-warp/
 	['wireguard', _('WireGuard') + ' - ' + _('UDP')],
 	['ssh', _('SSH') + ' - ' + _('TCP')]
 ];

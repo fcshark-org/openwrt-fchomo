@@ -403,23 +403,30 @@ return view.extend({
 		so.depends('sudoku_table_type', 'prefer_entropy');
 		so.modalonly = true;
 
-		so = ss.taboption('field_general', form.Value, 'sudoku_padding_min', _('Minimum padding'));
-		so.datatype = 'uinteger';
+		so = ss.taboption('field_general', form.Value, 'sudoku_padding_min', _('Minimum padding rate'));
+		so.datatype = 'and(uinteger, range(0, 100))';
 		so.default = 2;
 		so.rmempty = false;
 		so.depends('type', 'sudoku');
 		so.modalonly = true;
 
-		so = ss.taboption('field_general', form.Value, 'sudoku_padding_max', _('Maximum padding'));
-		so.datatype = 'uinteger';
+		so = ss.taboption('field_general', form.Value, 'sudoku_padding_max', _('Maximum padding rate'));
+		so.datatype = 'and(uinteger, range(0, 100))';
 		so.default = 7;
 		so.rmempty = false;
+		so.validate = function(section_id, value) {
+			const padding_min = this.section.getOption('sudoku_padding_min').formvalue(section_id);
+
+			if (value < padding_min)
+				return _('Expecting: %s').format(_('Maximum padding rate must be greater than minimum padding rate.'));
+
+			return true;
+		}
 		so.depends('type', 'sudoku');
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', form.Flag, 'sudoku_enable_pure_downlink', _('Enable obfuscate for downlink'),
-			_('When disabled, downlink ciphertext is split into 6-bit segments, reusing the original padding pool and obfuscate type to reduce downlink overhead.') + '</br>' +
-			_('Uplink keeps the Sudoku protocol, and downlink characteristics are consistent with uplink characteristics.'));
+			_('false = bandwidth optimized downlink; true = pure Sudoku downlink.'));
 		so.default = so.enabled;
 		so.depends('type', 'sudoku');
 		so.modalonly = true;
@@ -432,7 +439,7 @@ return view.extend({
 		so = ss.taboption('field_general', form.ListValue, 'sudoku_http_mask_mode', _('HTTP mask mode'));
 		so.default = 'legacy';
 		so.value('legacy', _('Legacy'));
-		so.value('stream', _('stream') + ' - ' + _('CDN support'));
+		so.value('stream', _('split-stream') + ' - ' + _('CDN support'));
 		so.value('poll', _('poll') + ' - ' + _('CDN support'));
 		so.value('auto', _('Auto') + ' - ' + _('CDN support'));
 		so.depends('sudoku_http_mask', '1');
@@ -457,7 +464,7 @@ return view.extend({
 			_('Reusing a single tunnel to carry multiple target connections within it.'));
 		so.default = 'off';
 		so.value('off', _('OFF'));
-		so.value('auto', _('Auto'), _('Reuse h1.1 keep-alive / h2 connections to reduce RTT for each connection establishment.'));
+		so.value('auto', _('Auto'), _('Reuse HTTP connections to reduce RTT for each connection establishment.'));
 		so.value('on', _('ON'), _('Reusing a single tunnel to carry multiple target connections within it.'));
 		so.validate = function(section_id, value) {
 			const http_mask_mode = this.section.getOption('sudoku_http_mask_mode').formvalue(section_id);

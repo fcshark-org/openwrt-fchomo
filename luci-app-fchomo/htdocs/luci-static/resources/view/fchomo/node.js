@@ -501,10 +501,10 @@ return view.extend({
 
 		so = ss.taboption('field_general', form.ListValue, 'tuic_congestion_controller', _('Congestion controller'),
 			_('QUIC congestion controller.'));
-		so.default = 'cubic';
-		so.value('cubic', _('cubic'));
-		so.value('new_reno', _('new_reno'));
-		so.value('bbr', _('bbr'));
+		so.default = hm.congestion_controller[0][0];
+		hm.congestion_controller.forEach((res) => {
+			so.value.apply(so, res);
+		})
 		so.depends('type', 'tuic');
 		so.modalonly = true;
 
@@ -702,10 +702,10 @@ return view.extend({
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', form.ListValue, 'masque_congestion_controller', _('Congestion controller'));
-		so.value('', _('Keep default'));
-		so.value('cubic', _('cubic'));
-		so.value('new_reno', _('new_reno'));
-		so.value('bbr', _('bbr'));
+		so.default = hm.congestion_controller[0][0];
+		hm.congestion_controller.forEach((res) => {
+			so.value.apply(so, res);
+		})
 		so.depends('type', 'tuic');
 		so.modalonly = true;
 

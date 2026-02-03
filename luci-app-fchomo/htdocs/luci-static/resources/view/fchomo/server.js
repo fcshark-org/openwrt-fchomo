@@ -445,10 +445,10 @@ return view.extend({
 
 		o = s.taboption('field_general', form.ListValue, 'tuic_congestion_controller', _('Congestion controller'),
 			_('QUIC congestion controller.'));
-		o.default = 'cubic';
-		o.value('cubic', _('cubic'));
-		o.value('new_reno', _('new_reno'));
-		o.value('bbr', _('bbr'));
+		o.default = hm.congestion_controller[0][0];
+		hm.congestion_controller.forEach((res) => {
+			o.value.apply(o, res);
+		})
 		o.depends('type', 'tuic');
 		o.modalonly = true;
 

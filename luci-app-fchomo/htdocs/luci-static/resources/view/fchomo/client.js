@@ -1677,7 +1677,7 @@ return view.extend({
 		/* Bootstrap DNS policy (Node) START */
 		s.tab('dns_node_policy', _('Bootstrap DNS policy (Node)'));
 
-		/* DNS policy */
+		/* Bootstrap DNS policy (Node) */
 		o = s.taboption('dns_node_policy', form.SectionValue, '_dns_node_policy', hm.GridSection, 'dns_node_policy', null);
 		ss = o.subsection;
 		ss.addremove = true;

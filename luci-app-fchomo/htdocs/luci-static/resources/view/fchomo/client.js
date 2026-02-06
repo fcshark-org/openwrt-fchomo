@@ -1464,8 +1464,10 @@ return view.extend({
 							'    - tls://1.1.1.1\n' +
 							'  proxy-server-nameserver:\n' +
 							'    - https://doh.pub/dns-query\n' +
+							'  proxy-server-nameserver-policy:\n' +
+							"    'www.yournode.com': '223.5.5.5'\n" +
 							'  ...'
-			o.overridecommand = '.dns | pick(["default-nameserver", "proxy-server-nameserver", "nameserver", "fallback", "nameserver-policy"]) | with(.["nameserver-policy"]; . = [.[]] | flatten) | [.[][]] | unique'
+			o.overridecommand = '.dns | pick(["default-nameserver", "proxy-server-nameserver", "nameserver", "fallback", "nameserver-policy", "proxy-server-nameserver-policy"]) | with(.["nameserver-policy"]; . = [.[]] | flatten) | with(.["proxy-server-nameserver-policy"]; . = [.[]] | flatten) | [.[][]] | unique'
 			o.parseYaml = parseDNSYaml;
 
 			return o.render();

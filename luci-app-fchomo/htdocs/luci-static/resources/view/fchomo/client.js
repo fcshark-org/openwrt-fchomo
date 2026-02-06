@@ -836,6 +836,58 @@ function renderRules(s, uciconfig) {
 	o.modalonly = true;
 }
 
+function renderPolicies(s, uciconfig) {
+	let o;
+
+	o = s.option(form.ListValue, 'type', _('Type'));
+	o.value('domain', _('Domain'));
+	o.value('geosite', _('Geosite'));
+	o.value('rule_set', _('Rule set'));
+	o.default = 'domain';
+
+	o = s.option(form.DynamicList, 'domain', _('Domain'),
+		_('Match domain. Support wildcards.'));
+	o.depends('type', 'domain');
+	o.modalonly = true;
+
+	o = s.option(form.DynamicList, 'geosite', _('Geosite'),
+		_('Match geosite.'));
+	o.depends('type', 'geosite');
+	o.modalonly = true;
+
+	o = s.option(form.MultiValue, 'rule_set', _('Rule set'),
+		_('Match rule set.'));
+	o.value('', _('-- Please choose --'));
+	o.load = L.bind(hm.loadRulesetLabel, o, [['', _('-- Please choose --')]], ['domain', 'classical']);
+	o.depends('type', 'rule_set');
+	o.modalonly = true;
+
+	o = s.option(form.DummyValue, '_entry', _('Entry'));
+	o.load = function(section_id) {
+		const option = uci.get(uciconfig, section_id, 'type');
+
+		return uci.get(uciconfig, section_id, option)?.join(',');
+	}
+	o.modalonly = false;
+
+	o = s.option(form.MultiValue, 'server', _('DNS server'));
+	o.value('default-dns');
+	o.default = 'default-dns';
+	o.load = loadDNSServerLabel;
+	o.validate = validateNameserver;
+	o.rmempty = false;
+	o.editable = true;
+
+	o = s.option(hm.ListValue, 'proxy', _('Proxy group override'),
+		_('Override the Proxy group of DNS server.'));
+	o.default = hm.preset_outbound.direct[0][0];
+	hm.preset_outbound.direct.forEach((res) => {
+		o.value.apply(o, res);
+	})
+	o.load = L.bind(hm.loadProxyGroupLabel, o, hm.preset_outbound.direct);
+	o.editable = true;
+}
+
 return view.extend({
 	load() {
 		return Promise.all([
@@ -1681,53 +1733,7 @@ return view.extend({
 			], ...arguments);
 		}
 
-		so = ss.option(form.ListValue, 'type', _('Type'));
-		so.value('domain', _('Domain'));
-		so.value('geosite', _('Geosite'));
-		so.value('rule_set', _('Rule set'));
-		so.default = 'domain';
-
-		so = ss.option(form.DynamicList, 'domain', _('Domain'),
-			_('Match domain. Support wildcards.'));
-		so.depends('type', 'domain');
-		so.modalonly = true;
-
-		so = ss.option(form.DynamicList, 'geosite', _('Geosite'),
-			_('Match geosite.'));
-		so.depends('type', 'geosite');
-		so.modalonly = true;
-
-		so = ss.option(form.MultiValue, 'rule_set', _('Rule set'),
-			_('Match rule set.'));
-		so.value('', _('-- Please choose --'));
-		so.load = L.bind(hm.loadRulesetLabel, so, [['', _('-- Please choose --')]], ['domain', 'classical']);
-		so.depends('type', 'rule_set');
-		so.modalonly = true;
-
-		so = ss.option(form.DummyValue, '_entry', _('Entry'));
-		so.load = function(section_id) {
-			const option = uci.get(data[0], section_id, 'type');
-
-			return uci.get(data[0], section_id, option)?.join(',');
-		}
-		so.modalonly = false;
-
-		so = ss.option(form.MultiValue, 'server', _('DNS server'));
-		so.value('default-dns');
-		so.default = 'default-dns';
-		so.load = loadDNSServerLabel;
-		so.validate = validateNameserver;
-		so.rmempty = false;
-		so.editable = true;
-
-		so = ss.option(hm.ListValue, 'proxy', _('Proxy group override'),
-			_('Override the Proxy group of DNS server.'));
-		so.default = hm.preset_outbound.direct[0][0];
-		hm.preset_outbound.direct.forEach((res) => {
-			so.value.apply(so, res);
-		})
-		so.load = L.bind(hm.loadProxyGroupLabel, so, hm.preset_outbound.direct);
-		so.editable = true;
+		renderPolicies(ss, data[0]);
 		/* DNS policy END */
 
 		/* Fallback filter START */

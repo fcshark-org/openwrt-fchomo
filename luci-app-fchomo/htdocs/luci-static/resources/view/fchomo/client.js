@@ -1674,6 +1674,58 @@ return view.extend({
 		so.modalonly = true;
 		/* DNS server END */
 
+		/* Bootstrap DNS policy (Node) START */
+		s.tab('dns_node_policy', _('Bootstrap DNS policy (Node)'));
+
+		/* DNS policy */
+		o = s.taboption('dns_node_policy', form.SectionValue, '_dns_node_policy', hm.GridSection, 'dns_node_policy', null);
+		ss = o.subsection;
+		ss.addremove = true;
+		ss.rowcolors = true;
+		ss.sortable = true;
+		ss.nodescriptions = true;
+		ss.hm_modaltitle = [ _('Bootstrap DNS policy (Node)'), _('Add a Bootstrap DNS policy (Node)') ];
+		ss.hm_prefmt = hm.glossary[ss.sectiontype].prefmt;
+		ss.hm_field  = hm.glossary[ss.sectiontype].field;
+		ss.hm_lowcase_only = false;
+		/* Import mihomo config start */
+		ss.handleYamlImport = function() {
+			const field = this.hm_field;
+			const o = new hm.HandleImport(this.map, this, _('Import mihomo config'),
+				_('Please type <code>%s</code> fields of mihomo config.</br>')
+					.format(field));
+			o.placeholder = 'proxy-server-nameserver-policy:\n' +
+							"  'www.yournode.com': '223.5.5.5'\n" +
+							'  ...'
+			o.parseYaml = parseDNSPolicyYaml;
+
+			return o.render();
+		}
+		ss.renderSectionAdd = function(/* ... */) {
+			let el = hm.GridSection.prototype.renderSectionAdd.apply(this, arguments);
+
+			el.appendChild(E('button', {
+				'class': 'cbi-button cbi-button-add',
+				'title': _('mihomo config'),
+				'click': ui.createHandlerFn(this, 'handleYamlImport')
+			}, [ _('Import mihomo config') ]));
+
+			return el;
+		}
+		/* Import mihomo config end */
+
+		so = ss.option(form.Value, 'label', _('Label'));
+		so.load = hm.loadDefaultLabel;
+		so.validate = hm.validateUniqueValue;
+		so.modalonly = true;
+
+		so = ss.option(form.Flag, 'enabled', _('Enable'));
+		so.default = so.enabled;
+		so.editable = true;
+
+		renderPolicies(ss, data[0]);
+		/* Bootstrap DNS policy (Node) END */
+
 		/* DNS policy START */
 		s.tab('dns_policy', _('DNS policy'));
 

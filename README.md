@@ -73,7 +73,7 @@ Always redirect port 53} --> mihomoin
 
 ## Releases
 
-You can find the prebuilt-ipks [here](https://fantastic-packages.github.io/packages/)
+You can find the prebuilt-ipks [here](https://fantastic-packages.github.io/releases/)
 
 ## Installation
 

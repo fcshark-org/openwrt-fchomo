@@ -530,6 +530,19 @@ return view.extend({
 		o.depends('type', 'vmess');
 		o.modalonly = true;
 
+		/* Tunnel fields */
+		o = s.taboption('field_general', form.MultiValue, 'tunnel_network', _('Network type'));
+		o.value('tcp', _('TCP'));
+		o.value('udp', _('UDP'));
+		o.depends('type', 'tunnel');
+		o.modalonly = true;
+
+		o = s.taboption('field_general', form.Value, 'tunnel_target', _('Target address'));
+		o.datatype = 'hostport';
+		o.placeholder = 'target.com:53';
+		o.depends('type', 'tunnel');
+		o.modalonly = true;
+
 		/* Plugin fields */
 		o = s.taboption('field_general', form.ListValue, 'plugin', _('Plugin'));
 		o.value('', _('none'));

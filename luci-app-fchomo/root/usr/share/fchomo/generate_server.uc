@@ -138,6 +138,10 @@ uci.foreach(uciconf, uciserver, (cfg) => {
 		/* VMess / VLESS */
 		decryption: cfg.vless_decryption === '1' ? parse_vless_encryption(cfg.vless_encryption_hmpayload, 'server') : null,
 
+		/* Tunnel */
+		network: cfg.tunnel_network,
+		target: cfg.tunnel_target,
+
 		/* Plugin fields */
 		...(cfg.plugin ? {
 			// shadow-tls

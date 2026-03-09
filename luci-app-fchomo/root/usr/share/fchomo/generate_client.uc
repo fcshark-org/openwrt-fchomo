@@ -328,29 +328,14 @@ uci.foreach(uciconf, ucisniff, (cfg) => {
 /* Inbound START */
 const proxy_mode = uci.get(uciconf, uciinbound, 'proxy_mode') || 'redir_tproxy';
 /* Listen ports */
-config.listeners = [];
-push(config.listeners, {
-	name: 'mixed-in',
-	type: 'mixed',
-	port: strToInt(uci.get(uciconf, uciinbound, 'mixed_port')) || 7890,
-	listen: '::',
-	udp: true
-});
+config["allow-lan"] = true;
+config["bind-address"] = "*";
+config["mixed-port"] = strToInt(uci.get(uciconf, uciinbound, 'mixed_port')) || 7890;
 if (match(proxy_mode, /redir/))
-	push(config.listeners, {
-		name: 'redir-in',
-		type: 'redir',
-		port: strToInt(uci.get(uciconf, uciinbound, 'redir_port')) || 7891,
-		listen: '::'
-	});
+	config["redir-port"] = strToInt(uci.get(uciconf, uciinbound, 'redir_port')) || 7891;
 if (match(proxy_mode, /tproxy/))
-	push(config.listeners, {
-		name: 'tproxy-in',
-		type: 'tproxy',
-		port: strToInt(uci.get(uciconf, uciinbound, 'tproxy_port')) || 7892,
-		listen: '::',
-		udp: true
-	});
+	config["tproxy-port"] = strToInt(uci.get(uciconf, uciinbound, 'tproxy_port')) || 7892;
+config.listeners = [];
 push(config.listeners, {
 	name: 'dns-in',
 	type: 'tunnel',

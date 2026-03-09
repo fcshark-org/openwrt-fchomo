@@ -11,14 +11,12 @@
 return view.extend({
 	load() {
 		return Promise.all([
-			uci.load('fchomo'),
-			hm.getFeatures()
+			uci.load('fchomo')
 		]);
 	},
 
 	render(data) {
 		const dashboard_repo = uci.get(data[0], 'api', 'dashboard_repo');
-		const features = data[1];
 
 		let m, s, o;
 

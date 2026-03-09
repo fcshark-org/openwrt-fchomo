@@ -124,6 +124,10 @@ const glossary = {
 		prefmt: 'rule_%s',
 		field: 'rule-providers',
 	},
+	inbound: {
+		prefmt: 'inbound_%s',
+		field: 'listeners',
+	},
 	server: {
 		prefmt: 'server_%s',
 		field: 'listeners',

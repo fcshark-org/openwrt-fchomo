@@ -11,6 +11,7 @@ import { urldecode, urlencode } from 'luci.http';
 import {
 	isEmpty, strToBool, strToInt, bytesizeToByte, durationToSecond,
 	arrToObj, removeBlankAttrs,
+	parseListener,
 	HM_DIR, RUN_DIR, PRESET_OUTBOUND, RULES_LOGICAL_TYPE
 } from 'fchomo';
 
@@ -39,6 +40,7 @@ const ucisniff = 'sniff',
       ucidnspoli = 'dns_policy',
       ucidnsnpoli = 'dns_node_policy',
       ucipgrp = 'proxy_group',
+      uciinbd = 'inbound',
       ucinode = 'node',
       uciprov = 'provider',
       ucichain = 'dialer_proxy',
@@ -357,6 +359,13 @@ push(config.listeners, {
 	network: ['tcp', 'udp'],
 	target: '1.1.1.1:53'
 }); // @Not required for v1.19.2+
+/* Custom Inbound settings */
+uci.foreach(uciconf, uciinbd, (cfg) => {
+	if (cfg.enabled === '0')
+		return;
+
+	push(config.listeners, parseListener(cfg, true));
+});
 /* Tun settings */
 if (match(proxy_mode, /tun/))
 	config.tun = {

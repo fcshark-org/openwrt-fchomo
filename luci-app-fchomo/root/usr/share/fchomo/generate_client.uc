@@ -349,7 +349,7 @@ uci.foreach(uciconf, uciinbd, (cfg) => {
 	if (cfg.enabled === '0')
 		return;
 
-	push(config.listeners, parseListener(cfg, true));
+	push(config.listeners, parseListener(cfg, true, get_proxygroup(cfg.proxy)));
 });
 /* Tun settings */
 if (match(proxy_mode, /tun/))

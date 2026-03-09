@@ -155,10 +155,6 @@ function renderListeners(s, uciconfig, isClient) {
 	o.rmempty = false;
 	//o.validate = hm.validateCommonPort; // @fw4 does not support port lists with commas
 
-	// @dev: Features under development
-	// @rule
-	// @proxy
-
 	/* HTTP / SOCKS fields */
 	/* hm.validateAuth */
 	o = s.taboption('field_general', form.Value, 'username', _('Username'));
@@ -521,6 +517,23 @@ function renderListeners(s, uciconfig, isClient) {
 	o.modalonly = true;
 
 	/* Extra fields */
+	if (isClient) {
+		o = s.taboption('field_general', hm.ListValue, 'rule', _('Sub rule'),
+			_('Name of the Sub rule used for inbound matching.'));
+		o.value.apply(o, ['', _('null')]);
+		o.load = L.bind(hm.loadSubRuleGroup, o, [['', _('null')]]);
+		o.editable = true;
+
+		o = s.taboption('field_general', hm.ListValue, 'proxy', _('Proxy group'),
+			_('Name of the Proxy group as outbound.'));
+		o.default = hm.preset_outbound.direct[0][0];
+		hm.preset_outbound.direct.forEach((res) => {
+			o.value.apply(o, res);
+		})
+		o.load = L.bind(hm.loadProxyGroupLabel, o, hm.preset_outbound.direct);
+		o.editable = true;
+	}
+
 	o = s.taboption('field_general', form.Flag, 'udp', _('UDP'));
 	o.default = o.disabled;
 	o.depends({type: /^(socks|mixed|shadowsocks)$/});

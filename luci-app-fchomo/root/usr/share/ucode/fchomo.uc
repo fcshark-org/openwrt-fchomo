@@ -210,13 +210,17 @@ export function parseVlessEncryption(payload, side) {
 		(isEmpty(content.keypairs) ? '' : '.' + join('.', map(content.keypairs, e => e[side]))); // Required
 };
 
-export function parseListener(cfg, isClient) {
+export function parseListener(cfg, isClient, label) {
 	return {
 		name: cfg['.name'],
 		type: cfg.type,
 
 		listen: cfg.listen || '::',
 		port: cfg.port,
+		...(isClient ? {
+			rule: cfg.rule,
+			proxy: label,
+		} : {}),
 
 		/* HTTP / SOCKS / VMess / VLESS / Trojan / AnyTLS / Tuic / Hysteria2 */
 		users: (cfg.type in ['http', 'socks', 'mixed', 'vmess', 'vless', 'trojan']) ? [

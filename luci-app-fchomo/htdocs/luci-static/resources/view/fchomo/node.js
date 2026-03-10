@@ -255,13 +255,13 @@ return view.extend({
 		/* hm.validateAuth */
 		so = ss.taboption('field_general', form.Value, 'username', _('Username'));
 		so.validate = hm.validateAuthUsername;
-		so.depends({type: /^(http|socks5|mieru|ssh)$/});
+		so.depends({type: /^(http|socks5|mieru|trusttunnel|ssh)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', form.Value, 'password', _('Password'));
 		so.password = true;
 		so.validate = hm.validateAuthPassword;
-		so.depends({type: /^(http|socks5|mieru|trojan|anytls|hysteria2|tuic|ssh)$/});
+		so.depends({type: /^(http|socks5|mieru|trojan|anytls|hysteria2|tuic|trusttunnel|ssh)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', hm.TextValue, 'headers', _('HTTP header'));
@@ -521,15 +521,6 @@ return view.extend({
 		so.depends('type', 'tuic');
 		so.modalonly = true;
 
-		so = ss.taboption('field_general', form.ListValue, 'tuic_congestion_controller', _('Congestion controller'),
-			_('QUIC congestion controller.'));
-		so.default = hm.congestion_controller[0][0];
-		hm.congestion_controller.forEach((res) => {
-			so.value.apply(so, res);
-		})
-		so.depends('type', 'tuic');
-		so.modalonly = true;
-
 		so = ss.taboption('field_general', form.ListValue, 'tuic_udp_relay_mode', _('UDP relay mode'),
 			_('UDP packet relay mode.'));
 		so.default = 'native';
@@ -723,12 +714,15 @@ return view.extend({
 		so.depends('masque_remote_dns_resolve', '1');
 		so.modalonly = true;
 
-		so = ss.taboption('field_general', form.ListValue, 'masque_congestion_controller', _('Congestion controller'));
-		so.default = hm.congestion_controller[0][0];
-		hm.congestion_controller.forEach((res) => {
-			so.value.apply(so, res);
-		})
-		so.depends('type', 'masque');
+		/* TrustTunnel fields */
+		so = ss.taboption('field_general', form.Flag, 'trusttunnel_health_check', _('Health check'));
+		so.default = so.enabled;
+		so.depends('type', 'trusttunnel');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.Flag, 'trusttunnel_quic', _('QUIC'));
+		so.default = so.disabled;
+		so.depends('type', 'trusttunnel');
 		so.modalonly = true;
 
 		/* WireGuard fields */
@@ -857,9 +851,17 @@ return view.extend({
 		so.modalonly = true;
 
 		/* Extra fields */
+		so = ss.taboption('field_general', form.ListValue, 'congestion_controller', _('Congestion controller'));
+		so.default = hm.congestion_controller[0][0];
+		hm.congestion_controller.forEach((res) => {
+			so.value.apply(so, res);
+		})
+		so.depends({type: /^(tuic|masque|trusttunnel)$/});
+		so.modalonly = true;
+
 		so = ss.taboption('field_general', form.Flag, 'udp', _('UDP'));
 		so.default = so.disabled;
-		so.depends({type: /^(direct|socks5|ss|mieru|vmess|vless|trojan|anytls|masque|wireguard)$/});
+		so.depends({type: /^(direct|socks5|ss|mieru|vmess|vless|trojan|anytls|trusttunnel|masque|wireguard)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', form.Flag, 'uot', _('UoT'),
@@ -950,7 +952,7 @@ return view.extend({
 			let tls = this.section.getUIElement(section_id, 'tls').node.querySelector('input');
 
 			// Force enabled
-			if (['trojan', 'anytls', 'hysteria', 'hysteria2', 'tuic'].includes(type)) {
+			if (['trojan', 'anytls', 'hysteria', 'hysteria2', 'tuic', 'trusttunnel'].includes(type)) {
 				tls.checked = true;
 				tls.disabled = true;
 			} else {
@@ -959,7 +961,7 @@ return view.extend({
 
 			return true;
 		}
-		so.depends({type: /^(http|socks5|vmess|vless|trojan|anytls|hysteria|hysteria2|tuic)$/});
+		so.depends({type: /^(http|socks5|vmess|vless|trojan|anytls|hysteria|hysteria2|tuic|trusttunnel)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_tls', form.Flag, 'tls_disable_sni', _('Disable SNI'),
@@ -970,7 +972,7 @@ return view.extend({
 
 		so = ss.taboption('field_tls', form.Value, 'tls_sni', _('TLS SNI'),
 			_('Used to verify the hostname on the returned certificates.'));
-		so.depends({tls: '1', type: /^(http|vmess|vless|trojan|anytls|hysteria|hysteria2)$/});
+		so.depends({tls: '1', type: /^(http|vmess|vless|trojan|anytls|hysteria|hysteria2|trusttunnel)$/});
 		so.depends({tls: '1', tls_disable_sni: '0', type: /^(tuic)$/});
 		so.modalonly = true;
 
@@ -1000,6 +1002,9 @@ return view.extend({
 					case 'anytls':
 						def_alpn = ['h2', 'http/1.1'];
 						break;
+					case 'trusttunnel':
+						def_alpn = ['h2'];
+						break;
 					default:
 						def_alpn = [];
 				}
@@ -1009,7 +1014,7 @@ return view.extend({
 
 			return true;
 		}
-		so.depends({tls: '1', type: /^(vmess|vless|trojan|anytls|hysteria|hysteria2|tuic)$/});
+		so.depends({tls: '1', type: /^(vmess|vless|trojan|anytls|hysteria|hysteria2|tuic|trusttunnel)$/});
 		so.depends({type: 'ss', plugin: 'shadow-tls'});
 		so.modalonly = true;
 
@@ -1031,7 +1036,7 @@ return view.extend({
 			'<br/>' +
 			_('This is <strong>DANGEROUS</strong>, your traffic is almost like <strong>PLAIN TEXT</strong>! Use at your own risk!'));
 		so.default = so.disabled;
-		so.depends({tls: '1', type: /^(http|socks5|vmess|vless|trojan|anytls|hysteria|hysteria2|tuic)$/});
+		so.depends({tls: '1', type: /^(http|socks5|vmess|vless|trojan|anytls|hysteria|hysteria2|tuic|trusttunnel)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_tls', form.Value, 'tls_cert_path', _('Certificate path') + _(' (mTLS)'),
@@ -1085,7 +1090,7 @@ return view.extend({
 		hm.tls_client_fingerprints.forEach((res) => {
 			so.value.apply(so, res);
 		})
-		so.depends({tls: '1', type: /^(vmess|vless|trojan|anytls)$/});
+		so.depends({tls: '1', type: /^(vmess|vless|trojan|anytls|trusttunnel)$/});
 		so.depends({type: 'ss', plugin: /^(shadow-tls|restls)$/});
 		so.modalonly = true;
 

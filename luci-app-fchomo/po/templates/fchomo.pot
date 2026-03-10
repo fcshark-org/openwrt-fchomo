@@ -3372,8 +3372,12 @@ msgstr ""
 msgid "obfs-simple"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/fchomo/node.js:485
-msgid "only applies when %s is stream/poll/auto."
+#: htdocs/luci-static/resources/view/fchomo/node.js:486
+msgid "only applies when %s is not %s."
+msgstr ""
+
+#: htdocs/luci-static/resources/view/fchomo/node.js:488
+msgid "only applies when %s is %s."
 msgstr ""
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:1552

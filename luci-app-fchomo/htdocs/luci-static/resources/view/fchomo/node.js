@@ -454,18 +454,19 @@ return view.extend({
 		so.value('stream', _('split-stream') + ' - ' + _('CDN support'));
 		so.value('poll', _('poll') + ' - ' + _('CDN support'));
 		so.value('auto', _('Auto') + ' - ' + _('CDN support'));
+		so.value('ws', _('WebSocket') + ' - ' + _('CDN support'));
 		so.depends('sudoku_http_mask', '1');
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', form.Flag, 'sudoku_http_mask_tls', _('HTTP mask: %s').format(_('TLS')));
 		so.default = so.disabled;
-		so.depends({sudoku_http_mask_mode: /^(stream|poll|auto)$/});
+		so.depends({sudoku_http_mask_mode: /^(stream|poll|auto|ws)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', form.Value, 'sudoku_http_mask_host', _('HTTP mask: %s').format(_('Host/SNI override')));
 		so.datatype = 'or(hostname, hostport)';
 		so.placeholder = 'example.com[:443]';
-		so.depends({sudoku_http_mask_mode: /^(stream|poll|auto)$/});
+		so.depends({sudoku_http_mask_mode: /^(stream|poll|auto|ws)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', form.Value, 'sudoku_path_root', _('HTTP root path'));
@@ -481,8 +482,10 @@ return view.extend({
 		so.validate = function(section_id, value) {
 			const http_mask_mode = this.section.getOption('sudoku_http_mask_mode').formvalue(section_id);
 
+			if (http_mask_mode === 'ws' && value !== 'off')
+				return _('Expecting: %s').format(_('only applies when %s is not %s.').format(_('HTTP mask mode'), _('WebSocket')));
 			if (value === 'on' && !['stream', 'poll', 'auto'].includes(http_mask_mode))
-				return _('Expecting: %s').format(_('only applies when %s is stream/poll/auto.').format(_('HTTP mask mode')));
+				return _('Expecting: %s').format(_('only applies when %s is %s.').format(_('HTTP mask mode'), _('stream/poll/auto')));
 
 			return true;
 		}

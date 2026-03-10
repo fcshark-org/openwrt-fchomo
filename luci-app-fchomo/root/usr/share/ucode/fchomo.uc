@@ -269,9 +269,12 @@ export function parseListener(cfg, isClient, label) {
 		"custom-tables": cfg.sudoku_custom_tables,
 		"handshake-timeout": strToInt(cfg.sudoku_handshake_timeout) ?? null,
 		"enable-pure-downlink": (cfg.sudoku_enable_pure_downlink === '0') ? false : null,
-		"disable-http-mask": (cfg.sudoku_http_mask === '0') ? true : null,
-		"http-mask-mode": cfg.sudoku_http_mask_mode,
-		"path-root": cfg.sudoku_path_root,
+		httpmask: (cfg.sudoku_http_mask === '0') ? { disable: true } : {
+			disable: false,
+			mode: cfg.sudoku_http_mask_mode,
+			path_root: cfg.sudoku_path_root,
+		},
+		fallback: (cfg.sudoku_http_mask === '0') ? null : cfg.sudoku_fallback,
 
 		/* Tuic */
 		"congestion-controller": cfg.tuic_congestion_controller,

@@ -535,12 +535,14 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		"table-type": cfg.sudoku_table_type,
 		"custom-tables": cfg.sudoku_custom_tables,
 		"enable-pure-downlink": (cfg.sudoku_enable_pure_downlink === '0') ? false : null,
-		"http-mask": (cfg.sudoku_http_mask === '0') ? false : true,
-		"http-mask-mode": cfg.sudoku_http_mask_mode,
-		"http-mask-tls": strToBool(cfg.sudoku_http_mask_tls),
-		"http-mask-host": cfg.sudoku_http_mask_host,
-		"path-root": cfg.sudoku_path_root,
-		"http-mask-multiplex": cfg.sudoku_http_mask_multiplex,
+		httpmask: (cfg.sudoku_http_mask === '0') ? { disable: true } : {
+			disable: false,
+			mode: cfg.sudoku_http_mask_mode,
+			tls: strToBool(cfg.sudoku_http_mask_tls) || false,
+			host: cfg.sudoku_http_mask_host,
+			path_root: cfg.sudoku_path_root,
+			multiplex: cfg.sudoku_http_mask_multiplex,
+		},
 
 		/* Snell */
 		psk: cfg.snell_psk,

@@ -387,10 +387,17 @@ function renderListeners(s, uciconfig, isClient) {
 	o.value('stream', _('split-stream') + ' - ' + _('CDN support'));
 	o.value('poll', _('poll') + ' - ' + _('CDN support'));
 	o.value('auto', _('Auto') + ' - ' + _('CDN support'));
+	o.value('ws', _('WebSocket') + ' - ' + _('CDN support'));
 	o.depends('sudoku_http_mask', '1');
 	o.modalonly = true;
 
 	o = s.taboption('field_general', form.Value, 'sudoku_path_root', _('HTTP root path'));
+	o.depends('sudoku_http_mask', '1');
+	o.modalonly = true;
+
+	o = s.taboption('field_general', form.Value, 'sudoku_fallback', _('Fallback'));
+	o.datatype = 'hostport';
+	o.placeholder = '127.0.0.1:80';
 	o.depends('sudoku_http_mask', '1');
 	o.modalonly = true;
 

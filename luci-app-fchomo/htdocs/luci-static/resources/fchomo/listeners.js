@@ -235,6 +235,12 @@ function renderListeners(s, uciconfig, isClient) {
 	o.depends('type', 'mieru');
 	o.modalonly = true;
 
+	o = s.taboption('field_general', form.Value, 'mieru_traffic_pattern', _('Traffic pattern'),
+		_('A base64 string is used to fine-tune network behavior.<br/>Please refer to the <a target="_blank" href="%s" rel="noreferrer noopener">document</a>.')
+		.format('https://github.com/enfein/mieru/blob/main/docs/traffic-pattern.md'));
+	o.depends('type', 'mieru');
+	o.modalonly = true;
+
 	/* Sudoku fields */
 	const sudoku_keytypes = [
 		['sudoku-keypair', _('sudoku-keypair')],

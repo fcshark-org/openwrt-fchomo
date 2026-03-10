@@ -375,6 +375,12 @@ return view.extend({
 		so.depends('type', 'mieru');
 		so.modalonly = true;
 
+		so = ss.taboption('field_general', form.Value, 'mieru_traffic_pattern', _('Traffic pattern'),
+			_('A base64 string is used to fine-tune network behavior.<br/>Please refer to the <a target="_blank" href="%s" rel="noreferrer noopener">document</a>.')
+			.format('https://github.com/enfein/mieru/blob/main/docs/traffic-pattern.md'));
+		so.depends('type', 'mieru');
+		so.modalonly = true;
+
 		/* Sudoku fields */
 		so = ss.taboption('field_general', form.Value, 'sudoku_key', _('Key'),
 			_('The ED25519 available private key or UUID provided by Sudoku server.'));

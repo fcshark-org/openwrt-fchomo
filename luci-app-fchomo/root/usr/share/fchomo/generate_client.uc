@@ -525,6 +525,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		transport: cfg.mieru_transport,
 		multiplexing: cfg.mieru_multiplexing,
 		"handshake-mode": cfg.mieru_handshake_mode,
+		"traffic-pattern": cfg.mieru_traffic_pattern,
 
 		/* Sudoku */
 		key: cfg.sudoku_key,

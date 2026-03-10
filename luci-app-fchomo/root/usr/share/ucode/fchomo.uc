@@ -258,6 +258,7 @@ export function parseListener(cfg, isClient, label) {
 
 		/* Mieru */
 		transport: cfg.mieru_transport,
+		"traffic-pattern": cfg.mieru_traffic_pattern,
 
 		/* Sudoku */
 		key: cfg.sudoku_key,

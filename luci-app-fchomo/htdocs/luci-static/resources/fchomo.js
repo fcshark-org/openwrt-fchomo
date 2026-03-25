@@ -889,48 +889,39 @@ function encodeBase64(input) {
  * Unzip Gzip data
  * @param {string|Array|ArrayBuffer|Uint8Array} input - Input data (Base64 string or binary object)
  * @param {boolean} asText - Return a string? (true: text, false: arrayBuffer)
- * @param {function} callback - Callback function (result)
+ * @returns {Promise<string|Uint8Array>}
  */
-function decompressGzip(input, asText = false, callback) {
+async function decompressGzip(input, asText = false) {
 	if (isEmpty(input))
-		return callback?.(null);
+		return null;
 
-	const decompress = async(data) => {
-		try {
-			const ds = new DecompressionStream('gzip');
+	const ds = new DecompressionStream('gzip');
 
-			let blob_in;
-			if (typeof data === 'string') {
-				if (data.match(/^H4sI/)) { // Gzip magic + Deflate
-					const response = await window.fetch('data:application/octet-stream;base64,' + data);
-					blob_in = await response.blob();
-				} else
-					throw new Error('Not a valid base64 encoded gzip');
-			} else {
-				// The `data` should be `Array` or `ArrayBuffer` or `Uint8Array`.
-				data = new Uint8Array(data);
-				if (data.subarray(0, 3).join(',') === [0x1f, 0x8b, 0x08].join(',')) // Gzip magic + Deflate
-					blob_in = new Blob([data]);
-				else
-					throw new Error('Not a valid gzip');
-			}
+	let blob_in;
+	if (typeof input === 'string') {
+		if (input.match(/^H4sI/)) { // Gzip magic + Deflate
+			const response = await window.fetch('data:application/octet-stream;base64,' + input);
+			blob_in = await response.blob();
+		} else
+			throw new Error('Not a valid base64 encoded gzip');
+	} else {
+		// The `input` should be `Array` or `ArrayBuffer` or `Uint8Array`.
+		input = new Uint8Array(input);
+		if (input.subarray(0, 3).join(',') === [0x1f, 0x8b, 0x08].join(',')) // Gzip magic + Deflate
+			blob_in = new Blob([input]);
+		else
+			throw new Error('Not a valid gzip');
+	}
 
-			const decodedStream = blob_in.stream().pipeThrough(ds);
-			const blob_out = await new window.Response(decodedStream).blob();
+	const decodedStream = blob_in.stream().pipeThrough(ds);
+	const blob_out = await new window.Response(decodedStream).blob();
 
-			if (asText)
-				return await blob_out.text();
-			else {
-				const buf = await blob_out.arrayBuffer();
-				return new Uint8Array(buf);
-			}
-		} catch (e) {
-			throw e;
-		}
-	};
-
-	decompress(input)
-		.then(result => callback?.(result));
+	if (asText)
+		return await blob_out.text();
+	else {
+		const buf = await blob_out.arrayBuffer();
+		return new Uint8Array(buf);
+	}
 }
 
 function generateRand(type, length) {

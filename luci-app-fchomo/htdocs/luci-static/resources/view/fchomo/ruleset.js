@@ -111,7 +111,7 @@ async function parseRulesetLink(section_type, uri) {
 					type: 'inline',
 					behavior: behavior,
 					payload: payload,
-					id: hm.calcStringMD5(String.format('inline:%s', btoa(payload)))
+					id: hm.calcStringMD5(String.format('inline:%s', hm.encodeBase64(payload)))
 				};
 			}
 

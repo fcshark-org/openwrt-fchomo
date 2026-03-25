@@ -90,14 +90,14 @@ function parseRulesetLink(section_type, uri) {
 					behavior: behavior,
 					id: hm.calcStringMD5(String.format('file://%s%s', url.host, url.pathname))
 				};
-				hm.writeFile(section_type, config.id, hm.decodeBase64Str(filler));
+				hm.writeFile(section_type, config.id, hm.decodeBase64(filler, true));
 			}
 
 			return done(config);
 		case 'inline':
 			var url = new URL('inline:' + uri[1]);
 			var behavior = url.searchParams.get('behav');
-			var payload = hm.decodeBase64Str(url.pathname).trim();
+			var payload = hm.decodeBase64(url.pathname, true).trim();
 
 			if (filebehav.test(behavior) && payload) {
 				config = {

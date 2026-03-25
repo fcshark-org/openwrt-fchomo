@@ -840,47 +840,48 @@ function calcStringMD5(e) {
 }
 
 /* thanks to homeproxy */
-function decodeBase64Str(str) {
+/**
+ * General Base64 Decoding
+ * @param {string} str - Base64 string
+ * @param {boolean} asText - true: decoded string (UTF-8), false: Uint8Array
+ * @returns {string|Uint8Array}
+ */
+function decodeBase64(str, asText = false) {
 	if (!str)
 		return null;
 
 	/* Thanks to luci-app-ssr-plus */
 	str = str.replace(/-/g, '+').replace(/_/g, '/');
-	let padding = (4 - (str.length % 4)) % 4;
+	const padding = (4 - (str.length % 4)) % 4;
 	if (padding)
-		str = str + Array(padding + 1).join('=');
+		str += '='.repeat(padding);
 
-	return decodeURIComponent(Array.prototype.map.call(atob(str), (c) =>
-		'%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-	).join(''));
+	if (asText)
+		return decodeURIComponent(Array.prototype.map.call(atob(str), c =>
+			'%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+		).join(''));
+
+	return Uint8Array.fromBase64(str); // OR Uint8Array.from(atob(str), c => c.charCodeAt(0));
 }
 
-function encodeBase64Str(str) {
-	if (!str)
+/**
+ * General Base64 Encoding
+ * @param {string|Array|ArrayBuffer|Uint8Array} input - String or binary data to be encoded
+ * @returns {string}
+ */
+function encodeBase64(input) {
+	if (isEmpty(input))
 		return null;
 
-	let buf = encodeURIComponent(str).split('%').slice(1).map(h => parseInt(h, 16));
-	return btoa(String.fromCharCode(...buf));
-}
+	if (typeof input === 'string') {
+		const rawStr = encodeURIComponent(input).replace(/%([0-9A-F]{2})/g, (match, p1) =>
+			String.fromCharCode(parseInt(p1, 16))
+		);
+		return btoa(rawStr);
+	}
 
-function decodeBase64Bin(str) {
-	if (!str)
-		return null;
-
-	/* Thanks to luci-app-ssr-plus */
-	str = str.replace(/-/g, '+').replace(/_/g, '/');
-	let padding = (4 - (str.length % 4)) % 4;
-	if (padding)
-		str = str + Array(padding + 1).join('=');
-
-	return Array.prototype.map.call(atob(str), c => c.charCodeAt(0)); // OR Uint8Array.fromBase64(str);
-}
-
-function encodeBase64Bin(buf) {
-	if (isEmpty(buf))
-		return null;
-
-	return btoa(String.fromCharCode(...buf)); // OR new Uint8Array(buf).toBase64();
+	const buf = (input instanceof ArrayBuffer) ? new Uint8Array(input) : input;
+	return new Uint8Array(buf).toBase64(); // OR btoa(String.fromCharCode.apply(null, buf));
 }
 
 function generateRand(type, length) {
@@ -951,7 +952,8 @@ function yaml2json(content, command) {
 
 function isEmpty(res) {
 	if (res == null) return true;                                                // null, undefined
-	if (typeof res === 'string' || Array.isArray(res)) return res.length === 0;  // empty String/Array
+	if (typeof res.length === 'number') return res.length === 0;                 // empty String/Array/TypedArray
+	if (res instanceof ArrayBuffer) return res.byteLength === 0;                 // empty ArrayBuffer
 	if (typeof res === 'object') {
 		if (res instanceof Map || res instanceof Set) return res.size === 0;     // empty Map/Set
 		return Object.keys(res).length === 0;                                    // empty Object
@@ -1706,10 +1708,8 @@ return baseclass.extend({
 
 	/* Method */
 	calcStringMD5,
-	decodeBase64Str,
-	encodeBase64Str,
-	decodeBase64Bin,
-	encodeBase64Bin,
+	decodeBase64,
+	encodeBase64,
 	generateRand,
 	shuffle,
 	json2yaml,

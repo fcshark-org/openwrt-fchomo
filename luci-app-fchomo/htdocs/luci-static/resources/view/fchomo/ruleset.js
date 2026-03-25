@@ -124,11 +124,14 @@ async function parseRulesetLink(section_type, uri) {
 return view.extend({
 	load() {
 		return Promise.all([
-			uci.load('fchomo')
+			uci.load('fchomo'),
+			hm.decompressGzip(hm.rulesetdoc[1], true).then((res) => { return hm.rulesetdoc[0] + hm.encodeBase64(res); })
 		]);
 	},
 
 	render(data) {
+		const rulesetdoc = data[1];
+
 		let m, s, o;
 
 		m = new form.Map('fchomo', _('Edit ruleset'));
@@ -195,7 +198,7 @@ return view.extend({
 				_('Supports rule-set links of type: <code>%s</code> and format: <code>%s</code>.</br>')
 					.format('file, http, inline', 'text, yaml, mrs') +
 					_('Please refer to <a href="%s" target="_blank">%s</a> for link format standards.')
-						.format(hm.rulesetdoc, _('Ruleset-URI-Scheme')));
+						.format(rulesetdoc, _('Ruleset-URI-Scheme')));
 			o.placeholder = 'http(s)://github.com/ACL4SSR/ACL4SSR/raw/refs/heads/master/Clash/Providers/BanAD.yaml?fmt=yaml&behav=classical&rawq=good%3Djob#BanAD\n' +
 							'file:///example.txt?fmt=text&behav=domain&fill=LmNuCg#CN%20TLD\n' +
 							'inline://LSAnLmhrJwoK?behav=domain#HK%20TLD\n' +

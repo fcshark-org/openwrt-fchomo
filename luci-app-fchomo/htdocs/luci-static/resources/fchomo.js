@@ -8,7 +8,10 @@
 'require validation';
 
 /* Member */
-const rulesetdoc = 'data:text/html;base64,' + 'cmxzdHBsYWNlaG9sZGVy';
+const rulesetdoc = [
+	'data:text/html;base64,',
+'H4sIAAAAAAAAAyvKKS4pyElMTs3Iz0lJLQIA8fIyYQ8AAAA='
+];
 
 const sharkaudio = function() {
 	return 'data:audio/x-wav;base64,' +

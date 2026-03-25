@@ -33,7 +33,7 @@ const parseRulesetYaml = hm.parseYaml.extend({
 	}
 });
 
-function parseRulesetLink(section_type, uri) {
+function parseRulesetLink(section_type, uri, callback) {
 	const filefmt = /^(text|yaml|mrs)$/;
 	const filebehav = /^(domain|ipcidr|classical)$/;
 
@@ -43,12 +43,12 @@ function parseRulesetLink(section_type, uri) {
 	const done = (conf) => {
 		if (conf && conf.type && conf.id) {
 			if (!conf.label) conf.label = conf.id;
-			return conf;
+			return callback?.(conf);
 		}
-		return null;
-	};
+		return callback?.(null);
+	}
 
-	if (!(uri[0] && uri[1])) return done();
+	if (!(uri[0] && uri[1])) return done(null);
 
 	switch (uri[0]) {
 		case 'http':
@@ -90,28 +90,46 @@ function parseRulesetLink(section_type, uri) {
 					behavior: behavior,
 					id: hm.calcStringMD5(String.format('file://%s%s', url.host, url.pathname))
 				};
-				hm.writeFile(section_type, config.id, hm.decodeBase64(filler, true));
+
+				if (filler?.match(/^H4sI/)) { // Gzip magic + Deflate
+					return hm.decompressGzip(filler, true, (fill) => {
+						hm.writeFile(section_type, config.id, fill);
+						return done(config);
+					});
+				} else {
+					hm.writeFile(section_type, config.id, hm.decodeBase64(filler, true));
+					return done(config);
+				}
 			}
 
-			return done(config);
+			return done(null);
 		case 'inline':
 			var url = new URL('inline:' + uri[1]);
 			var behavior = url.searchParams.get('behav');
-			var payload = hm.decodeBase64(url.pathname, true).trim();
+			var rawData = url.pathname;
 
-			if (filebehav.test(behavior) && payload) {
-				config = {
-					label: url.hash ? decodeURIComponent(url.hash.slice(1)) : null,
-					type: 'inline',
-					behavior: behavior,
-					payload: payload,
-					id: hm.calcStringMD5(String.format('inline:%s', btoa(payload)))
-				};
-			}
+			const handleInline = (payload) => {
+				payload = (payload || '').trim();
+				if (filebehav.test(behavior) && payload) {
+					config = {
+						label: url.hash ? decodeURIComponent(url.hash.slice(1)) : null,
+						type: 'inline',
+						behavior: behavior,
+						payload: payload,
+						id: hm.calcStringMD5(String.format('inline:%s', btoa(payload)))
+					};
+				}
+				done(config);
+			};
 
-			return done(config);
+			if (rawData.match(/^H4sI/))
+				return hm.decompressGzip(rawData, true, handleInline);
+			else
+				return handleInline(hm.decodeBase64(rawData, true));
+
+			return done(null);
 		default:
-			return done();
+			return done(null);
 	}
 }
 
@@ -197,26 +215,33 @@ return view.extend({
 				let input_links = textarea.getValue().trim().split('\n');
 				if (!input_links[0]) return ui.hideModal();
 
-				let imported_count = 0;
 				input_links = [...new Set(input_links)]; // Remove duplicate lines
-				for (const link of input_links) {
-					let config = parseRulesetLink(section_type, link);
-					if (config) {
-						this.write(config);
-						imported_count++;
+
+				let tasks = input_links.map(link => {
+					return new Promise((resolve) => {
+						parseRulesetLink(section_type, link, (config) => {
+							if (config) {
+								this.write(config);
+								resolve(true);
+							} else
+								resolve(false);
+						});
+					});
+				});
+
+				Promise.all(tasks).then(results => {
+					let imported_count = results.filter(r => r === true).length;
+
+					if (imported_count === 0)
+						ui.addNotification(null, E('p', _('No valid rule-set link found.')));
+					else {
+						ui.addNotification(null, E('p', _('Successfully imported %s %s of total %s.')
+							.format(imported_count, _('rule-set'), input_links.length)), 'info');
+						this.save();
 					}
-				}
+				});
 
-				if (imported_count === 0)
-					ui.addNotification(null, E('p', _('No valid rule-set link found.')));
-				else
-					ui.addNotification(null, E('p', _('Successfully imported %s %s of total %s.')
-						.format(imported_count, _('rule-set'), input_links.length)), 'info');
-
-				if (imported_count)
-					return this.save();
-				else
-					return ui.hideModal();
+				return false;
 			}
 
 			return o.render();

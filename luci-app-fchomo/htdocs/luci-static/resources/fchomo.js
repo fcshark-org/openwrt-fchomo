@@ -916,11 +916,11 @@ function shuffle(StrORArr) {
 	else
 		throw new Error(`String or Array only`);
 
-    for (let i = arr.length - 1; i > 0; i--) {         // Traverse the array from back to front
-        const j = Math.floor(Math.random() * (i + 1)); // Generate a random index between 0 and i
+	for (let i = arr.length - 1; i > 0; i--) {         // Traverse the array from back to front
+		const j = Math.floor(Math.random() * (i + 1)); // Generate a random index between 0 and i
 
-        [arr[i], arr[j]] = [arr[j], arr[i]];           // Swap positions
-    }
+		[arr[i], arr[j]] = [arr[j], arr[i]];           // Swap positions
+	}
 
 	if (typeof StrORArr === 'string')
 		return arr.join('');
@@ -1510,9 +1510,9 @@ function validateSudokuCustomTable(section_id, value) {
 		return _('Expecting: %s').format(_('valid format: 2x, 2p, 4v'));
 
 	const counts = {};
-    for (const c of value)
-        counts[c] = (counts[c] || 0) + 1;
-    if (!(counts.x === 2 && counts.p === 2 && counts.v === 4))
+	for (const c of value)
+		counts[c] = (counts[c] || 0) + 1;
+	if (!(counts.x === 2 && counts.p === 2 && counts.v === 4))
 		return _('Expecting: %s').format(_('valid format: 2x, 2p, 4v'));
 
 	return true;

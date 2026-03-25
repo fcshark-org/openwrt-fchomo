@@ -33,7 +33,7 @@ const parseRulesetYaml = hm.parseYaml.extend({
 	}
 });
 
-function parseRulesetLink(section_type, uri) {
+async function parseRulesetLink(section_type, uri) {
 	const filefmt = /^(text|yaml|mrs)$/;
 	const filebehav = /^(domain|ipcidr|classical)$/;
 
@@ -90,15 +90,21 @@ function parseRulesetLink(section_type, uri) {
 					behavior: behavior,
 					id: hm.calcStringMD5(String.format('file://%s%s', url.host, url.pathname))
 				};
-				hm.writeFile(section_type, config.id, hm.decodeBase64(filler, true));
+				if (filler?.match(/^H4sI/)) // Gzip magic + Deflate
+					await hm.writeFile(section_type, config.id, await hm.decompressGzip(filler, true));
+				else
+					hm.writeFile(section_type, config.id, hm.decodeBase64(filler, true));
 			}
 
 			return done(config);
 		case 'inline':
 			var url = new URL('inline:' + uri[1]);
 			var behavior = url.searchParams.get('behav');
-			var payload = hm.decodeBase64(url.pathname, true).trim();
+			var payload = url.pathname.match(/^H4sI/) // Gzip magic + Deflate
+				? await hm.decompressGzip(url.pathname, true)
+				: hm.decodeBase64(url.pathname, true);
 
+			payload = (payload || '').trim();
 			if (filebehav.test(behavior) && payload) {
 				config = {
 					label: url.hash ? decodeURIComponent(url.hash.slice(1)) : null,
@@ -118,11 +124,14 @@ function parseRulesetLink(section_type, uri) {
 return view.extend({
 	load() {
 		return Promise.all([
-			uci.load('fchomo')
+			uci.load('fchomo'),
+			hm.decompressGzip(hm.rulesetdoc[1], true).then((res) => { return hm.rulesetdoc[0] + hm.encodeBase64(res); })
 		]);
 	},
 
 	render(data) {
+		const rulesetdoc = data[1];
+
 		let m, s, o;
 
 		m = new form.Map('fchomo', _('Edit ruleset'));
@@ -189,18 +198,19 @@ return view.extend({
 				_('Supports rule-set links of type: <code>%s</code> and format: <code>%s</code>.</br>')
 					.format('file, http, inline', 'text, yaml, mrs') +
 					_('Please refer to <a href="%s" target="_blank">%s</a> for link format standards.')
-						.format(hm.rulesetdoc, _('Ruleset-URI-Scheme')));
+						.format(rulesetdoc, _('Ruleset-URI-Scheme')));
 			o.placeholder = 'http(s)://github.com/ACL4SSR/ACL4SSR/raw/refs/heads/master/Clash/Providers/BanAD.yaml?fmt=yaml&behav=classical&rawq=good%3Djob#BanAD\n' +
 							'file:///example.txt?fmt=text&behav=domain&fill=LmNuCg#CN%20TLD\n' +
-							'inline://LSAnLmhrJwoK?behav=domain#HK%20TLD\n';
-			o.handleFn = function(textarea) {
+							'inline://LSAnLmhrJwoK?behav=domain#HK%20TLD\n' +
+							'inline://H4sIAAAAAAACA9NVUNcrKVcHANszKpEHAAAA?behav=domain#TW%20TLD\n';
+			o.handleFn = async function(textarea) {
 				let input_links = textarea.getValue().trim().split('\n');
 				if (!input_links[0]) return ui.hideModal();
 
 				let imported_count = 0;
 				input_links = [...new Set(input_links)]; // Remove duplicate lines
 				for (const link of input_links) {
-					let config = parseRulesetLink(section_type, link);
+					let config = await parseRulesetLink(section_type, link);
 					if (config) {
 						this.write(config);
 						imported_count++;

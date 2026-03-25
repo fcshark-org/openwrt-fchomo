@@ -33,8 +33,8 @@ echo '</style>'
 tail -n +$(( $p +1 )) $DOCNAME.html
 } > buildin.html
 popd
-minify "$PKG_BUILD_DIR"/buildin.html | base64 | tr -d '\n' > "$PKG_BUILD_DIR"/base64
-sed -i "s|'cmxzdHBsYWNlaG9sZGVy'|'$(cat "$PKG_BUILD_DIR"/base64)'|" "$PKG_BUILD_DIR"/htdocs/luci-static/resources/fchomo.js
+minify "$PKG_BUILD_DIR"/buildin.html | gzip -9 -c | base64 | tr -d '\n' > "$PKG_BUILD_DIR"/base64
+sed -i "s|'H4sIAAAAAAAAAyvKKS4pyElMTs3Iz0lJLQIA8fIyYQ8AAAA='|'$(cat "$PKG_BUILD_DIR"/base64)'|" "$PKG_BUILD_DIR"/htdocs/luci-static/resources/fchomo.js
 # shaka audio
 sed -i "s|audio/x-wav|audio/mpeg|;
 		s|'UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA='|'$(base64 "$CURDIR/docs/$SHARKAUDIO" | tr -d '\n')'|" \

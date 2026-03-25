@@ -8,7 +8,10 @@
 'require validation';
 
 /* Member */
-const rulesetdoc = 'data:text/html;base64,' + 'cmxzdHBsYWNlaG9sZGVy';
+const rulesetdoc = [
+	'data:text/html;base64,',
+'H4sIAAAAAAAAAyvKKS4pyElMTs3Iz0lJLQIA8fIyYQ8AAAA='
+];
 
 const sharkaudio = function() {
 	return 'data:audio/x-wav;base64,' +
@@ -839,6 +842,16 @@ function calcStringMD5(e) {
 	return (p(a) + p(b) + p(c) + p(d)).toLowerCase();
 }
 
+/* Thanks to luci-app-ssr-plus */
+function base64Format(str) {
+	str = str.replace(/-/g, '+').replace(/_/g, '/');
+	const padding = (4 - (str.length % 4)) % 4;
+	if (padding)
+		str += '='.repeat(padding);
+
+	return str;
+}
+
 /* thanks to homeproxy */
 /**
  * General Base64 Decoding
@@ -850,11 +863,7 @@ function decodeBase64(str, asText = false) {
 	if (!str)
 		return null;
 
-	/* Thanks to luci-app-ssr-plus */
-	str = str.replace(/-/g, '+').replace(/_/g, '/');
-	const padding = (4 - (str.length % 4)) % 4;
-	if (padding)
-		str += '='.repeat(padding);
+	str = base64Format(str);
 
 	if (asText)
 		return decodeURIComponent(Array.prototype.map.call(atob(str), c =>
@@ -882,6 +891,46 @@ function encodeBase64(input) {
 
 	const buf = (input instanceof ArrayBuffer) ? new Uint8Array(input) : input;
 	return new Uint8Array(buf).toBase64(); // OR btoa(String.fromCharCode.apply(null, buf));
+}
+
+// thanks to https://github.com/scottschiller/ArmorAlley/blob/master/src/floppy/index-floppy.html
+/**
+ * Unzip Gzip data
+ * @param {string|Array|ArrayBuffer|Uint8Array} input - Input data (Base64 string or binary object)
+ * @param {boolean} asText - Return a string? (true: text, false: arrayBuffer)
+ * @returns {Promise<string|Uint8Array>}
+ */
+async function decompressGzip(input, asText = false) {
+	if (isEmpty(input))
+		return null;
+
+	const ds = new DecompressionStream('gzip');
+
+	let blob_in;
+	if (typeof input === 'string') {
+		if (input.match(/^H4sI/)) { // Gzip magic + Deflate
+			const response = await window.fetch('data:application/octet-stream;base64,' + base64Format(input));
+			blob_in = await response.blob();
+		} else
+			throw new Error('Not a valid base64 encoded gzip');
+	} else {
+		// The `input` should be `Array` or `ArrayBuffer` or `Uint8Array`.
+		input = new Uint8Array(input);
+		if (input.subarray(0, 3).join(',') === [0x1f, 0x8b, 0x08].join(',')) // Gzip magic + Deflate
+			blob_in = new Blob([input]);
+		else
+			throw new Error('Not a valid gzip');
+	}
+
+	const decodedStream = blob_in.stream().pipeThrough(ds);
+	const blob_out = await new window.Response(decodedStream).blob();
+
+	if (asText)
+		return await blob_out.text();
+	else {
+		const buf = await blob_out.arrayBuffer();
+		return new Uint8Array(buf);
+	}
 }
 
 function generateRand(type, length) {
@@ -1710,6 +1759,7 @@ return baseclass.extend({
 	calcStringMD5,
 	decodeBase64,
 	encodeBase64,
+	decompressGzip,
 	generateRand,
 	shuffle,
 	json2yaml,

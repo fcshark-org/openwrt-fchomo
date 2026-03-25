@@ -839,6 +839,16 @@ function calcStringMD5(e) {
 	return (p(a) + p(b) + p(c) + p(d)).toLowerCase();
 }
 
+/* Thanks to luci-app-ssr-plus */
+function base64Format(str) {
+	str = str.replace(/-/g, '+').replace(/_/g, '/');
+	const padding = (4 - (str.length % 4)) % 4;
+	if (padding)
+		str += '='.repeat(padding);
+
+	return str;
+}
+
 /* thanks to homeproxy */
 /**
  * General Base64 Decoding
@@ -850,11 +860,7 @@ function decodeBase64(str, asText = false) {
 	if (!str)
 		return null;
 
-	/* Thanks to luci-app-ssr-plus */
-	str = str.replace(/-/g, '+').replace(/_/g, '/');
-	const padding = (4 - (str.length % 4)) % 4;
-	if (padding)
-		str += '='.repeat(padding);
+	str = base64Format(str);
 
 	if (asText)
 		return decodeURIComponent(Array.prototype.map.call(atob(str), c =>
@@ -902,7 +908,7 @@ function decompressGzip(input, asText = false, callback) {
 			let blob_in;
 			if (typeof data === 'string') {
 				if (data.match(/^H4sI/)) { // Gzip magic + Deflate
-					const response = await window.fetch('data:application/octet-stream;base64,' + data);
+					const response = await window.fetch('data:application/octet-stream;base64,' + base64Format(data));
 					blob_in = await response.blob();
 				} else
 					throw new Error('Not a valid base64 encoded gzip');

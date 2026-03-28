@@ -17,7 +17,7 @@ log() {
 }
 
 to_upper() {
-	echo -e "$1" | tr "[a-z]" "[A-Z]"
+	echo -e "$1" | tr "a-z" "A-Z"
 }
 
 get_local_ver() {

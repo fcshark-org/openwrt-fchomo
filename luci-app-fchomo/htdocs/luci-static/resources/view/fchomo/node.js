@@ -1197,6 +1197,13 @@ return view.extend({
 		so.depends({transport_enabled: '1', transport_type: 'grpc'});
 		so.modalonly = true;
 
+		so = ss.taboption('field_transport', form.Value, 'transport_grpc_ping_interval', _('gRPC ping interval'),
+			_('In seconds.'));
+		so.datatype = 'uinteger';
+		so.placeholder = '0';
+		so.depends({transport_enabled: '1', transport_type: 'grpc'});
+		so.modalonly = true;
+
 		so = ss.taboption('field_transport', form.Value, 'transport_ws_max_early_data', _('Max Early Data'),
 			_('Early Data first packet length limit.'));
 		so.datatype = 'uinteger';

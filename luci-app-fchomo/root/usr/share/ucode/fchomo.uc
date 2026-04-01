@@ -273,7 +273,7 @@ export function parseListener(cfg, isClient, label) {
 			httpmask: (cfg.sudoku_http_mask === '0') ? { disable: true } : {
 				disable: false,
 				mode: cfg.sudoku_http_mask_mode,
-				path_root: cfg.sudoku_path_root,
+				"path-root": cfg.sudoku_path_root,
 			}
 		} : {}),
 		fallback: (cfg.sudoku_http_mask === '0') ? null : cfg.sudoku_fallback,

@@ -540,7 +540,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 				mode: cfg.sudoku_http_mask_mode,
 				tls: strToBool(cfg.sudoku_http_mask_tls) || false,
 				host: cfg.sudoku_http_mask_host,
-				path_root: cfg.sudoku_path_root,
+				"path-root": cfg.sudoku_path_root,
 				multiplex: cfg.sudoku_http_mask_multiplex,
 			}
 		} : {}),

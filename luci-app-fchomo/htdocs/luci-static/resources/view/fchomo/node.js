@@ -1244,6 +1244,7 @@ return view.extend({
 		so.modalonly = true;
 
 		so = ss.taboption('field_transport', form.ListValue, 'transport_xhttp_mode', _('XHTTP mode'));
+		so.value('auto', _('Auto'));
 		so.value('stream-one', _('stream-one'));
 		so.value('stream-up', _('stream-up'));
 		so.value('packet-up', _('packet-up'));

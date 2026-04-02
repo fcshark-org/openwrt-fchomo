@@ -1953,7 +1953,7 @@ msgstr "混淆类型"
 #: htdocs/luci-static/resources/view/fchomo/node.js:408
 #: htdocs/luci-static/resources/view/fchomo/node.js:409
 msgid "Obfuscated as %s"
-msgstr "混淆为"
+msgstr "混淆为%s"
 
 #: htdocs/luci-static/resources/view/fchomo/global.js:880
 msgid "One or more numbers in the range 0-63 separated by commas"

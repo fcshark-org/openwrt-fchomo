@@ -586,7 +586,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		encryption: cfg.vless_encryption === '1' ? cfg.vless_encryption_encryption : null,
 
 		/* TrustTunnel */
-		"health-check": strToBool(cfg.trusttunnel_health_check === '0' ? false : true),
+		"health-check": cfg.trusttunnel_health_check === '0' ? false : true,
 		quic: strToBool(cfg.trusttunnel_quic),
 
 		/* WireGuard */
@@ -658,6 +658,14 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 				"early-data-header-name": cfg.transport_ws_early_data_header,
 				"v2ray-http-upgrade": strToBool(cfg.transport_ws_v2ray_http_upgrade),
 				"v2ray-http-upgrade-fast-open": strToBool(cfg.transport_ws_v2ray_http_upgrade_fast_open)
+			} : null,
+			"xhttp-opts": cfg.transport_type === 'xhttp' ? {
+				host: cfg.transport_host,
+				path: cfg.transport_path || '/',
+				headers: cfg.transport_http_headers ? json(cfg.transport_http_headers) : null,
+				mode: cfg.transport_xhttp_mode,
+				"no-grpc-header": strToBool(cfg.transport_xhttp_no_grpc_header),
+				"x-padding-bytes": cfg.transport_xhttp_x_padding_bytes
 			} : null
 		} : {}),
 

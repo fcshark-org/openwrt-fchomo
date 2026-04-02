@@ -1130,17 +1130,25 @@ return view.extend({
 		so.value('h2', _('HTTPUpgrade'));
 		so.value('grpc', _('gRPC'));
 		so.value('ws', _('WebSocket'));
+		so.value('xhttp', _('XHTTP'));
 		so.validate = function(section_id, value) {
 			const type = this.section.getOption('type').formvalue(section_id);
 
 			switch (type) {
 				case 'vmess':
-				case 'vless':
 					if (!['http', 'h2', 'grpc', 'ws'].includes(value))
 						return _('Expecting: only support %s.').format(_('HTTP') +
 							' / ' + _('HTTPUpgrade') +
 							' / ' + _('gRPC') +
 							' / ' + _('WebSocket'));
+					break;
+				case 'vless':
+					if (!['http', 'h2', 'grpc', 'ws', 'xhttp'].includes(value))
+						return _('Expecting: only support %s.').format(_('HTTP') +
+							' / ' + _('HTTPUpgrade') +
+							' / ' + _('gRPC') +
+							' / ' + _('WebSocket') +
+							' / ' + _('XHTTP'));
 					break;
 				case 'trojan':
 					if (!['grpc', 'ws'].includes(value))
@@ -1160,6 +1168,12 @@ return view.extend({
 		so.datatype = 'list(hostname)';
 		so.placeholder = 'example.com';
 		so.depends({transport_enabled: '1', transport_type: 'h2'});
+		so.modalonly = true;
+
+		so = ss.taboption('field_transport', form.DynamicList, 'transport_host', _('Server hostname'));
+		so.datatype = 'hostname';
+		so.placeholder = 'example.com';
+		so.depends({transport_enabled: '1', transport_type: 'xhttp'});
 		so.modalonly = true;
 
 		so = ss.taboption('field_transport', form.Value, 'transport_http_method', _('HTTP request method'));
@@ -1182,13 +1196,13 @@ return view.extend({
 		so.placeholder = '/';
 		so.default = '/';
 		so.rmempty = false;
-		so.depends({transport_enabled: '1', transport_type: /^(h2|ws)$/});
+		so.depends({transport_enabled: '1', transport_type: /^(h2|ws|xhttp)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_transport', hm.TextValue, 'transport_http_headers', _('HTTP header'));
-		so.placeholder = '{\n  "Host": "example.com",\n  "Connection": [\n    "keep-alive"\n  ]\n}';
+		so.placeholder = '{\n  "Host": "example.com",\n  "Connection": [\n    "keep-alive"\n  ],\n  "X-Forwarded-For": "" // XHTTP\n}';
 		so.validate = hm.validateJson;
-		so.depends({transport_enabled: '1', transport_type: /^(http|ws)$/});
+		so.depends({transport_enabled: '1', transport_type: /^(http|ws|xhttp)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_transport', form.Value, 'transport_grpc_servicename', _('gRPC service name'));
@@ -1227,6 +1241,23 @@ return view.extend({
 		so = ss.taboption('field_transport', form.Flag, 'transport_ws_v2ray_http_upgrade_fast_open', _('V2ray HTTPUpgrade fast open'));
 		so.default = so.disabled;
 		so.depends({transport_enabled: '1', transport_type: 'ws', transport_ws_v2ray_http_upgrade: '1'});
+		so.modalonly = true;
+
+		so = ss.taboption('field_transport', form.ListValue, 'transport_xhttp_mode', _('XHTTP mode'));
+		so.value('stream-one', _('stream-one'));
+		so.value('stream-up', _('stream-up'));
+		so.value('packet-up', _('packet-up'));
+		so.depends({transport_enabled: '1', transport_type: 'xhttp'});
+		so.modalonly = true;
+
+		so = ss.taboption('field_transport', form.Flag, 'transport_xhttp_no_grpc_header', _('No gRPC header'));
+		so.default = so.disabled;
+		so.depends({transport_enabled: '1', transport_type: 'xhttp'});
+		so.modalonly = true;
+
+		so = ss.taboption('field_transport', form.Value, 'transport_xhttp_x_padding_bytes', _('Padding bytes'));
+		so.placeholder = '100-1000';
+		so.depends({transport_enabled: '1', transport_type: 'xhttp'});
 		so.modalonly = true;
 
 		/* Multiplex fields */ // TCP protocol only

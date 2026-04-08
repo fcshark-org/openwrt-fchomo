@@ -665,7 +665,14 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 				headers: cfg.transport_http_headers ? json(cfg.transport_http_headers) : null,
 				mode: cfg.transport_xhttp_mode,
 				"no-grpc-header": strToBool(cfg.transport_xhttp_no_grpc_header),
-				"x-padding-bytes": cfg.transport_xhttp_x_padding_bytes
+				"x-padding-bytes": cfg.transport_xhttp_x_padding_bytes,
+				"reuse-settings": cfg.transport_xhttp_xmux ? {
+					"max-connections": cfg.transport_xhttp_xmux_max_connections,
+					"max-concurrency": cfg.transport_xhttp_xmux_max_concurrency,
+					"c-max-reuse-times": cfg.transport_xhttp_xmux_max_reuse_times,
+					"h-max-request-times": cfg.transport_xhttp_xmux_max_request_times,
+					"h-max-reusable-secs": cfg.transport_xhttp_xmux_max_reusable_secs
+				} : null
 			} : null
 		} : {}),
 

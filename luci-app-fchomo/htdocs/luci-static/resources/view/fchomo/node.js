@@ -1261,6 +1261,36 @@ return view.extend({
 		so.depends({transport_enabled: '1', transport_type: 'xhttp'});
 		so.modalonly = true;
 
+		so = ss.taboption('field_transport', form.Flag, 'transport_xhttp_xmux', _('XMUX'));
+		so.default = so.disabled;
+		so.depends({transport_enabled: '1', transport_type: 'xhttp'});
+		so.modalonly = true;
+
+		so = ss.taboption('field_transport', form.Value, 'transport_xhttp_xmux_max_connections', _('XMUX: ') + _('Max connections'));
+		so.placeholder = '16-32';
+		so.depends('transport_xhttp_xmux', '1');
+		so.modalonly = true;
+
+		so = ss.taboption('field_transport', form.Value, 'transport_xhttp_xmux_max_concurrency', _('XMUX: ') + _('Max concurrency'));
+		so.placeholder = '0';
+		so.depends({transport_xhttp_xmux: '1', transport_xhttp_xmux_max_connections: ''});
+		so.modalonly = true;
+
+		so = ss.taboption('field_transport', form.Value, 'transport_xhttp_xmux_max_reuse_times', _('XMUX: ') + _('Max reuse times'));
+		so.placeholder = '0';
+		so.depends('transport_xhttp_xmux', '1');
+		so.modalonly = true;
+
+		so = ss.taboption('field_transport', form.Value, 'transport_xhttp_xmux_max_request_times', _('XMUX: ') + _('Max request times'));
+		so.placeholder = '600-900';
+		so.depends('transport_xhttp_xmux', '1');
+		so.modalonly = true;
+
+		so = ss.taboption('field_transport', form.Value, 'transport_xhttp_xmux_max_reusable_secs', _('XMUX: ') + _('Max reusable seconds'));
+		so.placeholder = '1800-3000';
+		so.depends('transport_xhttp_xmux', '1');
+		so.modalonly = true;
+
 		/* Multiplex fields */ // TCP protocol only
 		so = ss.taboption('field_general', form.Flag, 'smux_enabled', _('Multiplex'));
 		so.default = so.disabled;

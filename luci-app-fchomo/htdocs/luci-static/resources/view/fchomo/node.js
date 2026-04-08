@@ -1170,7 +1170,7 @@ return view.extend({
 		so.depends({transport_enabled: '1', transport_type: 'h2'});
 		so.modalonly = true;
 
-		so = ss.taboption('field_transport', form.DynamicList, 'transport_host', _('Server hostname'));
+		so = ss.taboption('field_transport', form.Value, 'transport_host', _('Server hostname'));
 		so.datatype = 'hostname';
 		so.placeholder = 'example.com';
 		so.depends({transport_enabled: '1', transport_type: 'xhttp'});

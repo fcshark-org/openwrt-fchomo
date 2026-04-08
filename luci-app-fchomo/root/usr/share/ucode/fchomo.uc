@@ -345,8 +345,13 @@ export function parseListener(cfg, isClient, label) {
 
 		/* Transport fields */
 		...(cfg.transport_enabled === '1' ? {
-			"grpc-service-name": cfg.transport_grpc_servicename,
-			"ws-path": cfg.transport_path
+			"grpc-service-name": cfg.transport_type === 'grpc' ? cfg.transport_grpc_servicename : null,
+			"ws-path": cfg.transport_type === 'ws' ? cfg.transport_path : null,
+			"xhttp-config": cfg.transport_type === 'xhttp' ? {
+				path: cfg.transport_path,
+				host: cfg.transport_host,
+				mode: cfg.transport_xhttp_mode
+			} : null
 		} : {})
 	}
 };

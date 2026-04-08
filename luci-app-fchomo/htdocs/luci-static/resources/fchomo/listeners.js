@@ -967,18 +967,18 @@ function renderListeners(s, uciconfig, isClient) {
 	o = s.taboption('field_transport', form.ListValue, 'transport_type', _('Transport type'));
 	o.value('grpc', _('gRPC'));
 	o.value('ws', _('WebSocket'));
+	o.value('xhttp', _('XHTTP'));
 	o.validate = function(section_id, value) {
 		const type = this.section.getOption('type').formvalue(section_id);
 
 		switch (type) {
-			case 'vmess':
 			case 'vless':
-				if (!['http', 'h2', 'grpc', 'ws'].includes(value))
-					return _('Expecting: only support %s.').format(_('HTTP') +
-						' / ' + _('HTTPUpgrade') +
-						' / ' + _('gRPC') +
-						' / ' + _('WebSocket'));
+				if (!['grpc', 'ws', 'xhttp'].includes(value))
+					return _('Expecting: only support %s.').format(_('gRPC') +
+						' / ' + _('WebSocket') +
+						' / ' + _('XHTTP'));
 				break;
+			case 'vmess':
 			case 'trojan':
 				if (!['grpc', 'ws'].includes(value))
 					return _('Expecting: only support %s.').format(_('gRPC') +
@@ -993,17 +993,31 @@ function renderListeners(s, uciconfig, isClient) {
 	o.depends('transport_enabled', '1');
 	o.modalonly = true;
 
+	o = s.taboption('field_transport', form.Value, 'transport_host', _('Server hostname'));
+	o.datatype = 'hostname';
+	o.placeholder = 'example.com';
+	o.depends({transport_enabled: '1', transport_type: 'xhttp'});
+	o.modalonly = true;
+
 	o = s.taboption('field_transport', form.Value, 'transport_path', _('Request path'));
 	o.placeholder = '/';
 	o.default = '/';
 	o.rmempty = false;
-	o.depends({transport_enabled: '1', transport_type: 'ws'});
+	o.depends({transport_enabled: '1', transport_type: /^(ws|xhttp)$/});
 	o.modalonly = true;
 
 	o = s.taboption('field_transport', form.Value, 'transport_grpc_servicename', _('gRPC service name'));
 	o.placeholder = 'GunService';
 	o.rmempty = false;
 	o.depends({transport_enabled: '1', transport_type: 'grpc'});
+	o.modalonly = true;
+
+	o = s.taboption('field_transport', form.ListValue, 'transport_xhttp_mode', _('XHTTP mode'));
+	o.value('auto', _('Auto'));
+	o.value('stream-one', _('stream-one'));
+	o.value('stream-up', _('stream-up'));
+	o.value('packet-up', _('packet-up'));
+	o.depends({transport_enabled: '1', transport_type: 'xhttp'});
 	o.modalonly = true;
 }
 

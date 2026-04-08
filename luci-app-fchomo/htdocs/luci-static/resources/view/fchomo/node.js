@@ -1261,6 +1261,12 @@ return view.extend({
 		so.depends({transport_enabled: '1', transport_type: 'xhttp'});
 		so.modalonly = true;
 
+		so = ss.taboption('field_transport', form.Value, 'transport_xhttp_sc_max_each_post_bytes', _('Max each POST bytes'));
+		so.datatype = 'uinteger';
+		so.placeholder = '1000000';
+		so.depends({transport_enabled: '1', transport_type: 'xhttp'});
+		so.modalonly = true;
+
 		so = ss.taboption('field_transport', form.Flag, 'transport_xhttp_xmux', _('XMUX'));
 		so.default = so.disabled;
 		so.depends({transport_enabled: '1', transport_type: 'xhttp'});

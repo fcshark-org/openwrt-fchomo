@@ -1019,6 +1019,12 @@ function renderListeners(s, uciconfig, isClient) {
 	o.value('packet-up', _('packet-up'));
 	o.depends({transport_enabled: '1', transport_type: 'xhttp'});
 	o.modalonly = true;
+
+	o = s.taboption('field_transport', form.Value, 'transport_xhttp_sc_max_each_post_bytes', _('Max each POST bytes'));
+	o.datatype = 'uinteger';
+	o.placeholder = '1000000';
+	o.depends({transport_enabled: '1', transport_type: 'xhttp'});
+	o.modalonly = true;
 }
 
 return baseclass.extend({

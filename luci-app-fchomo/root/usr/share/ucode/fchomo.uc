@@ -350,7 +350,8 @@ export function parseListener(cfg, isClient, label) {
 			"xhttp-config": cfg.transport_type === 'xhttp' ? {
 				path: cfg.transport_path,
 				host: cfg.transport_host,
-				mode: cfg.transport_xhttp_mode
+				mode: cfg.transport_xhttp_mode,
+				"sc-max-each-post-bytes": strToInt(cfg.transport_xhttp_sc_max_each_post_bytes) || null,
 			} : null
 		} : {})
 	}

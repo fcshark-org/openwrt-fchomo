@@ -351,6 +351,8 @@ export function parseListener(cfg, isClient, label) {
 				path: cfg.transport_path,
 				host: cfg.transport_host,
 				mode: cfg.transport_xhttp_mode,
+				"no-sse-header": strToBool(cfg.transport_xhttp_no_sse_header),
+				"sc-stream-up-server-secs": cfg.transport_xhttp_sc_stream_up_server_secs,
 				"sc-max-each-post-bytes": strToInt(cfg.transport_xhttp_sc_max_each_post_bytes) || null,
 			} : null
 		} : {})

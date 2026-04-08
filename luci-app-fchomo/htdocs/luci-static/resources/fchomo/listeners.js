@@ -1020,6 +1020,16 @@ function renderListeners(s, uciconfig, isClient) {
 	o.depends({transport_enabled: '1', transport_type: 'xhttp'});
 	o.modalonly = true;
 
+	o = s.taboption('field_transport', form.Flag, 'transport_xhttp_no_sse_header', _('No SSE header'));
+	o.default = o.disabled;
+	o.depends({transport_enabled: '1', transport_type: 'xhttp'});
+	o.modalonly = true;
+
+	o = s.taboption('field_transport', form.Value, 'transport_xhttp_sc_stream_up_server_secs', _('stream-up server seconds'));
+	o.placeholder = '20-80';
+	o.depends({transport_enabled: '1', transport_type: 'xhttp'});
+	o.modalonly = true;
+
 	o = s.taboption('field_transport', form.Value, 'transport_xhttp_sc_max_each_post_bytes', _('Max each POST bytes'));
 	o.datatype = 'uinteger';
 	o.placeholder = '1000000';

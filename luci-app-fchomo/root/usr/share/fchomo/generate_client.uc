@@ -681,6 +681,11 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		} : {}),
 
 		/* Multiplex fields */
+		...(cfg.type in ['trusttunnel'] ? {
+			"max-connections": strToInt(cfg.smux_max_connections) || null,
+			"min-streams": strToInt(cfg.smux_min_streams) || null,
+			"max-streams": strToInt(cfg.smux_max_streams) || null
+		} : {}),
 		smux: cfg.smux_enabled === '1' ? {
 			enabled: true,
 			protocol: cfg.smux_protocol,

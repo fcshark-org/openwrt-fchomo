@@ -1316,6 +1316,7 @@ return view.extend({
 		so.datatype = 'uinteger';
 		so.placeholder = '4';
 		so.depends('smux_enabled', '1');
+		so.depends({transport_enabled: '1', transport_type: 'grpc'});
 		so.modalonly = true;
 
 		so = ss.taboption('field_multiplex', form.Value, 'smux_min_streams', _('Minimum streams'),
@@ -1323,6 +1324,7 @@ return view.extend({
 		so.datatype = 'uinteger';
 		so.placeholder = '4';
 		so.depends('smux_enabled', '1');
+		so.depends({transport_enabled: '1', transport_type: 'grpc'});
 		so.modalonly = true;
 
 		so = ss.taboption('field_multiplex', form.Value, 'smux_max_streams', _('Maximum streams'),
@@ -1332,6 +1334,7 @@ return view.extend({
 		so.datatype = 'uinteger';
 		so.placeholder = '0';
 		so.depends({smux_enabled: '1', smux_max_connections: '', smux_min_streams: ''});
+		so.depends({transport_enabled: '1', transport_type: 'grpc', smux_max_connections: '', smux_min_streams: ''});
 		so.modalonly = true;
 
 		so = ss.taboption('field_multiplex', form.Flag, 'smux_padding', _('Enable padding'));

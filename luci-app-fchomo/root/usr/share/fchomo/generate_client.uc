@@ -671,8 +671,8 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 				"x-padding-bytes": cfg.transport_xhttp_x_padding_bytes,
 				"sc-max-each-post-bytes": strToInt(cfg.transport_xhttp_sc_max_each_post_bytes) || null,
 				"reuse-settings": cfg.transport_xhttp_xmux ? {
-					"max-connections": cfg.transport_xhttp_xmux_max_connections,
 					"max-concurrency": cfg.transport_xhttp_xmux_max_concurrency,
+					"max-connections": cfg.transport_xhttp_xmux_max_connections,
 					"c-max-reuse-times": cfg.transport_xhttp_xmux_max_reuse_times,
 					"h-max-request-times": cfg.transport_xhttp_xmux_max_request_times,
 					"h-max-reusable-secs": cfg.transport_xhttp_xmux_max_reusable_secs
@@ -782,11 +782,11 @@ uci.foreach(uciconf, uciprov, (cfg) => {
 				// Configuration Items
 				tfo: strToBool(cfg.override_tfo),
 				mptcp: strToBool(cfg.override_mptcp),
-				udp: (cfg.override_udp === '0') ? false : true,
+				udp: (cfg.override_udp === '0') ? null : true,
 				"udp-over-tcp": strToBool(cfg.override_uot),
 				up: cfg.override_up ? cfg.override_up + ' Mbps' : null,
 				down: cfg.override_down ? cfg.override_down + ' Mbps' : null,
-				"skip-cert-verify": strToBool(cfg.override_skip_cert_verify) || false,
+				"skip-cert-verify": cfg.override_skip_cert_verify ? strToBool(cfg.override_skip_cert_verify) || false : null,
 				"dialer-proxy": dialerproxy[cfg['.name']]?.detour,
 				"interface-name": cfg.override_interface_name,
 				"routing-mark": strToInt(cfg.override_routing_mark) || null,

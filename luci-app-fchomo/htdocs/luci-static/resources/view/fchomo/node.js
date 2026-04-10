@@ -1272,14 +1272,14 @@ return view.extend({
 		so.depends({transport_enabled: '1', transport_type: 'xhttp'});
 		so.modalonly = true;
 
-		so = ss.taboption('field_transport', form.Value, 'transport_xhttp_xmux_max_connections', _('XMUX: ') + _('Max connections'));
+		so = ss.taboption('field_transport', form.Value, 'transport_xhttp_xmux_max_concurrency', _('XMUX: ') + _('Max concurrency'));
 		so.placeholder = '16-32';
 		so.depends('transport_xhttp_xmux', '1');
 		so.modalonly = true;
 
-		so = ss.taboption('field_transport', form.Value, 'transport_xhttp_xmux_max_concurrency', _('XMUX: ') + _('Max concurrency'));
+		so = ss.taboption('field_transport', form.Value, 'transport_xhttp_xmux_max_connections', _('XMUX: ') + _('Max connections'));
 		so.placeholder = '0';
-		so.depends({transport_xhttp_xmux: '1', transport_xhttp_xmux_max_connections: ''});
+		so.depends({transport_xhttp_xmux: '1', transport_xhttp_xmux_max_concurrency: ''});
 		so.modalonly = true;
 
 		so = ss.taboption('field_transport', form.Value, 'transport_xhttp_xmux_max_reuse_times', _('XMUX: ') + _('Max reuse times'));
@@ -1689,11 +1689,14 @@ return view.extend({
 		so.depends({type: 'inline', '!reverse': true});
 		so.modalonly = true;
 
-		so = ss.taboption('field_override', form.Flag, 'override_skip_cert_verify', _('Skip cert verify'),
+		so = ss.taboption('field_override', form.ListValue, 'override_skip_cert_verify', _('Skip cert verify'),
 			_('Donot verifying server certificate.') +
 			'<br/>' +
 			_('This is <strong>DANGEROUS</strong>, your traffic is almost like <strong>PLAIN TEXT</strong>! Use at your own risk!'));
-		so.default = so.disabled;
+		so.default = '';
+		so.value('', _('Keep default'));
+		so.value('1', _('Yes'));
+		so.value('0', _('No'));
 		so.depends({type: 'inline', '!reverse': true});
 		so.modalonly = true;
 

@@ -315,6 +315,11 @@ msgstr "自动更新"
 msgid "Auto update resources."
 msgstr "自动更新资源文件。"
 
+#: htdocs/luci-static/resources/fchomo/listeners.js:548
+#: htdocs/luci-static/resources/view/fchomo/node.js:865
+msgid "BBR profile"
+msgstr "BBR 配置文件"
+
 #: htdocs/luci-static/resources/fchomo.js:42
 msgid "Baidu"
 msgstr "百度"

@@ -55,6 +55,13 @@ const congestion_controller = [
 	['bbr', _('bbr')],
 ];
 
+const bbr_profiles = [
+	['', _('Keep default')],
+	['standard', _('Standard')],
+	['conservative', _('Conservative')],
+	['aggressive', _('Aggressive')],
+];
+
 const stunserver = [
 	['stun.fitauto.ru:3478'],
 	['stun.hot-chilli.net:3478'],
@@ -1715,6 +1722,7 @@ return baseclass.extend({
 	monospacefonts,
 	checkurls,
 	congestion_controller,
+	bbr_profiles,
 	stunserver,
 	dashrepos,
 	dashrepos_urlparams,

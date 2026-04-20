@@ -608,6 +608,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 
 		/* Extra fields */
 		"congestion-controller": cfg.congestion_controller,
+		"bbr-profile": cfg.bbr_profile,
 		udp: strToBool(cfg.udp),
 		"udp-over-tcp": strToBool(cfg.uot),
 		"udp-over-tcp-version": cfg.uot_version,

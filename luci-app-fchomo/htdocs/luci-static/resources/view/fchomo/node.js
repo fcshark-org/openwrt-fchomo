@@ -862,6 +862,15 @@ return view.extend({
 		so.depends({type: /^(tuic|masque|trusttunnel)$/});
 		so.modalonly = true;
 
+		so = ss.taboption('field_general', form.ListValue, 'bbr_profile', _('BBR profile'));
+		so.default = hm.bbr_profiles[0][0];
+		hm.bbr_profiles.forEach((res) => {
+			so.value.apply(so, res);
+		})
+		so.depends({congestion_controller: 'bbr'});
+		so.depends({type: 'hysteria2'});
+		so.modalonly = true;
+
 		so = ss.taboption('field_general', form.Flag, 'udp', _('UDP'));
 		so.default = so.disabled;
 		so.depends({type: /^(direct|socks5|ss|mieru|vmess|vless|trojan|anytls|trusttunnel|masque|wireguard)$/});

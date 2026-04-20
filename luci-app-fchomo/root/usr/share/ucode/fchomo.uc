@@ -321,6 +321,7 @@ export function parseListener(cfg, isClient, label) {
 
 		/* Extra fields */
 		"congestion-controller": cfg.congestion_controller,
+		"bbr-profile": cfg.bbr_profile,
 		network: cfg.network,
 		udp: strToBool(cfg.udp),
 

@@ -545,6 +545,15 @@ function renderListeners(s, uciconfig, isClient) {
 	o.depends({type: /^(tuic|trusttunnel)$/});
 	o.modalonly = true;
 
+	o = s.taboption('field_general', form.ListValue, 'bbr_profile', _('BBR profile'));
+	o.default = hm.bbr_profiles[0][0];
+	hm.bbr_profiles.forEach((res) => {
+		o.value.apply(o, res);
+	})
+	o.depends({congestion_controller: 'bbr'});
+	o.depends({type: 'hysteria2'});
+	o.modalonly = true;
+
 	o = s.taboption('field_general', form.MultiValue, 'network', _('Network type'));
 	o.value('tcp', _('TCP'));
 	o.value('udp', _('UDP'));

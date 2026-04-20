@@ -304,6 +304,11 @@ msgstr ""
 msgid "Auto update resources."
 msgstr ""
 
+#: htdocs/luci-static/resources/fchomo/listeners.js:548
+#: htdocs/luci-static/resources/view/fchomo/node.js:865
+msgid "BBR profile"
+msgstr ""
+
 #: htdocs/luci-static/resources/fchomo.js:42
 msgid "Baidu"
 msgstr ""

@@ -278,7 +278,7 @@ return view.extend({
 
 		so = ss.taboption('field_general', form.Value, 'hysteria_hop_interval', _('Port hop interval'),
 			_('In seconds. <code>%s</code> will be used if empty.').format('30'));
-		so.datatype = 'uinteger';
+		so.placeholder = '15 OR 15-30';
 		so.depends('type', 'hysteria2');
 		so.modalonly = true;
 

@@ -232,7 +232,7 @@ msgstr ""
 
 #: htdocs/luci-static/resources/fchomo.js:62
 msgid "Aggressive"
-msgstr ""
+msgstr "侵略性"
 
 #: htdocs/luci-static/resources/view/fchomo/global.js:514
 msgid "Aging time of NAT map maintained by client.</br>"
@@ -547,7 +547,7 @@ msgstr "连接检查"
 
 #: htdocs/luci-static/resources/fchomo.js:61
 msgid "Conservative"
-msgstr ""
+msgstr "保守"
 
 #: htdocs/luci-static/resources/fchomo.js:589
 msgid "Content copied to clipboard!"
@@ -2764,7 +2764,7 @@ msgstr "堆栈"
 
 #: htdocs/luci-static/resources/fchomo.js:60
 msgid "Standard"
-msgstr ""
+msgstr "标准"
 
 #: htdocs/luci-static/resources/fchomo.js:243
 msgid "Steam Client"

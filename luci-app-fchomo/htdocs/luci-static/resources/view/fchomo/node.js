@@ -1000,10 +1000,12 @@ return view.extend({
 						def_alpn = ['h3'];
 						break;
 					case 'vmess':
-					case 'vless':
 					case 'trojan':
 					case 'anytls':
 						def_alpn = ['h2', 'http/1.1'];
+						break;
+					case 'vless':
+						def_alpn = ['h3', 'h2', 'http/1.1'];
 						break;
 					case 'trusttunnel':
 						def_alpn = ['h3', 'h2'];

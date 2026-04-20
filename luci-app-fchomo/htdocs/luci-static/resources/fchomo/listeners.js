@@ -1034,6 +1034,12 @@ function renderListeners(s, uciconfig, isClient) {
 	o.depends({transport_enabled: '1', transport_type: 'xhttp'});
 	o.modalonly = true;
 
+	o = s.taboption('field_transport', form.Value, 'transport_xhttp_sc_max_buffered_posts', _('Max buffered posts'));
+	o.datatype = 'uinteger';
+	o.placeholder = '30';
+	o.depends({transport_enabled: '1', transport_type: 'xhttp'});
+	o.modalonly = true;
+
 	o = s.taboption('field_transport', form.Value, 'transport_xhttp_sc_stream_up_server_secs', _('stream-up server seconds'));
 	o.placeholder = '20-80';
 	o.depends({transport_enabled: '1', transport_type: 'xhttp'});

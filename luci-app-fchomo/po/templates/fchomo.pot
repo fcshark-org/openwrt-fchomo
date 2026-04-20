@@ -1453,7 +1453,6 @@ msgstr ""
 msgid "In millisecond. <code>%s</code> will be used if empty."
 msgstr ""
 
-#: htdocs/luci-static/resources/fchomo/listeners.js:1049
 #: htdocs/luci-static/resources/view/fchomo/node.js:1285
 msgid "In milliseconds."
 msgstr ""
@@ -1715,6 +1714,10 @@ msgstr ""
 msgid "Max UDP relay packet size"
 msgstr ""
 
+#: htdocs/luci-static/resources/fchomo/listeners.js:1037
+msgid "Max buffered posts"
+msgstr ""
+
 #: htdocs/luci-static/resources/view/fchomo/node.js:1296
 msgid "Max concurrency"
 msgstr ""
@@ -1732,7 +1735,7 @@ msgstr ""
 msgid "Max download speed"
 msgstr ""
 
-#: htdocs/luci-static/resources/fchomo/listeners.js:1042
+#: htdocs/luci-static/resources/fchomo/listeners.js:1048
 #: htdocs/luci-static/resources/view/fchomo/node.js:1278
 msgid "Max each POST bytes"
 msgstr ""
@@ -1806,7 +1809,6 @@ msgstr ""
 msgid "Min of idle sessions to keep"
 msgstr ""
 
-#: htdocs/luci-static/resources/fchomo/listeners.js:1048
 #: htdocs/luci-static/resources/view/fchomo/node.js:1284
 msgid "Min posts interval"
 msgstr ""
@@ -3606,7 +3608,7 @@ msgstr ""
 msgid "stream-up"
 msgstr ""
 
-#: htdocs/luci-static/resources/fchomo/listeners.js:1037
+#: htdocs/luci-static/resources/fchomo/listeners.js:1043
 msgid "stream-up server seconds"
 msgstr ""
 

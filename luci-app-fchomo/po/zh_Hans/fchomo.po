@@ -1478,7 +1478,6 @@ msgstr "单位为毫秒。"
 msgid "In millisecond. <code>%s</code> will be used if empty."
 msgstr "单位为毫秒。留空则使用 <code>%s</code>。"
 
-#: htdocs/luci-static/resources/fchomo/listeners.js:1049
 #: htdocs/luci-static/resources/view/fchomo/node.js:1285
 msgid "In milliseconds."
 msgstr ""
@@ -1744,6 +1743,10 @@ msgstr "前置数据最大值"
 msgid "Max UDP relay packet size"
 msgstr "UDP 中继数据包最大尺寸"
 
+#: htdocs/luci-static/resources/fchomo/listeners.js:1037
+msgid "Max buffered posts"
+msgstr "POST 最大缓冲"
+
 #: htdocs/luci-static/resources/view/fchomo/node.js:1296
 msgid "Max concurrency"
 msgstr "最大并发"
@@ -1761,7 +1764,7 @@ msgstr "最大失败次数"
 msgid "Max download speed"
 msgstr "最大下载速度"
 
-#: htdocs/luci-static/resources/fchomo/listeners.js:1042
+#: htdocs/luci-static/resources/fchomo/listeners.js:1048
 #: htdocs/luci-static/resources/view/fchomo/node.js:1278
 msgid "Max each POST bytes"
 msgstr "POST 最大字节数"
@@ -1837,7 +1840,6 @@ msgstr "Mihomo 服务端"
 msgid "Min of idle sessions to keep"
 msgstr "要保留的最少闲置会话数"
 
-#: htdocs/luci-static/resources/fchomo/listeners.js:1048
 #: htdocs/luci-static/resources/view/fchomo/node.js:1284
 msgid "Min posts interval"
 msgstr "POST 最小间隔时间"
@@ -3646,7 +3648,7 @@ msgstr ""
 msgid "stream-up"
 msgstr ""
 
-#: htdocs/luci-static/resources/fchomo/listeners.js:1037
+#: htdocs/luci-static/resources/fchomo/listeners.js:1043
 msgid "stream-up server seconds"
 msgstr ""
 

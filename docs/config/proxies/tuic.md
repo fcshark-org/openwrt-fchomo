@@ -17,6 +17,7 @@ proxies:
   request-timeout: 8000
   udp-relay-mode: native
   # congestion-controller: bbr
+  # bbr-profile: "" # Available: "standard", "conservative", "aggressive". Default: "standard"
   # max-udp-relay-packet-size: 1500
   # fast-open: true
   # skip-cert-verify: true

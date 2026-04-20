@@ -68,8 +68,7 @@
       udp: true
       tls: true
       network: xhttp
-      alpn:
-        - h2
+      alpn: [h2]
       # ech-opts: ...
       # reality-opts: ...
       # skip-cert-verify: false
@@ -87,13 +86,28 @@
         #   X-Forwarded-For: ""
         # no-grpc-header: false
         # x-padding-bytes: "100-1000"
+        # x-padding-obfs-mode: false
+        # x-padding-key: x_padding
+        # x-padding-header: Referer
+        # x-padding-placement: queryInHeader # Available: queryInHeader, cookie, header, query
+        # x-padding-method: repeat-x # Available: repeat-x, tokenish
+        # uplink-http-method: POST # Available: POST, PUT, PATCH, DELETE
+        # session-placement: path # Available: path, query, cookie, header
+        # session-key: ""
+        # seq-placement: path # Available: path, query, cookie, header
+        # seq-key: ""
+        # uplink-data-placement: body # Available: body, cookie, header
+        # uplink-data-key: ""
+        # uplink-chunk-size: 0 # only applicable when uplink-data-placement is not body
         # sc-max-each-post-bytes: 1000000
+        # sc-min-posts-interval-ms: 30
         # reuse-settings: # aka XMUX
         #   max-concurrency: "16-32"
         #   max-connections: "0"
         #   c-max-reuse-times: "0"
         #   h-max-request-times: "600-900"
         #   h-max-reusable-secs: "1800-3000"
+        #   h-keep-alive-period: 0
         # download-settings:
         #   ## xhttp part
         #   path: "/"
@@ -102,19 +116,33 @@
         #     X-Forwarded-For: ""
         #   no-grpc-header: false
         #   x-padding-bytes: "100-1000"
+        #   x-padding-obfs-mode: false
+        #   x-padding-key: x_padding
+        #   x-padding-header: Referer
+        #   x-padding-placement: queryInHeader # Available: queryInHeader, cookie, header, query
+        #   x-padding-method: repeat-x # Available: repeat-x, tokenish
+        #   uplink-http-method: POST # Available: POST, PUT, PATCH, DELETE
+        #   session-placement: path # Available: path, query, cookie, header
+        #   session-key: ""
+        #   seq-placement: path # Available: path, query, cookie, header
+        #   seq-key: ""
+        #   uplink-data-placement: body # Available: body, cookie, header
+        #   uplink-data-key: ""
+        #   uplink-chunk-size: 0 # only applicable when uplink-data-placement is not body
         #   sc-max-each-post-bytes: 1000000
+        #   sc-min-posts-interval-ms: 30
         #   reuse-settings: # aka XMUX
         #     max-concurrency: "16-32"
         #     max-connections: "0"
         #     c-max-reuse-times: "0"
         #     h-max-request-times: "600-900"
         #     h-max-reusable-secs: "1800-3000"
+        #     h-keep-alive-period: 0
         #   ## proxy part
         #   server: server
         #   port: 443
         #   tls: true
-        #   alpn:
-        #     - h2
+        #   alpn: ...
         #   ech-opts: ...
         #   reality-opts: ...
         #   skip-cert-verify: false

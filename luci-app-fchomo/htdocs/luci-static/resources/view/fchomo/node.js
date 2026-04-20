@@ -1281,6 +1281,13 @@ return view.extend({
 		so.depends({transport_enabled: '1', transport_type: 'xhttp'});
 		so.modalonly = true;
 
+		so = ss.taboption('field_transport', form.Value, 'transport_xhttp_sc_min_posts_interval_ms', _('Min posts interval'),
+			_('In milliseconds.'));
+		so.datatype = 'uinteger';
+		so.placeholder = '30';
+		so.depends({transport_enabled: '1', transport_type: 'xhttp'});
+		so.modalonly = true;
+
 		so = ss.taboption('field_transport', form.Flag, 'transport_xhttp_xmux', _('XMUX'));
 		so.default = so.disabled;
 		so.depends({transport_enabled: '1', transport_type: 'xhttp'});

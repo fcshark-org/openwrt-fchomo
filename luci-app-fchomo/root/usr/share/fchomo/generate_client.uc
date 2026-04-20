@@ -671,6 +671,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 				"no-grpc-header": strToBool(cfg.transport_xhttp_no_grpc_header),
 				"x-padding-bytes": cfg.transport_xhttp_x_padding_bytes,
 				"sc-max-each-post-bytes": strToInt(cfg.transport_xhttp_sc_max_each_post_bytes) || null,
+				"sc-min-posts-interval-ms": strToInt(cfg.transport_xhttp_sc_min_posts_interval_ms) || null,
 				"reuse-settings": cfg.transport_xhttp_xmux ? {
 					"max-concurrency": cfg.transport_xhttp_xmux_max_concurrency,
 					"max-connections": cfg.transport_xhttp_xmux_max_connections,

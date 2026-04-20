@@ -282,8 +282,6 @@ Early Data 首包长度阈值
 
 客户端每个 POST 最多携带多少数据，默认值 1000000 即 1MB，该值应小于 CDN 等 HTTP 中间盒所允许的最大值，服务端也会拒绝大于该值的 POST
 
-注意：和原版实现不同，此项只允许填写单个数字，不允许填写范围
-
 ### xhttp-opts.reuse-settings
 
 链接复用设置（即XMUX）
@@ -311,6 +309,10 @@ Early Data 首包长度阈值
 ### xhttp-opts.reuse-settings.h-max-reusable-secs
 
 TCP/QUIC 连接持续该时间后将不会被分配新的 HTTP 请求，将在内部最后一个 HTTP 请求关闭后断开
+
+### xhttp-opts.reuse-settings.h-keep-alive-period
+
+H2 / H3 连接空闲时客户端每隔多少秒发一次保活包，默认 0，即 Chrome H2 的 45 秒，或 quic-go H3 的 10 秒。它是 XMUX 里唯一不允许填范围（该项取随机才是特征）且允许填负数（比如填 -1 关掉空闲保活包）的项，建议留 0。
 
 ### xhttp-opts.download-settings
 

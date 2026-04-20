@@ -68,7 +68,7 @@
       udp: true
       tls: true
       network: xhttp
-      alpn: [h2]
+      alpn: [h2] # By default, only h2 mode is supported. To enable h3 mode, you need to set alpn: [h3]; to enable HTTP/1.1 mode, you need to set alpn: [http/1.1].
       # ech-opts: ...
       # reality-opts: ...
       # skip-cert-verify: false

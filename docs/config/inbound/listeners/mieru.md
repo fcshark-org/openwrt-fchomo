@@ -10,6 +10,10 @@ listeners:
   users:
     username1: password1
     username2: password2
+  # 一个 base64 字符串用于微调网络行为
+  # traffic-pattern: ""
+  # 如果开启，且客户端不发送用户提示，代理服务器将拒绝连接
+  # user-hint-is-mandatory: false
 ```
 
 [通用字段](./index.md)

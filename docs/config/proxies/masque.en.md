@@ -18,6 +18,7 @@ proxies:
   # remote-dns-resolve: true # Force remote DNS resolution, default is false
   # dns: [ 1.1.1.1, 8.8.8.8 ] # Effective only when remote-dns-resolve is true
   # congestion-controller: bbr # Disabled by default
+  # bbr-profile: "" # Available: "standard", "conservative", "aggressive". Default: "standard"
 
 # masque-h2
 - name: "masque-h2"

@@ -1842,7 +1842,7 @@ msgstr "要保留的最少闲置会话数"
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:1284
 msgid "Min posts interval"
-msgstr "POST 最小间隔时间"
+msgstr "POST 请求最小间隔时间"
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:1351
 msgid ""

@@ -306,6 +306,47 @@ HTTP 标头的名称。仅当 `x-padding-placement` 为 `header` 或 `queryInHea
 * `repeat-x`：默认方法（一个包含 X 个字符的长序列）
 * `tokenish`：生成一个随机的 Base62 标记
 
+### xhttp-opts.uplink-http-method
+
+更改用于上行数据传输的 HTTP 方法。使用任何支持请求体（例如 `PUT`、`PATCH`）且 CDN 允许的方法
+
+### xhttp-opts.session-placement
+
+会话 ID 的放置位置。选项：`path`, `query`, `cookie`, `header`
+
+### xhttp-opts.session-key
+
+会话 ID 的键名（如果放置位置为`path`，则不适用）
+
+### xhttp-opts.seq-placement
+
+序列号的放置位置。选项：`path`、`query`、`cookie`、`header`。如果`session-placement`设置为`path`，则`seq-placement`也必须设置为`path`
+
+### xhttp-opts.seq-key
+
+序列号的键名（如果放置位置为`path`，则不适用）
+
+### xhttp-opts.uplink-data-placement
+
+将拆分后的上行链路数据片段放置位置（仅适用于`packet-up`模式）。选项：`cookie` 或 `header`
+
+### xhttp-opts.uplink-data-key
+
+用于传递数据片段的键的基本名称。客户端会自动将数据分割成多个数据块，服务器会将它们重新组装起来
+
+### xhttp-opts.uplink-chunk-size
+
+每个上行链路数据块的最大大小（以字节为单位）（仅当 `uplink-data-placement` 不是 `body` 时适用）
+
+最小值：64 字节
+
+推荐值：
+
+* 对于`cookie`放置：3072 字节（默认 3KB）
+* 对于`header`放置：4096 字节（默认 4KB）
+
+如果未指定，则会根据 `uplink-data-placement` 自动选择合适的默认值
+
 ### xhttp-opts.sc-max-each-post-bytes
 
 客户端每个 POST 最多携带多少数据，默认值 1000000 即 1MB，该值应小于 CDN 等 HTTP 中间盒所允许的最大值，服务端也会拒绝大于该值的 POST

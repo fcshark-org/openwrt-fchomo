@@ -282,6 +282,10 @@ Early Data 首包长度阈值
 
 客户端每个 POST 最多携带多少数据，默认值 1000000 即 1MB，该值应小于 CDN 等 HTTP 中间盒所允许的最大值，服务端也会拒绝大于该值的 POST
 
+### xhttp-opts.sc-min-posts-interval-ms
+
+基于单个代理请求，客户端发起 POST 请求的最小间隔，默认值 30 毫秒
+
 ### xhttp-opts.reuse-settings
 
 链接复用设置（即XMUX）

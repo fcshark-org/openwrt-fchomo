@@ -18,9 +18,10 @@ proxies:
   ### quic options
   # quic: true
   # congestion-controller: bbr
+  # bbr-profile: "" # Available: "standard", "conservative", "aggressive". Default: "standard"
   ### reuse options
-  # max-connections: 1
-  # min-streams: 0
+  # max-connections: 8
+  # min-streams: 5
   # max-streams: 0
 ```
 
@@ -38,7 +39,7 @@ proxies:
 
 ### max-connections
 
-最大连接数量。默认值为1即只使用一条底层链接
+最大连接数量。
 
 与 `max-streams` 冲突
 

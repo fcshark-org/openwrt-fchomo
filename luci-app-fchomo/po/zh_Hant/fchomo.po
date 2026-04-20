@@ -1543,6 +1543,10 @@ msgstr "介面控制"
 msgid "Keep default"
 msgstr "保持預設"
 
+#: htdocs/luci-static/resources/view/fchomo/node.js:1302
+msgid "Keep-alive period"
+msgstr "Keep-alive 週期"
+
 #: htdocs/luci-static/resources/fchomo/listeners.js:249
 #: htdocs/luci-static/resources/view/fchomo/node.js:385
 msgid "Key"

@@ -675,7 +675,8 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 					"max-connections": cfg.transport_xhttp_xmux_max_connections,
 					"c-max-reuse-times": cfg.transport_xhttp_xmux_max_reuse_times,
 					"h-max-request-times": cfg.transport_xhttp_xmux_max_request_times,
-					"h-max-reusable-secs": cfg.transport_xhttp_xmux_max_reusable_secs
+					"h-max-reusable-secs": cfg.transport_xhttp_xmux_max_reusable_secs,
+					"h-keep-alive-period": strToInt(cfg.transport_xhttp_xmux_keep_alive_period)
 				} : null
 			} : null
 		} : {}),

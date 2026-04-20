@@ -1516,6 +1516,10 @@ msgstr ""
 msgid "Keep default"
 msgstr ""
 
+#: htdocs/luci-static/resources/view/fchomo/node.js:1302
+msgid "Keep-alive period"
+msgstr ""
+
 #: htdocs/luci-static/resources/fchomo/listeners.js:249
 #: htdocs/luci-static/resources/view/fchomo/node.js:385
 msgid "Key"

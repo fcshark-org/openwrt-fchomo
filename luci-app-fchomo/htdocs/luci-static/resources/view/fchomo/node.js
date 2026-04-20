@@ -1299,6 +1299,12 @@ return view.extend({
 		so.depends('transport_xhttp_xmux', '1');
 		so.modalonly = true;
 
+		so = ss.taboption('field_transport', form.Value, 'transport_xhttp_xmux_keep_alive_period', _('XMUX: ') + _('Keep-alive period'));
+		so.datatype = 'uinteger';
+		so.placeholder = '0';
+		so.depends('transport_xhttp_xmux', '1');
+		so.modalonly = true;
+
 		/* Multiplex fields */ // TCP protocol only
 		so = ss.taboption('field_general', form.Flag, 'smux_enabled', _('Multiplex'));
 		so.default = so.disabled;

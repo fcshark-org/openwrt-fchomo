@@ -15,6 +15,7 @@ listeners:
   obfs: salamander
   obfs-password: password
   masquerade: ""
+  #  bbr-profile: "" # Available: "standard", "conservative", "aggressive". Default: "standard"
   alpn:
   - h3
   certificate: ./server.crt # 证书 PEM 格式，或者 证书的路径

@@ -19,6 +19,21 @@ listeners:
   #   host: ""
   #   mode: auto # Available: "stream-one", "stream-up" or "packet-up"
   #   no-sse-header: false
+  #   x-padding-bytes: "100-1000"
+  #   x-padding-obfs-mode: false
+  #   x-padding-key: x_padding
+  #   x-padding-header: Referer
+  #   x-padding-placement: queryInHeader # Available: queryInHeader, cookie, header, query
+  #   x-padding-method: repeat-x # Available: repeat-x, tokenish
+  #   uplink-http-method: POST # Available: POST, PUT, PATCH, DELETE
+  #   session-placement: path # Available: path, query, cookie, header
+  #   session-key: ""
+  #   seq-placement: path # Available: path, query, cookie, header
+  #   seq-key: ""
+  #   uplink-data-placement: body # Available: body, cookie, header
+  #   uplink-data-key: ""
+  #   uplink-chunk-size: 0 # only applicable when uplink-data-placement is not body
+  #   sc-max-buffered-posts: 30
   #   sc-stream-up-server-secs: "20-80"
   #   sc-max-each-post-bytes: 1000000
   # -------------------------

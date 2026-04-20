@@ -13,6 +13,7 @@ proxies:
   password: yourpassword
   up: "30 Mbps"
   down: "200 Mbps"
+  # bbr-profile: "" # Available: "standard", "conservative", "aggressive". Default: "standard"
   obfs: salamander # Default is empty; if filled, obfs is enabled. Currently, only salamander is supported.
   obfs-password: yourpassword
 

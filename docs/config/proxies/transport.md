@@ -284,27 +284,27 @@ Early Data 首包长度阈值
 
 ### xhttp-opts.x-padding-key
 
-用于存储填充值的键名。其含义取决于 x-padding-placement：
+用于存储填充值的键名。其含义取决于 `x-padding-placement`：
 
-* URL 中查询参数的名称（如果 placement 为 queryInHeader）
+* URL 中查询参数的名称（如果 placement 为 `queryInHeader`）
 * cookie 的名称
 * HTTP 标头的名称
 * URL 查询参数的名称
 
 ### xhttp-opts.x-padding-header
 
-HTTP 标头的名称。仅当 x-padding-placement 为 header 或 queryInHeader 时才相关
+HTTP 标头的名称。仅当 `x-padding-placement` 为 `header` 或 `queryInHeader` 时才相关
 
 ### xhttp-opts.x-padding-placement
 
-定义填充值的放置位置。可选值：queryInHeader、cookie、header、query。仅当 x-padding-obfs-mode 为 true 时才有效
+定义填充值的放置位置。可选值：`queryInHeader`、`cookie`、`header`、`query`。仅当 `x-padding-obfs-mode` 为 true 时才有效
 
 ### xhttp-opts.x-padding-method
 
 定义填充值的生成方式
 
-* repeat-x：默认方法（一个包含 X 个字符的长序列）
-* tokenish：生成一个随机的 Base62 标记
+* `repeat-x`：默认方法（一个包含 X 个字符的长序列）
+* `tokenish`：生成一个随机的 Base62 标记
 
 ### xhttp-opts.sc-max-each-post-bytes
 

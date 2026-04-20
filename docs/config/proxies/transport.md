@@ -248,8 +248,11 @@ Early Data 首包长度阈值
 
 `xhttp` 传输层设置，仅传输层为 `xhttp` 时生效
 
+默认仅支持h2，如果开启h3模式需要设置`alpn: [h3]`，如果开启http1.1模式需要设置`alpn: [http/1.1]`
+
 !!! note
     仅VLESS支持xhttp传输层，请勿在其他协议上使用
+
 
 ### xhttp-opts.path
 

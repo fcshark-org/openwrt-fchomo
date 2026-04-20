@@ -670,6 +670,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 				mode: cfg.transport_xhttp_mode,
 				"no-grpc-header": strToBool(cfg.transport_xhttp_no_grpc_header),
 				"x-padding-bytes": cfg.transport_xhttp_x_padding_bytes,
+				// @bypassing CDN's potential detection /* https://github.com/MetaCubeX/mihomo/commit/2337d70d86fa15efe7b69ee54bff6139ebfabcf6 */
 				"sc-max-each-post-bytes": strToInt(cfg.transport_xhttp_sc_max_each_post_bytes) || null,
 				"sc-min-posts-interval-ms": strToInt(cfg.transport_xhttp_sc_min_posts_interval_ms) || null,
 				"reuse-settings": cfg.transport_xhttp_xmux ? {

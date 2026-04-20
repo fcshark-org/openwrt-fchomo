@@ -278,6 +278,34 @@ Early Data 首包长度阈值
 
 客户端发的 request header 均默认包含 `Referer: ...?x_padding=XXX...` ，默认长度为 100-1000，每次请求随机，服务端默认会检查它是否在服务端允许的范围内
 
+### xhttp-opts.x-padding-obfs-mode
+
+启用填充混淆。为向后兼容，默认为 false
+
+### xhttp-opts.x-padding-key
+
+用于存储填充值的键名。其含义取决于 x-padding-placement：
+
+* URL 中查询参数的名称（如果 placement 为 queryInHeader）
+* cookie 的名称
+* HTTP 标头的名称
+* URL 查询参数的名称
+
+### xhttp-opts.x-padding-header
+
+HTTP 标头的名称。仅当 x-padding-placement 为 header 或 queryInHeader 时才相关
+
+### xhttp-opts.x-padding-placement
+
+定义填充值的放置位置。可选值：queryInHeader、cookie、header、query。仅当 x-padding-obfs-mode 为 true 时才有效
+
+### xhttp-opts.x-padding-method
+
+定义填充值的生成方式
+
+* repeat-x：默认方法（一个包含 X 个字符的长序列）
+* tokenish：生成一个随机的 Base62 标记
+
 ### xhttp-opts.sc-max-each-post-bytes
 
 客户端每个 POST 最多携带多少数据，默认值 1000000 即 1MB，该值应小于 CDN 等 HTTP 中间盒所允许的最大值，服务端也会拒绝大于该值的 POST

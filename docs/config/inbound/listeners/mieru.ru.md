@@ -10,6 +10,10 @@ listeners:
   users:
     username1: password1
     username2: password2
+  # Строка base64, используемая для тонкой настройки поведения сети
+  # traffic-pattern: ""
+  # Если включено, и клиент не отправляет подсказку пользователя, прокси-сервер отклонит соединение
+  # user-hint-is-mandatory: false
 ```
 
 [Общие поля](./index.ru.md)

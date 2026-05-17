@@ -251,6 +251,20 @@ export function parseListener(cfg, isClient, label) {
 		obfs: cfg.hysteria_obfs_type,
 		"obfs-password": cfg.hysteria_obfs_password,
 		masquerade: cfg.hysteria_masquerade,
+		"realm-opts": cfg.hysteria2_realm === '1' ? {
+			enable: true,
+			"server-url": cfg.hysteria2_realm_server_url,
+			token: cfg.hysteria2_realm_token,
+			"realm-id": cfg.hysteria2_realm_id,
+			"stun-servers": cfg.hysteria2_realm_stun_servers,
+			// @TLS of server-url
+			//sni,
+			//alpn,
+			//"skip-cert-verify",
+			//fingerprint,
+			//certificate,
+			//"private-key"
+		} : null,
 
 		/* Shadowsocks */
 		cipher: cfg.shadowsocks_chipher,
@@ -362,6 +376,7 @@ export function parseListener(cfg, isClient, label) {
 				"sc-max-buffered-posts": strToInt(cfg.transport_xhttp_sc_max_buffered_posts) || null,
 				"sc-stream-up-server-secs": cfg.transport_xhttp_sc_stream_up_server_secs,
 				"sc-max-each-post-bytes": strToInt(cfg.transport_xhttp_sc_max_each_post_bytes) || null,
+				// @其他的配置
 			} : null
 		} : {})
 	}

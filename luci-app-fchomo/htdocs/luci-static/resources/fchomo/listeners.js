@@ -118,6 +118,7 @@ function renderListeners(s, uciconfig, isClient) {
 
 	s.tab('field_general', _('General fields'));
 	s.tab('field_vless_encryption', _('Vless Encryption fields'));
+	s.tab('field_hysteria2_realm', _('Hysteria2 Realm fields'));
 	s.tab('field_tls', _('TLS fields'));
 	s.tab('field_transport', _('Transport fields'));
 	s.tab('field_multiplex', _('Multiplex fields'));
@@ -788,6 +789,40 @@ function renderListeners(s, uciconfig, isClient) {
 	o.rmempty = false;
 	o.depends('vless_decryption', '1');
 	o.modalonly = true;
+
+	// @xhttp-config其他的配置
+
+	/* Hysteria2 Realm fields */
+	o = s.taboption('field_general', form.Flag, 'hysteria2_realm', _('Realm'));
+	o.default = o.disabled;
+	o.depends('type', 'hysteria2');
+	o.modalonly = true;
+
+	o = s.taboption('field_hysteria2_realm', form.Value, 'hysteria2_realm_server_url', _('Rendezvous server'));
+	o.placeholder = 'https://realm.hy2.io';
+	o.rmempty = false;
+	o.depends('hysteria2_realm', '1');
+	o.modalonly = true;
+
+	o = s.taboption('field_hysteria2_realm', form.Value, 'hysteria2_realm_token', _('Pre-shared key of rendezvous server'));
+	o.placeholder = 'public';
+	o.depends('hysteria2_realm', '1');
+	o.modalonly = true;
+
+	o = s.taboption('field_hysteria2_realm', form.Value, 'hysteria2_realm_id', _('Realm ID'));
+	o.placeholder = 'my-cabin-1f3a8c2e9b';
+	o.rmempty = false;
+	o.depends('hysteria2_realm', '1');
+	o.modalonly = true;
+
+	o = s.taboption('field_hysteria2_realm', form.DynamicList, 'hysteria2_realm_stun_servers', _('STUN servers'));
+	o.datatype = 'hostport';
+	o.default = ['stun.nextcloud.com:3478','stun.sip.us:3478','global.stun.twilio.com:3478'];
+	o.rmempty = false;
+	o.depends('hysteria2_realm', '1');
+	o.modalonly = true;
+
+	// @ 下面支持填写针对server-url的TLS配置(sni, skip-cert-verify, fingerprint, certificate, private-key, alpn)
 
 	/* TLS fields */
 	o = s.taboption('field_general', form.Flag, 'tls', _('TLS'));

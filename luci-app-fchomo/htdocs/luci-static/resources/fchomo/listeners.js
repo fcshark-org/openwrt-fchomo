@@ -210,6 +210,36 @@ function renderListeners(s, uciconfig, isClient) {
 	o.depends('type', 'hysteria2');
 	o.modalonly = true;
 
+	/* Hysteria2 Realmserver fields */
+	o = s.taboption('field_general', form.Value, 'hysteria2_realmserver_token', _('Pre-shared key'));
+	o.placeholder = 'public';
+	o.rmempty = false;
+	o.depends('type', 'hysteria2-realm');
+	o.modalonly = true;
+
+	o = s.taboption('field_general', form.Value, 'hysteria2_realmserver_max_realms', _('Max realms'));
+	o.datatype = 'uinteger';
+	o.placeholder = '65536';
+	o.depends('type', 'hysteria2-realm');
+	o.modalonly = true;
+
+	o = s.taboption('field_general', form.Value, 'hysteria2_realmserver_max_realms_per_ip', _('Max realms per client IP'));
+	o.datatype = 'uinteger';
+	o.placeholder = '4';
+	o.depends('type', 'hysteria2-realm');
+	o.modalonly = true;
+
+	o = s.taboption('field_general', form.Value, 'hysteria2_realmserver_trusted_proxy_header', _('Trusted proxy header'),
+		_('Header to read real client IP from (e.g. X-Forwarded-For)'));
+	o.depends('type', 'hysteria2-realm');
+	o.modalonly = true;
+
+	o = s.taboption('field_general', form.Value, 'hysteria2_realmserver_realm_name_pattern', _('Realm name pattern'));
+	o.default = '^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$';
+	o.rmempty = false;
+	o.depends('type', 'hysteria2-realm');
+	o.modalonly = true;
+
 	/* Shadowsocks fields */
 	o = s.taboption('field_general', form.ListValue, 'shadowsocks_chipher', _('Chipher'));
 	o.default = hm.shadowsocks_cipher_methods[1][0];
@@ -837,10 +867,27 @@ function renderListeners(s, uciconfig, isClient) {
 		if (['trojan', 'anytls', 'tuic', 'hysteria2', 'trusttunnel'].includes(type)) {
 			tls.checked = true;
 			tls.disabled = true;
-			if (['tuic', 'hysteria2'].includes(type) && !`${tls_alpn.getValue()}`)
-				tls_alpn.setValue('h3');
 		} else {
 			tls.removeAttribute('disabled');
+		}
+
+		// Default alpn
+		if (!`${tls_alpn.getValue()}`) {
+			let def_alpn;
+
+			switch (type) {
+				case 'hysteria2':
+				case 'tuic':
+					def_alpn = ['h3'];
+					break;
+				case 'hysteria2-realm':
+					def_alpn = ['h2', 'http/1.1'];
+					break;
+				default:
+					def_alpn = [];
+			}
+
+			tls_alpn.setValue(def_alpn);
 		}
 
 		// Force disabled
@@ -859,7 +906,7 @@ function renderListeners(s, uciconfig, isClient) {
 
 		return true;
 	}
-	o.depends({type: /^(http|socks|mixed|vmess|vless|trojan|anytls|tuic|hysteria2|trusttunnel)$/});
+	o.depends({type: /^(http|socks|mixed|vmess|vless|trojan|anytls|tuic|hysteria2|hysteria2-realm|trusttunnel)$/});
 	o.modalonly = true;
 
 	o = s.taboption('field_tls', form.DynamicList, 'tls_alpn', _('TLS ALPN'),
@@ -902,7 +949,7 @@ function renderListeners(s, uciconfig, isClient) {
 	hm.tls_client_auth_types.forEach((res) => {
 		o.value.apply(o, res);
 	})
-	o.depends({tls: '1', type: /^(http|socks|mixed|vmess|vless|trojan|anytls|hysteria2|tuic|trusttunnel)$/});
+	o.depends({tls: '1', type: /^(http|socks|mixed|vmess|vless|trojan|anytls|hysteria2|hysteria2-realm|tuic|trusttunnel)$/});
 	o.modalonly = true;
 
 	o = s.taboption('field_tls', form.Value, 'tls_client_auth_cert_path', _('Client Auth Certificate path') + _(' (mTLS)'),
@@ -911,7 +958,7 @@ function renderListeners(s, uciconfig, isClient) {
 	o.validate = function(/* ... */) {
 		return hm.validateMTLSClientAuth.call(this, 'tls_client_auth_type', ...arguments);
 	}
-	o.depends({tls: '1', type: /^(http|socks|mixed|vmess|vless|trojan|anytls|hysteria2|tuic|trusttunnel)$/});
+	o.depends({tls: '1', type: /^(http|socks|mixed|vmess|vless|trojan|anytls|hysteria2|hysteria2-realm|tuic|trusttunnel)$/});
 	o.modalonly = true;
 
 	o = s.taboption('field_tls', form.Button, '_upload_client_auth_cert', _('Upload certificate') + _(' (mTLS)'),
@@ -960,13 +1007,13 @@ function renderListeners(s, uciconfig, isClient) {
 
 		return node;
 	}
-	o.depends({tls: '1', type: /^(http|socks|mixed|vmess|vless|trojan|anytls|hysteria2|tuic|trusttunnel)$/});
+	o.depends({tls: '1', type: /^(http|socks|mixed|vmess|vless|trojan|anytls|hysteria2|hysteria2-realm|tuic|trusttunnel)$/});
 	o.modalonly = true;
 
 	o = s.taboption('field_tls', hm.CopyValue, 'tls_ech_config', _('ECH config'),
 		_('This ECH parameter needs to be added to the HTTPS record of the domain.'));
 	o.placeholder = 'AEn+DQBFKwAgACABWIHUGj4u+PIggYXcR5JF0gYk3dCRioBW8uJq9H4mKAAIAAEAAQABAANAEnB1YmxpYy50bHMtZWNoLmRldgAA';
-	o.depends({tls: '1', type: /^(http|socks|mixed|vmess|vless|trojan|anytls|hysteria2|tuic|trusttunnel)$/});
+	o.depends({tls: '1', type: /^(http|socks|mixed|vmess|vless|trojan|anytls|hysteria2|hysteria2-realm|tuic|trusttunnel)$/});
 	o.modalonly = true;
 
 	// uTLS fields

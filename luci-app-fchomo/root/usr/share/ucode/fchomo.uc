@@ -302,6 +302,11 @@ export function parseListener(cfg, isClient, label) {
 
 		/* Plugin fields */
 		...(cfg.plugin ? {
+			// obfs-simple
+			"simple-obfs": cfg.plugin === 'obfs' ? {
+				enable: true,
+				mode: cfg.plugin_opts_obfsmode
+			} : null,
 			// shadow-tls
 			"shadow-tls": cfg.plugin === 'shadow-tls' ? {
 				enable: true,

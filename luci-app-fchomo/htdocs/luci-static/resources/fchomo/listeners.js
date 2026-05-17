@@ -498,9 +498,16 @@ function renderListeners(s, uciconfig, isClient) {
 	/* Plugin fields */
 	o = s.taboption('field_general', form.ListValue, 'plugin', _('Plugin'));
 	o.value('', _('none'));
+	o.value('obfs', _('obfs-simple'));
 	o.value('shadow-tls', _('shadow-tls'));
 	//o.value('kcp-tun', _('kcp-tun'));
 	o.depends('type', 'shadowsocks');
+	o.modalonly = true;
+
+	o = s.taboption('field_general', form.ListValue, 'plugin_opts_obfsmode', _('Plugin: ') + _('Obfs Mode'));
+	o.value('http', _('HTTP'));
+	o.value('tls', _('TLS'));
+	o.depends('plugin', 'obfs');
 	o.modalonly = true;
 
 	o = s.taboption('field_general', form.Value, 'plugin_opts_handshake_dest', _('Plugin: ') + _('Handshake target that supports TLS 1.3'));

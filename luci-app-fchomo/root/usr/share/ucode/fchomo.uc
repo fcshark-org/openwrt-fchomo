@@ -353,7 +353,7 @@ export function parseListener(cfg, isClient, label) {
 		udp: strToBool(cfg.udp),
 
 		/* TLS fields */
-		...(cfg.tls === '1' ? {
+		...(cfg.allow_insecure === '1' ? { "allow-insecure": true } : cfg.tls === '1' ? {
 			alpn: cfg.tls_alpn,
 			...(cfg.tls_reality === '1' ? {
 				"reality-config": {

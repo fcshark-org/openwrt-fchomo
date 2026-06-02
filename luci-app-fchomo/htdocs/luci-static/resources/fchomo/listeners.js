@@ -855,6 +855,12 @@ function renderListeners(s, uciconfig, isClient) {
 	// @ 下面支持填写针对server-url的TLS配置(sni, skip-cert-verify, fingerprint, certificate, private-key, alpn)
 
 	/* TLS fields */
+	o = s.taboption('field_general', form.Flag, 'allow_insecure', _('Allow insecure connections'),
+		_('Only applicable when %s are used as a frontend.').format('nginx/caddy'));
+	o.default = o.disabled;
+	o.depends({type: /^(vless|trojan|anytls)$/});
+	o.modalonly = true;
+
 	o = s.taboption('field_general', form.Flag, 'tls', _('TLS'));
 	o.default = o.disabled;
 	o.validate = function(section_id, value) {
@@ -906,7 +912,7 @@ function renderListeners(s, uciconfig, isClient) {
 
 		return true;
 	}
-	o.depends({type: /^(http|socks|mixed|vmess|vless|trojan|anytls|tuic|hysteria2|hysteria2-realm|trusttunnel)$/});
+	o.depends({allow_insecure: '0', type: /^(http|socks|mixed|vmess|vless|trojan|anytls|tuic|hysteria2|hysteria2-realm|trusttunnel)$/});
 	o.modalonly = true;
 
 	o = s.taboption('field_tls', form.DynamicList, 'tls_alpn', _('TLS ALPN'),

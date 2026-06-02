@@ -298,6 +298,7 @@ return view.extend({
 		so = ss.taboption('field_general', form.ListValue, 'hysteria_obfs_type', _('Obfuscate type'));
 		so.value('', _('Disable'));
 		so.value('salamander', _('Salamander'));
+		so.value('gecko', _('Gecko'));
 		so.depends('type', 'hysteria2');
 		so.modalonly = true;
 
@@ -307,6 +308,16 @@ return view.extend({
 		so.rmempty = false;
 		so.depends('type', 'hysteria');
 		so.depends({type: 'hysteria2', hysteria_obfs_type: /.+/});
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.Value, 'hysteria_obfs_min_packet_size', _('Obfuscate minimum packet size'));
+		so.placeholder = '512'
+		so.depends('hysteria_obfs_type', 'gecko');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.Value, 'hysteria_obfs_max_packet_size', _('Obfuscate maximum packet size'));
+		so.placeholder = '1200'
+		so.depends('hysteria_obfs_type', 'gecko');
 		so.modalonly = true;
 
 		/* SSH fields */

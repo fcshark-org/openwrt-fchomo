@@ -250,6 +250,8 @@ export function parseListener(cfg, isClient, label) {
 		"ignore-client-bandwidth": strToBool(cfg.hysteria_ignore_client_bandwidth),
 		obfs: cfg.hysteria_obfs_type,
 		"obfs-password": cfg.hysteria_obfs_password,
+		"obfs-min-packet-size": strToInt(cfg.hysteria_obfs_min_packet_size),
+		"obfs-max-packet-size": strToInt(cfg.hysteria_obfs_max_packet_size),
 		masquerade: cfg.hysteria_masquerade,
 		"realm-opts": cfg.hysteria2_realm === '1' ? {
 			enable: true,

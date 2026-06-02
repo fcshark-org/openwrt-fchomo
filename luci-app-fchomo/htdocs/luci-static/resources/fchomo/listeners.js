@@ -193,6 +193,7 @@ function renderListeners(s, uciconfig, isClient) {
 	o = s.taboption('field_general', form.ListValue, 'hysteria_obfs_type', _('Obfuscate type'));
 	o.value('', _('Disable'));
 	o.value('salamander', _('Salamander'));
+	o.value('gecko', _('Gecko'));
 	o.depends('type', 'hysteria2');
 	o.modalonly = true;
 
@@ -202,6 +203,16 @@ function renderListeners(s, uciconfig, isClient) {
 	o.rmempty = false;
 	o.depends('type', 'hysteria');
 	o.depends({type: 'hysteria2', hysteria_obfs_type: /.+/});
+	o.modalonly = true;
+
+	o = s.taboption('field_general', form.Value, 'hysteria_obfs_min_packet_size', _('Obfuscate minimum packet size'));
+	o.placeholder = '512'
+	o.depends('hysteria_obfs_type', 'gecko');
+	o.modalonly = true;
+
+	o = s.taboption('field_general', form.Value, 'hysteria_obfs_max_packet_size', _('Obfuscate maximum packet size'));
+	o.placeholder = '1200'
+	o.depends('hysteria_obfs_type', 'gecko');
 	o.modalonly = true;
 
 	o = s.taboption('field_general', form.Value, 'hysteria_masquerade', _('Masquerade'),

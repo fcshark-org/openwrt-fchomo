@@ -562,6 +562,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		/* Snell */
 		psk: cfg.snell_psk,
 		version: cfg.snell_version,
+		reuse: strToBool(cfg.snell_reuse),
 		"obfs-opts": cfg.type === 'snell' ? {
 			mode: cfg.plugin_opts_obfsmode,
 			host: cfg.plugin_opts_host,

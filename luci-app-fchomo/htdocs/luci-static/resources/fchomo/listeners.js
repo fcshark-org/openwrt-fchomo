@@ -440,6 +440,24 @@ function renderListeners(s, uciconfig, isClient) {
 	o.depends('sudoku_http_mask', '1');
 	o.modalonly = true;
 
+	/* Snell fields */
+	o = s.taboption('field_general', hm.GenValue, 'snell_psk', _('Pre-shared key'));
+	o.password = true;
+	o.rmempty = false;
+	o.validate = hm.validateAuthPassword;
+	o.depends('type', 'snell');
+	o.modalonly = true;
+
+	o = s.taboption('field_general', form.ListValue, 'snell_version', _('Version'));
+	o.value('1', _('v1'));
+	o.value('2', _('v2'));
+	o.value('3', _('v3'));
+	o.value('4', _('v4'));
+	o.value('5', _('v5'));
+	o.default = '4';
+	o.depends('type', 'snell');
+	o.modalonly = true;
+
 	/* Tuic fields */
 	o = s.taboption('field_general', hm.GenValue, 'uuid', _('UUID'));
 	o.rmempty = false;
@@ -539,6 +557,14 @@ function renderListeners(s, uciconfig, isClient) {
 	o.value('http', _('HTTP'));
 	o.value('tls', _('TLS'));
 	o.depends('plugin', 'obfs');
+	o.depends('type', 'snell');
+	o.modalonly = true;
+
+	o = s.taboption('field_general', form.Value, 'plugin_opts_host', _('Plugin: ') + _('Host that supports TLS 1.3'));
+	o.datatype = 'hostname';
+	o.placeholder = 'cloud.tencent.com';
+	o.rmempty = false;
+	o.depends('type', 'snell');
 	o.modalonly = true;
 
 	o = s.taboption('field_general', form.Value, 'plugin_opts_handshake_dest', _('Plugin: ') + _('Handshake target that supports TLS 1.3'));
@@ -605,8 +631,8 @@ function renderListeners(s, uciconfig, isClient) {
 	o.modalonly = true;
 
 	o = s.taboption('field_general', form.Flag, 'udp', _('UDP'));
-	o.default = o.disabled;
-	o.depends({type: /^(socks|mixed|shadowsocks)$/});
+	o.default = o.enabled;
+	o.depends({type: /^(socks|mixed|shadowsocks|snell)$/});
 	o.modalonly = true;
 
 	/* Vless Encryption fields */

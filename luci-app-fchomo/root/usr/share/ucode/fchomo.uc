@@ -300,6 +300,14 @@ export function parseListener(cfg, isClient, label) {
 		} : {}),
 		fallback: (cfg.sudoku_http_mask === '0') ? null : cfg.sudoku_fallback,
 
+		/* Snell */
+		psk: cfg.snell_psk,
+		version: cfg.snell_version,
+		"obfs-opts": cfg.type === 'snell' ? {
+			mode: cfg.plugin_opts_obfsmode,
+			host: cfg.plugin_opts_host,
+		} : null,
+
 		/* Tuic */
 		"max-idle-time": durationToSecond(cfg.tuic_max_idle_time),
 		"authentication-timeout": durationToSecond(cfg.tuic_authentication_timeout),
@@ -350,7 +358,7 @@ export function parseListener(cfg, isClient, label) {
 		"congestion-controller": cfg.congestion_controller,
 		"bbr-profile": cfg.bbr_profile,
 		network: cfg.network,
-		udp: strToBool(cfg.udp),
+		udp: cfg.udp === '0' ? false : true,
 
 		/* TLS fields */
 		...(cfg.allow_insecure === '1' ? { "allow-insecure": true } : cfg.tls === '1' ? {

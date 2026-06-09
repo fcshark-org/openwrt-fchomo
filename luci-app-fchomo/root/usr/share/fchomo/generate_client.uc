@@ -840,6 +840,7 @@ uci.foreach(uciconf, ucirule, (cfg) => {
 		} : {
 			path: HM_DIR + '/ruleset/' + cfg['.name'],
 			url: cfg.url,
+			"path-in-bundle": cfg.path_in_bundle,
 			"size-limit": bytesizeToByte(cfg.size_limit) || null,
 			interval: (cfg.type === 'http') ? durationToSecond(cfg.interval) ?? 259200 : null,
 			proxy: get_proxygroup(cfg.proxy),

@@ -787,6 +787,7 @@ uci.foreach(uciconf, uciprov, (cfg) => {
 			"size-limit": bytesizeToByte(cfg.size_limit) || null,
 			interval: (cfg.type === 'http') ? durationToSecond(cfg.interval) ?? 86400 : null,
 			proxy: get_proxygroup(cfg.proxy),
+			"age-secret-key": cfg.age_private_key,
 			header: cfg.header ? json(cfg.header) : null,
 			/* Health fields */
 			"health-check": cfg.health_enable === '0' ? {enable: false} : {

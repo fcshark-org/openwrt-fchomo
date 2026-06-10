@@ -49,9 +49,9 @@ check_dashboard_update() {
 		return 2
 	fi
 
-	local dash_ver="$($wget "${github_token:--q}" -O- "https://api.github.com/repos/$dashrepo/releases/latest" | jsonfilter -e "@.tag_name" 2>/dev/null)"
+	local dash_ver="$($wget "${github_token:--q}" -O- "https://api.github.com/repos/$dashrepo/releases/latest" | jsonfilter -qe "@.tag_name" 2>/dev/null)"
 	[ -n "$dash_ver" ] || {
-		dash_ver="$($wget "${github_token:--q}" -O- "https://api.github.com/repos/$dashrepo/tags" | jsonfilter -e "@[*].name" | head -n1)"
+		dash_ver="$($wget "${github_token:--q}" -O- "https://api.github.com/repos/$dashrepo/tags" | jsonfilter -qe "@[*].name" | head -n1)"
 	}
 	if [ -z "$dash_ver" ]; then
 		log "[$(to_upper "$dashtype")] [$dashrepo] Failed to get the latest version, please retry later."
@@ -100,7 +100,7 @@ check_geodata_update() {
 		return 2
 	fi
 
-	local geodata_ver="$($wget "${github_token:--q}" -O- "https://api.github.com/repos/$georepo/releases/latest" | jsonfilter -e "@.tag_name")"
+	local geodata_ver="$($wget "${github_token:--q}" -O- "https://api.github.com/repos/$georepo/releases/latest" | jsonfilter -qe "@.tag_name")"
 	if [ -z "$geodata_ver" ]; then
 		log "[$(to_upper "$geotype")] Failed to get the latest version, please retry later."
 		return 1
@@ -151,8 +151,8 @@ check_list_update() {
 	fi
 
 	local list_info="$($wget "${github_token:--q}" -O- "https://api.github.com/repos/$listrepo/commits?sha=$listref&path=$listname")"
-	local list_sha="$(echo -e "$list_info" | jsonfilter -e "@[0].sha")"
-	local list_ver="$(echo -e "$list_info" | jsonfilter -e "@[0].commit.message" | grep -Eo "[0-9-]+" | tr -d ' \n-')"
+	local list_sha="$(echo -e "$list_info" | jsonfilter -qe "@[0].sha")"
+	local list_ver="$(echo -e "$list_info" | jsonfilter -qe "@[0].commit.message" | grep -Eo "[0-9-]+" | tr -d ' \n-')"
 	if [ -z "$list_sha" ] || [ -z "$list_ver" ]; then
 		log "[$(to_upper "$listtype")] Failed to get the latest version, please retry later."
 		return 1

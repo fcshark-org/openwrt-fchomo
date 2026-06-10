@@ -1763,6 +1763,8 @@ return view.extend({
 						this.hm_options.type = document.getElementById(cbid).value;
 						if (this.hm_options.type === 'age-convert')
 							this.hm_options.params = this.formvalue(section_id);
+						else
+							this.hm_options.params = '';
 
 						return hm.handleGenKey.call(this, this.hm_options);
 					})

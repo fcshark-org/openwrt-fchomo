@@ -2,9 +2,9 @@
 
 'use strict';
 
-import { access, lsdir, lstat, popen, readfile, writefile } from 'fs';
+import { access, lsdir, lstat, mkstemp, popen, readfile, writefile } from 'fs';
 import {
-	shellQuote, isBinary, yqRead, yqReadFile,
+	shellQuote, isBinary, executeCommand, yqRead, yqReadFile,
 	HM_DIR, EXE_DIR, SDL_DIR, RUN_DIR
 } from 'fchomo';
 
@@ -115,6 +115,56 @@ const methods = {
 			}
 
 			return { result };
+		}
+	},
+
+	age_crypto: {
+		args: { action: 'action', key: 'key', content: 'content'},
+		call: function(req) {
+			if (!(req.args?.action in ['decrypt', 'encrypt']))
+				return { result: false, error: 'illegal action' };
+
+			if (!req.args?.key)
+				return { result: false, error: 'illegal key' };
+
+			if (!req.args?.content)
+				return { result: '' };
+
+			let content = req.args?.content;
+			let infd = mkstemp();
+
+			if (content) {
+				content = trim(content);
+				content = replace(content, /\r\n?/g, '\n');
+			}
+			infd.write(content);
+
+			infd.seek();
+			const out = executeCommand(infd, '/usr/bin/mihomo age', req.args?.action, req.args?.key, '-', '-');
+			infd.close();
+
+			return out.exitcode === 0 ? { result: out.stdout } : { result: false, error: out.stderr };
+		}
+	},
+
+	age_crypto_file: {
+		args: { action: 'action', key: 'key', input: 'input', output: 'output'},
+		call: function(req) {
+			if (!(req.args?.action in ['decrypt', 'encrypt']))
+				return { result: false, error: 'illegal action' };
+
+			if (!req.args?.key)
+				return { result: false, error: 'illegal key' };
+
+			if ((!req.args?.input) || match(req.args?.input, /\.\.\//))
+				return { result: false, error: 'illegal input' };
+
+			if ((!req.args?.output) || match(req.args?.output, /\.\.\//))
+				return { result: false, error: 'illegal output' };
+
+			const out = executeCommand(null, '/usr/bin/mihomo age', req.args?.action, req.args?.key, req.args?.input, req.args?.output);
+
+			return out.exitcode === 0 ? { result: true } : { result: false, error: out.stderr };
 		}
 	},
 

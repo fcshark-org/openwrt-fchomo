@@ -1085,10 +1085,10 @@ return view.extend({
 
 		so = ss.taboption('field_general', form.Value, 'empty_fallback', _('Empty fallback'));
 		so.default = ''; // COMPATIBLE
-		hm.preset_outbound.full.filter(item => item[0] !== 'GLOBAL').forEach((res) => {
+		hm.preset_outbound.proxy.forEach((res) => {
 			so.value.apply(so, res);
 		})
-		so.load = L.bind(hm.loadNodeLabel, so, hm.preset_outbound.full.filter(item => item[0] !== 'GLOBAL'));
+		so.load = L.bind(hm.loadNodeLabel, so, hm.preset_outbound.proxy);
 		so.modalonly = true;
 
 		/* Override fields */

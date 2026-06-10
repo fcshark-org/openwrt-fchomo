@@ -215,6 +215,14 @@ const preset_outbound = {
 		['COMPATIBLE'],  // built-in Outbound
 		['GLOBAL']       // built-in Proxy Group
 	],
+	proxy: [ // built-in Outbound
+		['DIRECT'],
+		['REJECT'],
+		['REJECT-DROP'],
+		['PASS'],
+		['PASS-RULE'],
+		['COMPATIBLE']
+	],
 	direct: [
 		['', _('null')],
 		['DIRECT'],

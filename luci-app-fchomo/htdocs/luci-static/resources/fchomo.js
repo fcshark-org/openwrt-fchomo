@@ -118,7 +118,7 @@ const glossary = {
 		prefmt: '%s_nodedomain',
 		field: 'proxy-server-nameserver-policy',
 	},
-	node: {
+	node: { // outbound
 		prefmt: 'node_%s',
 		field: 'proxies',
 	},
@@ -207,13 +207,13 @@ const outbound_type = [
 
 const preset_outbound = {
 	full: [
-		['DIRECT'],
-		['REJECT'],
-		['REJECT-DROP'],
-		['PASS'],
-		['PASS-RULE'],
-		['COMPATIBLE'],
-		['GLOBAL']
+		['DIRECT'],      // built-in Outbound
+		['REJECT'],      // built-in Outbound
+		['REJECT-DROP'], // built-in Outbound
+		['PASS'],        // built-in Outbound
+		['PASS-RULE'],   // built-in Outbound
+		['COMPATIBLE'],  // built-in Outbound
+		['GLOBAL']       // built-in Proxy Group
 	],
 	direct: [
 		['', _('null')],

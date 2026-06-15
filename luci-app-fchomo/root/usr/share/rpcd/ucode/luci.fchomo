@@ -53,9 +53,9 @@ const methods = {
 			}
 
 			const type = req.args?.type;
-			let cmd = `generate ${type}`;
 			let result = {};
 
+			let cmd = `generate ${type}`;
 			if (type === 'age-x25519') {
 				cmd = 'age keygen';
 			} else if (type === 'age-mlkem768-x25519') {
@@ -63,7 +63,8 @@ const methods = {
 			} else if (type === 'age-convert') {
 				cmd = 'age convert';
 			}
-			const fd = popen(`/usr/bin/mihomo ${cmd}` + (req.args?.params ? ' ' + shellQuote(req.args.params) : ''));
+
+			const fd = popen(`/usr/bin/mihomo ${cmd} ${shellQuote(req.args.params ?? '')}`);
 			if (fd) {
 				for (let line = fd.read('line'); length(line); line = fd.read('line')) {
 					if (type === 'uuid')

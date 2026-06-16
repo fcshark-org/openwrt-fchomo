@@ -247,7 +247,7 @@ return view.extend({
 		so.default = so.enabled;
 		so.editable = true;
 
-		so = ss.taboption('field_general', form.ListValue, 'type', _('Type'));
+		so = ss.taboption('field_general', form.RichListValue, 'type', _('Type'));
 		so.default = hm.outbound_type[0][0];
 		hm.outbound_type.forEach((res) => {
 			so.value.apply(so, res);
@@ -256,12 +256,24 @@ return view.extend({
 		so = ss.taboption('field_general', form.Value, 'server', _('Server address'));
 		so.datatype = 'host';
 		so.rmempty = false;
-		so.depends({type: 'direct', '!reverse': true});
+		so.depends({type: /^(rematch|direct)$/, '!reverse': true});
 
 		so = ss.taboption('field_general', form.Value, 'port', _('Port'));
 		so.datatype = 'port';
 		so.rmempty = false;
-		so.depends({type: /^(direct|mieru)$/, '!reverse': true});
+		so.depends({type: /^(rematch|direct|mieru)$/, '!reverse': true});
+
+		/* Rematch fields */
+		so = ss.taboption('field_general', form.ListValue, 'target_rematch_name', _('REMATCH-NAME marking'));
+		so.load = L.bind(hm.loadRematchName, so, [['', _('-- Please choose --')]]);
+		so.rmempty = false;
+		so.depends('type', 'rematch');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.ListValue, 'target_sub_rule', _('Use sub rule'));
+		so.load = L.bind(hm.loadSubRuleGroup, so, [['', _('-- Please choose --')]]);
+		so.depends('type', 'rematch');
+		so.modalonly = true;
 
 		/* HTTP / SOCKS fields */
 		/* hm.validateAuth */
@@ -903,7 +915,7 @@ return view.extend({
 
 		so = ss.taboption('field_general', form.Flag, 'udp', _('UDP'));
 		so.default = so.disabled;
-		so.depends({type: /^(direct|socks5|ss|mieru|vmess|vless|trojan|anytls|trusttunnel|masque|wireguard)$/});
+		so.depends({type: /^(rematch|direct|socks5|ss|mieru|vmess|vless|trojan|anytls|trusttunnel|masque|wireguard)$/});
 		so.depends({type: 'snell', snell_version: /^(3|4|5)$/});
 		so.modalonly = true;
 
@@ -1470,10 +1482,12 @@ return view.extend({
 		/* Dial fields */
 		so = ss.taboption('field_dial', form.Flag, 'tfo', _('TFO'));
 		so.default = so.disabled;
+		so.depends({type: /^(rematch)$/, '!reverse': true});
 		so.modalonly = true;
 
 		so = ss.taboption('field_dial', form.Flag, 'mptcp', _('mpTCP'));
 		so.default = so.disabled;
+		so.depends({type: /^(rematch)$/, '!reverse': true});
 		so.modalonly = true;
 
 		/* Features are implemented in proxy chain
@@ -1487,11 +1501,13 @@ return view.extend({
 			_('Priority: Proxy Node > Global.'));
 		so.multiple = false;
 		so.noaliases = true;
+		so.depends({type: /^(rematch)$/, '!reverse': true});
 		so.modalonly = true;
 
 		so = ss.taboption('field_dial', form.Value, 'routing_mark', _('Routing mark (Fwmark)'),
 			_('Priority: Proxy Node > Global.'));
 		so.datatype = 'uinteger';
+		so.depends({type: /^(rematch)$/, '!reverse': true});
 		so.modalonly = true;
 
 		so = ss.taboption('field_dial', form.ListValue, 'ip_version', _('IP version'));
@@ -1499,6 +1515,7 @@ return view.extend({
 		hm.ip_version.forEach((res) => {
 			so.value.apply(so, res);
 		})
+		so.depends({type: /^(rematch)$/, '!reverse': true});
 		so.modalonly = true;
 		/* Proxy Node END */
 

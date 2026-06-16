@@ -211,7 +211,7 @@ return view.extend({
 	render(data) {
 		let m, s, o, ss, so;
 
-		m = new form.Map('fchomo', _('Edit node'));
+		m = new form.Map('fchomo', _('Edit outbound'));
 
 		s = m.section(form.NamedSection, 'global', 'fchomo');
 

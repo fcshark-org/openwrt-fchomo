@@ -820,6 +820,10 @@ msgstr "編輯入站"
 msgid "Edit node"
 msgstr "編輯節點"
 
+#: htdocs/luci-static/resources/view/fchomo/node.js:214
+msgid "Edit outbound"
+msgstr "編輯出站"
+
 #: htdocs/luci-static/resources/view/fchomo/ruleset.js:138
 msgid "Edit ruleset"
 msgstr "編輯規則集"

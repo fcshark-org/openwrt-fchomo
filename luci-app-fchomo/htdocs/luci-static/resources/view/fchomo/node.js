@@ -1489,7 +1489,7 @@ return view.extend({
 		so.noaliases = true;
 		so.modalonly = true;
 
-		so = ss.taboption('field_dial', form.Value, 'routing_mark', _('Routing mark'),
+		so = ss.taboption('field_dial', form.Value, 'routing_mark', _('Routing mark (Fwmark)'),
 			_('Priority: Proxy Node > Global.'));
 		so.datatype = 'uinteger';
 		so.modalonly = true;
@@ -1874,7 +1874,7 @@ return view.extend({
 		so.depends({type: 'inline', '!reverse': true});
 		so.modalonly = true;
 
-		so = ss.taboption('field_override', form.Value, 'override_routing_mark', _('Routing mark'),
+		so = ss.taboption('field_override', form.Value, 'override_routing_mark', _('Routing mark (Fwmark)'),
 			_('Priority: Proxy Node > Global.'));
 		so.datatype = 'uinteger';
 		so.depends({type: 'inline', '!reverse': true});

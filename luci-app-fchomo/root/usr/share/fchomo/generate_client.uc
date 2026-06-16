@@ -388,6 +388,7 @@ config.dns = {
 	enable: true,
 	"prefer-h3": false,
 	listen: '[::]:' + (uci.get(uciconf, ucidns, 'dns_port') || '7853'),
+	"listen-routing-mark": strToInt(uci.get(uciconf, ucidns, 'routing_mark')) || null,
 	ipv6: (uci.get(uciconf, ucidns, 'ipv6') === '0') ? false : true,
 	"enhanced-mode": 'redir-host',
 	"use-hosts": true,

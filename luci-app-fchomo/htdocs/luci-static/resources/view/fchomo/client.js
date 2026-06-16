@@ -1386,6 +1386,9 @@ return view.extend({
 		so.placeholder = '7853';
 		so.rmempty = false;
 
+		so = ss.option(form.Value, 'routing_mark', _('Listen routing mark (SO_MARK)'));
+		so.datatype = 'uinteger'
+
 		so = ss.option(form.Flag, 'ipv6', _('IPv6 support'));
 		so.default = so.enabled;
 

@@ -600,7 +600,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		network: cfg.masque_network || null,
 
 		/* TrustTunnel */
-		"health-check": cfg.trusttunnel_health_check === '0' ? false : true,
+		"health-check": cfg.type === 'trusttunnel' ? (cfg.trusttunnel_health_check === '0' ? false : true) : null,
 		quic: strToBool(cfg.trusttunnel_quic),
 
 		/* WireGuard */

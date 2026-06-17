@@ -748,6 +748,13 @@ return view.extend({
 		so.depends('type', 'masque');
 		so.modalonly = true;
 
+		so = ss.taboption('field_general', form.ListValue, 'masque_network', _('Network'));
+		so.default = '';
+		so.value('', _('h3'));
+		so.value('h2', _('h2'));
+		so.depends('type', 'masque');
+		so.modalonly = true;
+
 		so = ss.taboption('field_general', form.Flag, 'masque_remote_dns_resolve', _('Remote DNS resolve'),
 			_('Force DNS remote resolution.'));
 		so.default = so.disabled;
@@ -901,7 +908,8 @@ return view.extend({
 		hm.congestion_controller.forEach((res) => {
 			so.value.apply(so, res);
 		})
-		so.depends({type: /^(tuic|masque|trusttunnel)$/});
+		so.depends({type: /^(tuic|trusttunnel)$/});
+		so.depends({type: 'masque', masque_network: ''});
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', form.ListValue, 'bbr_profile', _('BBR profile'));
@@ -1050,7 +1058,7 @@ return view.extend({
 
 			return true;
 		}
-		so.depends({type: /^(http|socks5|vmess|vless|trojan|anytls|hysteria|hysteria2|tuic|masque|trusttunnel)$/});
+		so.depends({type: /^(http|socks5|vmess|vless|trojan|anytls|hysteria|hysteria2|tuic|trusttunnel)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_tls', form.Flag, 'tls_disable_sni', _('Disable SNI'),
@@ -1093,9 +1101,6 @@ return view.extend({
 					case 'vless':
 						def_alpn = ['h3', 'h2', 'http/1.1'];
 						break;
-					case 'masque':
-						def_alpn = ['h2'];
-						break;
 					case 'trusttunnel':
 						def_alpn = ['h3', 'h2'];
 						break;
@@ -1108,7 +1113,7 @@ return view.extend({
 
 			return true;
 		}
-		so.depends({tls: '1', type: /^(vmess|vless|trojan|anytls|hysteria|hysteria2|tuic|masque|trusttunnel)$/});
+		so.depends({tls: '1', type: /^(vmess|vless|trojan|anytls|hysteria|hysteria2|tuic|trusttunnel)$/});
 		so.depends({type: 'ss', plugin: 'shadow-tls'});
 		so.modalonly = true;
 

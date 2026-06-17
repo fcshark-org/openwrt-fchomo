@@ -486,14 +486,12 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		"target-rematch-name": cfg.target_rematch_name,
 		"target-sub-rule": cfg.target_sub_rule,
 
-		/* HTTP / SOCKS / Shadowsocks / VMess / VLESS / Trojan / hysteria2 / TUIC / SSH / WireGuard / Masque */
+		/* HTTP / SOCKS / Shadowsocks / VMess / VLESS / Trojan / hysteria2 / TUIC / WireGuard / Masque */
 		username: cfg.username,
 		uuid: cfg.vmess_uuid || cfg.uuid,
 		cipher: cfg.vmess_chipher || cfg.shadowsocks_chipher,
 		password: cfg.shadowsocks_password || cfg.password,
 		headers: cfg.headers ? json(cfg.headers) : null,
-		"private-key": cfg.masque_private_key || cfg.wireguard_private_key || cfg.ssh_priv_key,
-		"public-key": cfg.masque_endpoint_public_key || cfg.wireguard_peer_public_key,
 		ip: cfg.masque_ip || cfg.wireguard_ip,
 		ipv6: cfg.masque_ipv6 || cfg.wireguard_ipv6,
 		mtu: strToInt(cfg.masque_mtu ?? cfg.wireguard_mtu) || null,
@@ -598,6 +596,9 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		"packet-encoding": cfg.vmess_packet_encoding,
 		encryption: cfg.vless_encryption === '1' ? cfg.vless_encryption_encryption : null,
 
+		/* Masque */
+		network: cfg.masque_network || null,
+
 		/* TrustTunnel */
 		"health-check": cfg.trusttunnel_health_check === '0' ? false : true,
 		quic: strToBool(cfg.trusttunnel_quic),
@@ -626,6 +627,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		"udp-over-tcp": strToBool(cfg.uot),
 		"udp-over-tcp-version": cfg.uot_version,
 
+		/* SSH / WireGuard / Masque */
 		/* TLS fields */
 		tls: (cfg.type in ['trojan', 'anytls', 'hysteria', 'hysteria2', 'tuic', 'trusttunnel']) ? null : strToBool(cfg.tls),
 		"disable-sni": strToBool(cfg.tls_disable_sni),
@@ -634,7 +636,8 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		alpn: cfg.tls_alpn, // Array
 		"skip-cert-verify": strToBool(cfg.tls_skip_cert_verify),
 		certificate: cfg.tls_cert_path, // mTLS
-		"private-key": cfg.tls_key_path, // mTLS
+		"private-key": cfg.masque_private_key || cfg.wireguard_private_key || cfg.ssh_priv_key || cfg.tls_key_path, // mTLS/SSH/WireGuard/Masque
+		"public-key": cfg.masque_endpoint_public_key || cfg.wireguard_peer_public_key, // WireGuard/Masque
 		"client-fingerprint": cfg.tls_client_fingerprint,
 		"ech-opts": cfg.tls_ech === '1' ? {
 			enable: true,

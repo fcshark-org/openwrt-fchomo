@@ -733,25 +733,38 @@ return view.extend({
 		so.datatype = 'ip4addr(1)';
 		so.placeholder = '172.16.0.2';
 		so.rmempty = false;
-		so.depends('type', 'masque');
+		so.depends({type: 'masque', masque_network: /^(|h2)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', form.Value, 'masque_ipv6', _('Local IPv6 address'),
 			_('The %s address used by local machine in the Cloudflare WARP network.').format('IPv6'));
 		so.datatype = 'ip6addr(1)';
-		so.depends('type', 'masque');
+		so.depends({type: 'masque', masque_network: /^(|h2)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', form.Value, 'masque_mtu', _('MTU'));
 		so.datatype = 'range(0,9000)';
 		so.placeholder = '1280';
-		so.depends('type', 'masque');
+		so.depends({type: 'masque', masque_network: /^(|h2)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', form.ListValue, 'masque_network', _('Network'));
 		so.default = '';
 		so.value('', _('h3'));
+		so.value('h3-l4proxy', _('h3-l4proxy'));
 		so.value('h2', _('h2'));
+		so.validate = function(section_id, value) {
+			const udp = this.section.getUIElement(section_id, 'udp').node.querySelector('input');
+
+			// Force disabled
+			if (value === 'h3-l4proxy') {
+				udp.checked = false;
+				udp.disabled = true;
+			} else
+				udp.removeAttribute('disabled');
+
+			return true;
+		}
 		so.depends('type', 'masque');
 		so.modalonly = true;
 
@@ -909,7 +922,7 @@ return view.extend({
 			so.value.apply(so, res);
 		})
 		so.depends({type: /^(tuic|trusttunnel)$/});
-		so.depends({type: 'masque', masque_network: ''});
+		so.depends({type: 'masque', masque_network: /^(|h3-l4proxy)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', form.ListValue, 'bbr_profile', _('BBR profile'));

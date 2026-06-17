@@ -602,7 +602,7 @@ function renderListeners(s, uciconfig, isClient) {
 
 	/* Extra fields */
 	if (isClient) {
-		o = s.taboption('field_general', form.Value, 'routing_mark', _('Routing mark (SO_MARK)'));
+		o = s.taboption('field_general', form.Value, 'routing_mark', _('Routing mark (Fwmark)'));
 		o.datatype = 'uinteger';
 		o.modalonly = true;
 

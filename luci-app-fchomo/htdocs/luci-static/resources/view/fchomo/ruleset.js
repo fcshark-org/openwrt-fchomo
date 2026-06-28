@@ -406,7 +406,12 @@ return view.extend({
 		hm.preset_outbound.direct.forEach((res) => {
 			o.value.apply(o, res);
 		})
-		o.load = L.bind(hm.loadProxyGroupLabel, o, hm.preset_outbound.direct);
+		o.load = function(section_id) {
+			return hm.loadLabel.call(this, [
+				...hm.preset_outbound.direct,
+				...hm.loadLabelValues(this.config, 'proxy_group')
+			], section_id);
+		}
 		o.textvalue = hm.textvalue2Value;
 		//o.editable = true;
 		o.depends('type', 'http');

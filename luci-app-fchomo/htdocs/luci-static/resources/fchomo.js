@@ -1114,109 +1114,80 @@ function loadModalTitle(title, addtitle, section_id) {
 	return label ? title + ' » ' + label : addtitle;
 }
 
-function loadProxyGroupLabel(preadds, section_id) {
+function loadLabel(preadds, section_id) {
 	delete this.keylist;
 	delete this.vallist;
 
-	preadds?.forEach((arr) => {
-		this.value.apply(this, arr);
-	});
-	uci.sections(this.config, 'proxy_group', (res) => {
-		if (res.enabled !== '0')
-			this.value(res['.name'], res.label);
-	});
+	for (const arr of preadds || [])
+		this.value(...arr);
 
 	return this.super('load', section_id);
 }
 
-function loadNodeLabel(preadds, section_id) {
-	delete this.keylist;
-	delete this.vallist;
+function loadLabelValues(uciconfig, sectiontype, options = {}) {
+	const values = [];
 
-	preadds?.forEach((arr) => {
-		this.value.apply(this, arr);
-	});
-	uci.sections(this.config, 'node', (res) => {
-		if (res.enabled !== '0')
-			this.value(res['.name'], res.label);
-	});
+	switch (sectiontype) {
+		case 'proxy_group':
+		case 'node':
+		case 'provider':
+			uci.sections(uciconfig, sectiontype, (res) => {
+				if (res.enabled !== '0')
+					values.push([res['.name'], res.label]);
+			});
+			break;
+		case 'ruleset':
+			uci.sections(uciconfig, sectiontype, (res) => {
+				if (
+					res.enabled !== '0' &&
+					(!options.behaviors ||
+					  options.behaviors.includes(res.behavior))
+				) {
+					values.push([res['.name'], res.label]);
+				}
+			});
+			break;
+		case 'subrule-group': {
+			const groups = new Set();
 
-	return this.super('load', section_id);
-}
+			uci.sections(uciconfig, 'subrules', (res) => {
+				if (res.enabled !== '0')
+					groups.add(res.group);
+			});
 
-function loadProviderLabel(preadds, section_id) {
-	delete this.keylist;
-	delete this.vallist;
+			for (const group of groups)
+				values.push([group, group]);
+			break;
+		}
+		case 'rematch-name': {
+			const names = new Set();
 
-	preadds?.forEach((arr) => {
-		this.value.apply(this, arr);
-	});
-	uci.sections(this.config, 'provider', (res) => {
-		if (res.enabled !== '0')
-			this.value(res['.name'], res.label);
-	});
+			for (const type of ['rules', 'subrules']) {
+				uci.sections(uciconfig, type, (res) => {
+					if (res.enabled === '0')
+						return;
 
-	return this.super('load', section_id);
-}
+					try {
+						const payload =
+							JSON.parse(res?.entry?.trim() || '{}').payload || [];
 
-function loadRulesetLabel(preadds, behaviors, section_id) {
-	delete this.keylist;
-	delete this.vallist;
+						for (const p of payload)
+							if (p.type === 'REMATCH-NAME')
+								names.add(p.factor);
+					} catch {}
+				});
+			}
 
-	preadds?.forEach((arr) => {
-		this.value.apply(this, arr);
-	});
-	uci.sections(this.config, 'ruleset', (res) => {
-		if (res.enabled !== '0')
-			if (behaviors ? behaviors.includes(res.behavior) : true)
-				this.value(res['.name'], res.label);
-	});
+			for (const name of names)
+				values.push([name, name]);
 
-	return this.super('load', section_id);
-}
+			break;
+		}
+		default:
+			break;
+	}
 
-function loadSubRuleGroup(preadds, section_id) {
-	delete this.keylist;
-	delete this.vallist;
-
-	preadds?.forEach((arr) => {
-		this.value.apply(this, arr);
-	});
-	let groups = {};
-	uci.sections(this.config, 'subrules', (res) => {
-		if (res.enabled !== '0')
-			groups[res.group] = res.group;
-	});
-	Object.keys(groups).forEach((group) => {
-		this.value(group, group);
-	});
-
-	return this.super('load', section_id);
-}
-
-function loadRematchName(preadds, section_id) {
-	delete this.keylist;
-	delete this.vallist;
-
-	preadds?.forEach((arr) => {
-		this.value.apply(this, arr);
-	});
-	let names = {};
-	for (const section_type of ['rules', 'subrules'])
-		uci.sections(this.config, section_type, (res) => {
-			if (res.enabled !== '0')
-				try {
-					const obj = JSON.parse(res?.entry?.trim() || '{}');
-					for (const p of obj.payload || [])
-						if (p.type === 'REMATCH-NAME')
-							names[p.factor] = p.factor;
-				} catch {}
-		});
-	Object.keys(names).forEach((name) => {
-		this.value(name, name);
-	});
-
-	return this.super('load', section_id);
+	return values;
 }
 
 function renderStatus(ElId, isRunning, instance, noGlobal) {
@@ -1819,12 +1790,8 @@ return baseclass.extend({
 	// load
 	loadDefaultLabel,
 	loadModalTitle,
-	loadProxyGroupLabel,
-	loadNodeLabel,
-	loadProviderLabel,
-	loadRulesetLabel,
-	loadSubRuleGroup,
-	loadRematchName,
+	loadLabel,
+	loadLabelValues,
 	// render
 	renderStatus,
 	updateStatus,

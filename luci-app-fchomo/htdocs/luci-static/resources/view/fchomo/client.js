@@ -1057,10 +1057,11 @@ return view.extend({
 			so.value.apply(so, res);
 		})
 
-		so = ss.taboption('field_general', form.MultiValue, 'groups', _('Group'));
+		so = ss.taboption('field_general', hm.MultiValue, 'groups', _('Group')); // @prxxxx_merged
 		hm.preset_outbound.proxy.forEach((res) => {
 			so.value.apply(so, res);
 		})
+		so.keep_order = true;
 		so.load = function(section_id) {
 			return hm.loadLabel.call(this, [
 				...hm.preset_outbound.proxy,
@@ -1069,8 +1070,9 @@ return view.extend({
 		}
 		so.editable = true;
 
-		so = ss.taboption('field_general', form.MultiValue, 'proxies', _('Node'));
+		so = ss.taboption('field_general', hm.MultiValue, 'proxies', _('Node')); // @prxxxx_merged
 		so.value('', _('-- Please choose --'));
+		so.keep_order = true;
 		so.load = function(section_id) {
 			return hm.loadLabel.call(this, [
 				['', _('-- Please choose --')],
@@ -1088,8 +1090,9 @@ return view.extend({
 		}
 		so.editable = true;
 
-		so = ss.taboption('field_general', form.MultiValue, 'use', _('Provider'));
+		so = ss.taboption('field_general', hm.MultiValue, 'use', _('Provider')); // @prxxxx_merged
 		so.value('', _('-- Please choose --'));
+		so.keep_order = true;
 		so.load = function(section_id) {
 			return hm.loadLabel.call(this, [
 				['', _('-- Please choose --')],

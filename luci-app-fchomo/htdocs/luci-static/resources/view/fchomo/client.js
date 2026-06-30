@@ -1133,7 +1133,7 @@ return view.extend({
 				...hm.loadLabelValues(this.config, 'node')
 			], section_id);
 		}
-		so.modalonly = true;
+		so.textvalue = hm.textvalue2Value;
 
 		/* Override fields */
 		so = ss.taboption('field_override', form.Flag, 'disable_udp', _('Disable UDP'));

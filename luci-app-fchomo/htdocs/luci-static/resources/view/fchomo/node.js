@@ -116,7 +116,7 @@ const parseProviderYaml = hm.parseYaml.extend({
 				url: cfg.url,
 				size_limit: cfg["size-limit"],
 				interval: cfg.interval,
-				proxy: cfg.proxy ? hm.preset_outbound.full.map(([key, label]) => key).includes(cfg.proxy) ? cfg.proxy : this.calcID(hm.glossary["proxy_group"].field, cfg.proxy) : null,
+				proxy: cfg.proxy ? hm.preset_outbound.direct.map(([key, label]) => key).includes(cfg.proxy) ? cfg.proxy : this.calcID(hm.glossary["proxy_group"].field, cfg.proxy) : null,
 				age_private_key: cfg["age-secret-key"],
 				header: cfg.header ? JSON.stringify(cfg.header, null, 2) : null, // string: object
 				/* Health fields */

@@ -443,6 +443,7 @@ if (!isEmpty(config.dns.fallback))
 		ipcidr: uci.get(uciconf, ucidns, 'fallback_filter_ipcidr') || [],
 		domain: uci.get(uciconf, ucidns, 'fallback_filter_domain') || [],
 	};
+config.dns["fallback-lazy-query"] = strToBool(uci.get(uciconf, ucidns, 'fallback_lazy_query'));
 /* DNS END */
 
 /* Hosts START */

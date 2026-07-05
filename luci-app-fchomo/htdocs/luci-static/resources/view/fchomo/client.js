@@ -1909,6 +1909,23 @@ return view.extend({
 		so = ss.option(form.DynamicList, 'fallback_filter_domain', _('Domain'),
 			_('Match domain. Support wildcards.</br>') +
 			_('The matching <code>%s</code> will be deemed as poisoned.').format(_('Domain')));
+
+		so = ss.option(form.Flag, 'fallback_lazy_query', _('Lazy query'),
+			_('Lazy query.'));
+		so.default = so.disabled;
+		so.validate = function(section_id, value) {
+			let desc = this.getUIElement(section_id).node.nextSibling;
+			value = this.formvalue(section_id);
+
+			if (value == 1)
+				desc.innerHTML = _('Check the response from the <code>%s</code>, only initiate query if the <code>%s</code> is satisfied.')
+					.format(_('Default DNS server'), _('Fallback filter'));
+			else
+				desc.innerHTML = _('Send queries to both the <code>%s</code> and the <code>%s</code>.')
+					.format(_('Default DNS server'), _('Fallback DNS server'));
+
+			return true;
+		}
 		/* Fallback filter END */
 
 		return m.render();

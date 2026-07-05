@@ -1073,7 +1073,7 @@ msgstr "请输入：%s"
 #: htdocs/luci-static/resources/view/fchomo/node.js:1271
 #: htdocs/luci-static/resources/view/fchomo/node.js:1279
 msgid "Expecting: only support %s."
-msgstr "请输入：仅支援 %s."
+msgstr "请输入：仅支援 %s。"
 
 #: htdocs/luci-static/resources/view/fchomo/global.js:723
 msgid "Experimental"

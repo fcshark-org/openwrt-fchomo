@@ -959,6 +959,14 @@ return view.extend({
 		so.depends({type: 'hysteria2'});
 		so.modalonly = true;
 
+		so = ss.taboption('field_general', form.Value, 'handshake_timeout', _('Handshake timeout'),
+			_('In seconds. After configuration, the handshake is not affected by the outer connection timeout.') + '</br>' +
+			_('The default value is <code>%s</code>, indicating that only the outer connection timeout is used.').format('0'));
+		so.datatype = 'uinteger';
+		so.placeholder = '30';
+		so.depends({type: /^(masque|openvpn)$/});
+		so.modalonly = true;
+
 		so = ss.taboption('field_general', form.Flag, 'udp', _('UDP'));
 		so.default = so.disabled;
 		so.depends({type: /^(rematch|direct|socks5|ss|mieru|vmess|vless|trojan|anytls|trusttunnel|masque|wireguard)$/});

@@ -561,6 +561,7 @@ function renderListeners(s, uciconfig, isClient) {
 	o.value('', _('none'));
 	o.value('obfs', _('obfs-simple'));
 	o.value('shadow-tls', _('shadow-tls'));
+	o.value('restls', _('restls'));
 	//o.value('kcp-tun', _('kcp-tun'));
 	o.validate = function(section_id, value) {
 		const type = this.section.getOption('type').formvalue(section_id);
@@ -594,13 +595,13 @@ function renderListeners(s, uciconfig, isClient) {
 	o.datatype = 'hostport';
 	o.placeholder = 'cloud.tencent.com:443';
 	o.rmempty = false;
-	o.depends({plugin: 'shadow-tls'});
+	o.depends({plugin: /^(shadow-tls|restls)$/});
 	o.modalonly = true;
 
 	o = s.taboption('field_general', hm.GenValue, 'plugin_opts_thetlspassword', _('Plugin: ') + _('Password'));
 	o.password = true;
 	o.rmempty = false;
-	o.depends({plugin: 'shadow-tls'});
+	o.depends({plugin: /^(shadow-tls|restls)$/});
 	o.modalonly = true;
 
 	o = s.taboption('field_general', form.ListValue, 'plugin_opts_shadowtls_version', _('Plugin: ') + _('Version'));
@@ -609,6 +610,12 @@ function renderListeners(s, uciconfig, isClient) {
 	o.value('3', _('v3'));
 	o.default = '3';
 	o.depends({plugin: 'shadow-tls'});
+	o.modalonly = true;
+
+	o = s.taboption('field_general', form.Value, 'plugin_opts_restls_script', _('Plugin: ') + _('Restls script'));
+	o.default = '300?100<1,400~100,350~100,600~100,300~200,300~100';
+	o.rmempty = false;
+	o.depends({plugin: 'restls'});
 	o.modalonly = true;
 
 	/* Extra fields */

@@ -363,6 +363,16 @@ export function parseListener(cfg, isClient, label) {
 						dest: cfg.plugin_opts_handshake_dest
 					}
 				}
+			} : cfg.plugin === 'restls' ? {
+			// restls
+				"res-tls": {
+					enable: true,
+					dest: cfg.plugin_opts_handshake_dest,
+					password: cfg.plugin_opts_thetlspassword,
+					"restls-script": cfg.plugin_opts_restls_script,
+					//"min-record-len": 0,
+					//proxy: ""
+				}
 			} : {}
 		) : {}),
 

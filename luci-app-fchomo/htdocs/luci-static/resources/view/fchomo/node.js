@@ -1095,7 +1095,7 @@ return view.extend({
 			let tls = this.section.getUIElement(section_id, 'tls').node.querySelector('input');
 
 			// Force enabled
-			if (['trojan', 'anytls', 'hysteria', 'hysteria2', 'tuic', 'trusttunnel'].includes(type)) {
+			if (['trojan', 'anytls', 'hysteria', 'hysteria2', 'tuic', 'trusttunnel', 'masque'].includes(type)) {
 				tls.checked = true;
 				tls.disabled = true;
 			} else {
@@ -1104,7 +1104,7 @@ return view.extend({
 
 			return true;
 		}
-		so.depends({type: /^(http|socks5|vmess|vless|trojan|anytls|hysteria|hysteria2|tuic|trusttunnel)$/});
+		so.depends({type: /^(http|socks5|vmess|vless|trojan|anytls|hysteria|hysteria2|tuic|trusttunnel|masque)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_tls', form.Flag, 'tls_disable_sni', _('Disable SNI'),
@@ -1115,7 +1115,7 @@ return view.extend({
 
 		so = ss.taboption('field_tls', form.Value, 'tls_sni', _('TLS SNI'),
 			_('Used to verify the hostname on the returned certificates.'));
-		so.depends({tls: '1', type: /^(http|vmess|vless|trojan|anytls|hysteria|hysteria2|trusttunnel)$/});
+		so.depends({tls: '1', type: /^(http|vmess|vless|trojan|anytls|hysteria|hysteria2|trusttunnel|masque)$/});
 		so.depends({tls: '1', type: /^(tuic)$/, tls_disable_sni: '0'});
 		so.modalonly = true;
 

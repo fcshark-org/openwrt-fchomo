@@ -1227,6 +1227,35 @@ function renderListeners(s, uciconfig, isClient) {
 	o.placeholder = '1000000';
 	o.depends({transport_enabled: '1', transport_type: 'xhttp'});
 	o.modalonly = true;
+
+	/* Multiplex fields */
+	o = s.taboption('field_general', form.Flag, 'smux_enabled', _('Multiplex'));
+	o.default = o.disabled;
+	o.depends({type: /^(shadowsocks|vmess|vless|trojan|tuic|hysteria2|sudoku)$/});
+	o.modalonly = true;
+
+	o = s.taboption('field_multiplex', form.Flag, 'smux_padding', _('Enable padding'));
+	o.default = o.disabled;
+	o.depends('smux_enabled', '1');
+	o.modalonly = true;
+
+	o = s.taboption('field_multiplex', form.Flag, 'smux_brutal', _('Enable TCP Brutal'),
+		_('Enable TCP Brutal congestion control algorithm'));
+	o.default = o.disabled;
+	o.depends('smux_enabled', '1');
+	o.modalonly = true;
+
+	o = s.taboption('field_multiplex', form.Value, 'smux_brutal_up', _('Upload bandwidth'),
+		_('Upload bandwidth in Mbps.'));
+	o.datatype = 'uinteger';
+	o.depends('smux_brutal', '1');
+	o.modalonly = true;
+
+	o = s.taboption('field_multiplex', form.Value, 'smux_brutal_down', _('Download bandwidth'),
+		_('Download bandwidth in Mbps.'));
+	o.datatype = 'uinteger';
+	o.depends('smux_brutal', '1');
+	o.modalonly = true;
 }
 
 return baseclass.extend({

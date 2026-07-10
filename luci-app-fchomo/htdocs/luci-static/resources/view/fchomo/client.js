@@ -563,13 +563,19 @@ function renderPayload(s, total, uciconfig) {
 		o.depends(Object.fromEntries([[prefix + 'type', /\bPROCESS\b/]]));
 		initPayload(o, n, 'factor', uciconfig);
 
-		o = s.option(form.Value, prefix + 'rematchname', _('Factor') + ` ${n+1}`);
-		o.value('rematch1');
-		o.validate = hm.validateAuthUsername;
+		o = s.option(form.ListValue, prefix + 'rematchname', _('Factor') + ` ${n+1}`);
 		if (n === 0)
 			o.depends('type', 'REMATCH-NAME');
 		o.depends(prefix + 'type', 'REMATCH-NAME');
 		initPayload(o, n, 'factor', uciconfig);
+		o.load = L.bind(function(n, key, uciconfig, section_id) {
+			hm.loadLabel.call(this, [
+				['', _('-- Please choose --')],
+				...hm.loadLabelValues(this.config, 'rematch-name')
+			], section_id);
+
+			return new RulesEntry(uci.get(uciconfig, section_id, 'entry')).getPayload(n)[key];
+		}, o, n, 'factor', uciconfig)
 
 		o = s.option(form.Value, prefix + 'uint', _('Factor') + ` ${n+1}`);
 		o.datatype = 'uinteger';
@@ -684,15 +690,13 @@ function renderPayload(s, total, uciconfig) {
 		})
 		initDynamicPayload(o, n, 'factor', uciconfig);
 		o.load = L.bind(function(n, key, uciconfig, section_id) {
-			let fusedval = [
+			hm.loadLabel.call(this, [
+				['REMATCHNAME', _('-- REMATCH-NAME --')],
+				...hm.loadLabelValues(this.config, 'rematch-name'),
 				['NETWORK', _('-- NETWORK --')],
 				['udp', _('UDP')],
 				['tcp', _('TCP')],
-				['RULESET', _('-- RULE-SET --')]
-			];
-
-			hm.loadLabel.call(this, [
-				...fusedval,
+				['RULESET', _('-- RULE-SET --')],
 				...hm.loadLabelValues(this.config, 'ruleset')
 			], section_id);
 

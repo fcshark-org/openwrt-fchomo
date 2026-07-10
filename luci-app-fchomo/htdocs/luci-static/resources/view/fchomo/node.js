@@ -264,14 +264,17 @@ return view.extend({
 		so.depends({type: /^(rematch|direct|mieru)$/, '!reverse': true});
 
 		/* Rematch fields */
-		so = ss.taboption('field_general', form.ListValue, 'target_rematch_name', _('REMATCH-NAME marking'));
-		so.load = function(section_id) {
-			return hm.loadLabel.call(this, [
-				['', _('-- Please choose --')],
-				...hm.loadLabelValues(this.config, 'rematch-name')
-			], section_id);
-		}
-		so.rmempty = false;
+		// https://github.com/MetaCubeX/mihomo/pull/2862
+		so = ss.taboption('field_general', form.Value, 'target_rematch_name', _('REMATCH-NAME marking'));
+		so.value('rematch1');
+		so.validate = function(section_id, value) {
+			const target_sub_rule = this.section.getOption('target_sub_rule').formvalue(section_id);
+
+			if (!value && !target_sub_rule)
+				return _('Expecting: %s or %s is required.').format(_('REMATCH-NAME marking'), _('Use sub rule'));
+
+			return hm.validateAuthUsername.call(this, section_id, value);
+		};
 		so.depends('type', 'rematch');
 		so.modalonly = true;
 
@@ -282,6 +285,14 @@ return view.extend({
 				...hm.loadLabelValues(this.config, 'subrule-group')
 			], section_id);
 		}
+		so.validate = function(section_id, value) {
+			const target_rematch_name = this.section.getOption('target_rematch_name').formvalue(section_id);
+
+			if (!value && !target_rematch_name)
+				return _('Expecting: %s or %s is required.').format(_('REMATCH-NAME marking'), _('Use sub rule'));
+
+			return true;
+		};
 		so.depends('type', 'rematch');
 		so.modalonly = true;
 

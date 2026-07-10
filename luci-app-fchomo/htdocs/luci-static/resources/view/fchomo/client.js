@@ -1903,7 +1903,8 @@ return view.extend({
 
 		so = ss.option(form.DynamicList, 'fallback_filter_geosite', _('Geosite'),
 			_('Match geosite.</br>') +
-			_('The matching <code>%s</code> will be deemed as poisoned.').format(_('Domain')));
+			_('The matching <code>%s</code> will be deemed as poisoned.').format(_('Domain')) + `</br>` +
+			_('Option is deprecated. Please use <code>%s</code> instead.').format(_('DNS policy')));
 
 		so = ss.option(form.DynamicList, 'fallback_filter_ipcidr', _('IP CIDR'),
 			_('Match response with ipcidr.</br>') +

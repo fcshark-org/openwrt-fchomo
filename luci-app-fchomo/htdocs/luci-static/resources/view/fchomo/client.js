@@ -13,7 +13,7 @@ const parseProxyGroupYaml = hm.parseYaml.extend({
 		if (!cfg.type)
 			return null;
 
-		// key mapping // 2026/07/05
+		// key mapping // 2026/07/08
 		let config = hm.removeBlankAttrs({
 			id: this.id,
 			label: this.label,
@@ -259,7 +259,7 @@ const parseDNSYaml = hm.parseYaml.extend({
 		if (detour)
 			addr.setParam('detour', hm.preset_outbound.dns.map(([key, label]) => key).includes(detour) ? detour : detour === 'RULES' ? '' : this.calcID(hm.glossary["proxy_group"].field, detour));
 
-		// key mapping // 2026/01/17
+		// key mapping // 2026/07/08
 		let config = {
 			id: this.id,
 			label: this.label,
@@ -291,7 +291,7 @@ const parseDNSPolicyYaml = hm.parseYaml.extend({
 				break;
 		}
 
-		// key mapping // 2026/01/17
+		// key mapping // 2026/07/08
 		let config = {
 			id: this.id,
 			label: this.label,
@@ -312,7 +312,7 @@ const parseRulesYaml = hm.parseYaml.extend({
 		if (!entry)
 			return null;
 
-		// key mapping // 2026/06/12
+		// key mapping // 2026/07/08
 		let config = {
 			id: this.id,
 			label: '%s %s'.format(this.id.slice(0,7), _('(Imported)')),

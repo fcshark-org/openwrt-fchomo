@@ -461,6 +461,9 @@ function renderListeners(s, uciconfig, isClient) {
 	o.modalonly = true;
 
 	o = s.taboption('field_general', form.ListValue, 'snell_version', _('Version'));
+	o.value('1', _('v1'));
+	o.value('2', _('v2'));
+	o.value('3', _('v3'));
 	o.value('4', _('v4'));
 	o.value('5', _('v5'));
 	o.default = '4';

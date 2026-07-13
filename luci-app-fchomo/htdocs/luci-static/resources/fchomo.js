@@ -201,6 +201,7 @@ const outbound_type = [
 	['tuic', _('TUIC') + ' - ' + _('UDP')],
 	//['hysteria', _('Hysteria') + ' - ' + _('UDP')],
 	['hysteria2', _('Hysteria2') + ' - ' + _('UDP')],
+	['shadowquic', _('ShadowQUIC') + ' - ' + _('UDP')],
 	['trusttunnel', _('TrustTunnel') + ' - ' + _('TCP/UDP')],
 	['wireguard', _('WireGuard') + ' - ' + _('UDP')],
 	['masque', _('Masque') + ' - ' + _('UDP')], // https://blog.cloudflare.com/post-quantum-warp/

@@ -497,7 +497,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		"target-rematch-name": cfg.target_rematch_name,
 		"target-sub-rule": cfg.target_sub_rule,
 
-		/* HTTP / SOCKS / Shadowsocks / VMess / VLESS / Trojan / TUIC / hysteria2 / WireGuard / Masque */
+		/* HTTP / SOCKS / Shadowsocks / VMess / VLESS / Trojan / TUIC / hysteria2 / ShadowQUIC / WireGuard / Masque */
 		username: cfg.username,
 		uuid: cfg.vmess_uuid || cfg.uuid,
 		cipher: cfg.vmess_chipher || cfg.shadowsocks_chipher,
@@ -565,14 +565,11 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		/* TUIC */
 		ip: cfg.tuic_ip,
 		"udp-relay-mode": cfg.tuic_udp_relay_mode,
-		"udp-over-stream": strToBool(cfg.tuic_udp_over_stream),
 		"udp-over-stream-version": cfg.tuic_udp_over_stream_version,
 		"max-udp-relay-packet-size": strToInt(cfg.tuic_max_udp_relay_packet_size) || null,
 		"fast-open": strToBool(cfg.tuic_fast_open),
 		"reduce-rtt": strToBool(cfg.tuic_reduce_rtt),
-		"heartbeat-interval": strToInt(cfg.tuic_heartbeat) || null,
 		"request-timeout": strToInt(cfg.tuic_request_timeout) || null,
-		"max-open-streams": strToInt(cfg.tuic_max_open_streams) || null,
 
 		/* Hysteria / Hysteria2 */
 		ports: isEmpty(cfg.hysteria_ports) ? null : join(',', cfg.hysteria_ports),
@@ -598,6 +595,15 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 			//"private-key"
 		} : null,
 
+		/* ShadowQUIC */
+		"quic-versions": cfg.shadowquic_quic_versions,
+		"zero-rtt": strToBool(cfg.shadowquic_zero_rtt),
+		// @# cwnd: 10 # default: 32,
+		// @# max-datagram-frame-size: 1400,
+		// @# recv-window-conn: 0,
+		// @# recv-window: 0,
+		// @# disable-mtu-discovery: false,
+
 		/* TrustTunnel */
 		"health-check": cfg.type === 'trusttunnel' ? (cfg.trusttunnel_health_check === '0' ? false : true) : null,
 		quic: strToBool(cfg.trusttunnel_quic),
@@ -617,8 +623,13 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		"host-key": cfg.ssh_host_key,
 
 		/* Extra fields */
+		"udp-over-stream": strToBool(cfg.shadowquic_udp_over_stream || cfg.tuic_udp_over_stream),
+		"heartbeat-interval": strToInt(cfg.tuic_heartbeat) || null,
+		"keep-alive-interval": strToInt(cfg.shadowquic_heartbeat) || null,
 		"congestion-controller": cfg.congestion_controller,
 		"bbr-profile": cfg.bbr_profile,
+		"max-open-streams": strToInt(cfg.max_open_streams) || null,
+
 		"handshake-timeout": strToInt(cfg.handshake_timeout),
 		udp: strToBool(cfg.udp),
 		"udp-over-tcp": strToBool(cfg.uot),
@@ -653,7 +664,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 
 		/* SSH / WireGuard / Masque */
 		/* TLS fields */
-		tls: (cfg.type in ['trojan', 'anytls', 'hysteria', 'hysteria2', 'tuic', 'trusttunnel']) ? null : strToBool(cfg.tls),
+		tls: (cfg.type in ['trojan', 'anytls', 'tuic', 'hysteria', 'hysteria2', 'shadowquic', 'trusttunnel']) ? null : strToBool(cfg.tls),
 		"disable-sni": strToBool(cfg.tls_disable_sni),
 		...arrToObj([[(cfg.type in ['vmess', 'vless']) ? 'servername' : 'sni', cfg.tls_sni]]),
 		fingerprint: cfg.tls_fingerprint,

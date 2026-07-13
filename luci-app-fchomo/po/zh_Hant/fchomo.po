@@ -1468,8 +1468,8 @@ msgid "Hysteria2"
 msgstr ""
 
 #: htdocs/luci-static/resources/fchomo.js:167
-msgid "Hysteria2 Realm"
-msgstr "Hysteria2 Realm"
+msgid "Hysteria2 Realm Server"
+msgstr "Hysteria2 Realm 伺服器"
 
 #: htdocs/luci-static/resources/fchomo/listeners.js:121
 #: htdocs/luci-static/resources/view/fchomo/node.js:235

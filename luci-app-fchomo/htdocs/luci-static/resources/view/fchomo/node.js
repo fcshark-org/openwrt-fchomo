@@ -231,6 +231,7 @@ return view.extend({
 		ss.hm_lowcase_only = true;
 
 		ss.tab('field_general', _('General fields'));
+		ss.tab('field_plugin', _('Plugin fields'));
 		ss.tab('field_vless_encryption', _('Vless Encryption fields'));
 		ss.tab('field_hysteria2_realm', _('Hysteria2 Realm fields'));
 		ss.tab('field_tls', _('TLS fields'));
@@ -888,69 +889,6 @@ return view.extend({
 		so.depends({type: 'ssh', ssh_host_key_algorithms: /.+/});
 		so.modalonly = true;
 
-		/* Plugin fields */
-		so = ss.taboption('field_general', form.ListValue, 'plugin', _('Plugin'));
-		so.value('', _('none'));
-		so.value('obfs', _('obfs-simple'));
-		//so.value('v2ray-plugin', _('v2ray-plugin'));
-		//so.value('gost-plugin', _('gost-plugin'));
-		so.value('shadow-tls', _('shadow-tls'));
-		so.value('restls', _('restls'));
-		//so.value('kcptun', _('kcptun'));
-		so.validate = function(section_id, value) {
-			const type = this.section.getOption('type').formvalue(section_id);
-
-			if (value) {
-				if (type === 'snell' && !['obfs', 'shadow-tls'].includes(value)) {
-					return _('Expecting: only support %s.').format(_('obfs-simple') +
-						' / ' + _('shadow-tls'));
-				}
-			}
-
-			return true;
-		}
-		so.depends({type: /^(ss|snell)$/});
-		so.modalonly = true;
-
-		so = ss.taboption('field_general', form.ListValue, 'plugin_opts_obfsmode', _('Plugin: ') + _('Obfs Mode'));
-		so.value('http', _('HTTP'));
-		so.value('tls', _('TLS'));
-		so.depends('plugin', 'obfs');
-		so.modalonly = true;
-
-		so = ss.taboption('field_general', form.Value, 'plugin_opts_host', _('Plugin: ') + _('Host that supports TLS 1.3'));
-		so.datatype = 'hostname';
-		so.placeholder = 'cloud.tencent.com';
-		so.rmempty = false;
-		so.depends({plugin: /^(obfs|v2ray-plugin|shadow-tls|restls)$/});
-		so.modalonly = true;
-
-		so = ss.taboption('field_general', form.Value, 'plugin_opts_thetlspassword', _('Plugin: ') + _('Password'));
-		so.password = true;
-		so.rmempty = false;
-		so.depends({plugin: /^(shadow-tls|restls)$/});
-		so.modalonly = true;
-
-		so = ss.taboption('field_general', form.ListValue, 'plugin_opts_shadowtls_version', _('Plugin: ') + _('Version'));
-		so.value('1', _('v1'));
-		so.value('2', _('v2'));
-		so.value('3', _('v3'));
-		so.default = '2';
-		so.depends({plugin: 'shadow-tls'});
-		so.modalonly = true;
-
-		so = ss.taboption('field_general', form.Value, 'plugin_opts_restls_versionhint', _('Plugin: ') + _('Version hint'));
-		so.default = 'tls13';
-		so.rmempty = false;
-		so.depends({plugin: 'restls'});
-		so.modalonly = true;
-
-		so = ss.taboption('field_general', form.Value, 'plugin_opts_restls_script', _('Plugin: ') + _('Restls script'));
-		so.default = '300?100<1,400~100,350~100,600~100,300~200,300~100';
-		so.rmempty = false;
-		so.depends({plugin: 'restls'});
-		so.modalonly = true;
-
 		/* Extra fields */
 		so = ss.taboption('field_general', form.ListValue, 'congestion_controller', _('Congestion controller'));
 		so.default = hm.congestion_controller[0][0];
@@ -995,6 +933,69 @@ return view.extend({
 		so.value('2', _('v2'));
 		so.default = '2';
 		so.depends('uot', '1');
+		so.modalonly = true;
+
+		/* Plugin fields */
+		so = ss.taboption('field_general', form.ListValue, 'plugin', _('Plugin'));
+		so.value('', _('none'));
+		so.value('obfs', _('obfs-simple'));
+		//so.value('v2ray-plugin', _('v2ray-plugin'));
+		//so.value('gost-plugin', _('gost-plugin'));
+		so.value('shadow-tls', _('shadow-tls'));
+		so.value('restls', _('restls'));
+		//so.value('kcptun', _('kcptun'));
+		so.validate = function(section_id, value) {
+			const type = this.section.getOption('type').formvalue(section_id);
+
+			if (value) {
+				if (type === 'snell' && !['obfs', 'shadow-tls'].includes(value)) {
+					return _('Expecting: only support %s.').format(_('obfs-simple') +
+						' / ' + _('shadow-tls'));
+				}
+			}
+
+			return true;
+		}
+		so.depends({type: /^(ss|snell)$/});
+		so.modalonly = true;
+
+		so = ss.taboption('field_plugin', form.ListValue, 'plugin_opts_obfsmode', _('Obfs Mode'));
+		so.value('http', _('HTTP'));
+		so.value('tls', _('TLS'));
+		so.depends('plugin', 'obfs');
+		so.modalonly = true;
+
+		so = ss.taboption('field_plugin', form.Value, 'plugin_opts_host', _('Host that supports TLS 1.3'));
+		so.datatype = 'hostname';
+		so.placeholder = 'cloud.tencent.com';
+		so.rmempty = false;
+		so.depends({plugin: /^(obfs|v2ray-plugin|shadow-tls|restls)$/});
+		so.modalonly = true;
+
+		so = ss.taboption('field_plugin', form.Value, 'plugin_opts_thetlspassword', _('Password'));
+		so.password = true;
+		so.rmempty = false;
+		so.depends({plugin: /^(shadow-tls|restls)$/});
+		so.modalonly = true;
+
+		so = ss.taboption('field_plugin', form.ListValue, 'plugin_opts_shadowtls_version', _('Version'));
+		so.value('1', _('v1'));
+		so.value('2', _('v2'));
+		so.value('3', _('v3'));
+		so.default = '2';
+		so.depends({plugin: 'shadow-tls'});
+		so.modalonly = true;
+
+		so = ss.taboption('field_plugin', form.Value, 'plugin_opts_restls_versionhint', _('Version hint'));
+		so.default = 'tls13';
+		so.rmempty = false;
+		so.depends({plugin: 'restls'});
+		so.modalonly = true;
+
+		so = ss.taboption('field_plugin', form.Value, 'plugin_opts_restls_script', _('Restls script'));
+		so.default = '300?100<1,400~100,350~100,600~100,300~200,300~100';
+		so.rmempty = false;
+		so.depends({plugin: 'restls'});
 		so.modalonly = true;
 
 		/* Vless Encryption fields */

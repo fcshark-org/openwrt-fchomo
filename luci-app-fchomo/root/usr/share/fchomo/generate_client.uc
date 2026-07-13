@@ -609,6 +609,14 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		"host-key-algorithms": cfg.ssh_host_key_algorithms,
 		"host-key": cfg.ssh_host_key,
 
+		/* Extra fields */
+		"congestion-controller": cfg.congestion_controller,
+		"bbr-profile": cfg.bbr_profile,
+		"handshake-timeout": strToInt(cfg.handshake_timeout),
+		udp: strToBool(cfg.udp),
+		"udp-over-tcp": strToBool(cfg.uot),
+		"udp-over-tcp-version": cfg.uot_version,
+
 		/* Plugin fields */
 		...(cfg.plugin ? (
 			cfg.type === 'snell' ? {
@@ -634,14 +642,6 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 				}
 			}
 		) : {}),
-
-		/* Extra fields */
-		"congestion-controller": cfg.congestion_controller,
-		"bbr-profile": cfg.bbr_profile,
-		"handshake-timeout": strToInt(cfg.handshake_timeout),
-		udp: strToBool(cfg.udp),
-		"udp-over-tcp": strToBool(cfg.uot),
-		"udp-over-tcp-version": cfg.uot_version,
 
 		/* SSH / WireGuard / Masque */
 		/* TLS fields */

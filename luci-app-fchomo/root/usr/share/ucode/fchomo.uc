@@ -331,6 +331,12 @@ export function parseListener(cfg, isClient, label) {
 		/* Tunnel */
 		target: cfg.tunnel_target,
 
+		/* Extra fields */
+		"congestion-controller": cfg.congestion_controller,
+		"bbr-profile": cfg.bbr_profile,
+		network: cfg.network,
+		udp: cfg.udp === '0' ? false : true,
+
 		/* Plugin fields */
 		...(cfg.plugin ? (
 			cfg.plugin === 'obfs' ? (
@@ -377,12 +383,6 @@ export function parseListener(cfg, isClient, label) {
 				}
 			} : {}
 		) : {}),
-
-		/* Extra fields */
-		"congestion-controller": cfg.congestion_controller,
-		"bbr-profile": cfg.bbr_profile,
-		network: cfg.network,
-		udp: cfg.udp === '0' ? false : true,
 
 		/* TLS fields */
 		...(cfg.allow_insecure === '1' ? { "allow-insecure": true } : cfg.tls === '1' ? {

@@ -130,7 +130,7 @@ const parseProviderYaml = hm.parseYaml.extend({
 				override_prefix: this.jq(cfg, "override.additional-prefix"),
 				override_suffix: this.jq(cfg, "override.additional-suffix"),
 				override_replace: (this.jq(cfg, "override.proxy-name") || []).map((obj) => JSON.stringify(obj)), // array.string: array.object
-				// Configuration Items
+				// Other configuration items
 				override_tfo: this.bool2str(this.jq(cfg, "override.tfo")), // bool
 				override_mptcp: this.bool2str(this.jq(cfg, "override.mptcp")), // bool
 				override_udp: this.bool2str(this.jq(cfg, "override.udp")), // bool
@@ -1899,7 +1899,7 @@ return view.extend({
 		so = ss.taboption('field_override', form.DummyValue, '_config_items', null);
 		so.load = function() {
 			return '<a target="_blank" href="%s" rel="noreferrer noopener">%s</a>'
-				.format('https://wiki.metacubex.one/config/proxy-providers/#_2', _('Configuration Items'));
+				.format('https://wiki.metacubex.one/config/proxy-providers/#override_1', _('Other configuration items'));
 		}
 		so.rawhtml = true;
 		so.depends({type: 'inline', '!reverse': true});

@@ -566,7 +566,7 @@ msgid "Complete"
 msgstr ""
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:1898
-msgid "Configuration Items"
+msgid "Other configuration items"
 msgstr ""
 
 #: htdocs/luci-static/resources/fchomo/listeners.js:653

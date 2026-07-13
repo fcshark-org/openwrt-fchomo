@@ -580,8 +580,8 @@ msgid "Complete"
 msgstr "完成"
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:1898
-msgid "Configuration Items"
-msgstr "配置項"
+msgid "Other configuration items"
+msgstr "其他配置項"
 
 #: htdocs/luci-static/resources/fchomo/listeners.js:653
 #: htdocs/luci-static/resources/view/fchomo/node.js:955

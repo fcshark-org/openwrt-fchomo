@@ -820,7 +820,7 @@ uci.foreach(uciconf, uciprov, (cfg) => {
 				"additional-prefix": cfg.override_prefix,
 				"additional-suffix": cfg.override_suffix,
 				"proxy-name": isEmpty(cfg.override_replace) ? null : map(cfg.override_replace, obj => json(obj)),
-				// Configuration Items
+				// Other configuration items
 				tfo: strToBool(cfg.override_tfo),
 				mptcp: strToBool(cfg.override_mptcp),
 				udp: (cfg.override_udp === '0') ? null : true,

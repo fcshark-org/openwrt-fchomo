@@ -930,7 +930,7 @@ function renderListeners(s, uciconfig, isClient) {
 	o.depends('hysteria2_realm', '1');
 	o.modalonly = true;
 
-	// @ 下面支持填写针对server-url的TLS配置(sni, skip-cert-verify, fingerprint, certificate, private-key, alpn)
+	// @ 下面支持填写针对server-url的TLS配置(sni, skip-cert-verify, name-cert-verify, fingerprint, certificate, private-key, alpn)
 
 	/* TLS fields */
 	o = s.taboption('field_general', form.Flag, 'tls', _('TLS'));

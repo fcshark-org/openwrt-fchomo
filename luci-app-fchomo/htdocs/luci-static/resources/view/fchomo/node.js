@@ -104,7 +104,7 @@ const parseProviderYaml = hm.parseYaml.extend({
 		if (!cfg.type)
 			return null;
 
-		// key mapping // 2026/07/11
+		// key mapping // 2026/07/12
 		let config = hm.removeBlankAttrs({
 			id: this.id,
 			label: this.label,
@@ -139,6 +139,7 @@ const parseProviderYaml = hm.parseYaml.extend({
 				override_uot: this.bool2str(this.jq(cfg, "override.udp-over-tcp")), // bool
 				override_up: this.jq(cfg, "override.up"),
 				override_down: this.jq(cfg, "override.down"),
+				override_name_cert_verify: this.jq(cfg, "override.name-cert-verify"),
 				override_skip_cert_verify: this.bool2str(this.jq(cfg, "override.skip-cert-verify")), // bool
 				//override_dialer_proxy: this.jq(cfg, "override.dialer-proxy"),
 				override_interface_name: this.jq(cfg, "override.interface-name"),
@@ -1103,7 +1104,7 @@ return view.extend({
 		so.depends('hysteria2_realm', '1');
 		so.modalonly = true;
 
-		// @ 下面支持填写针对server-url的TLS配置(sni, skip-cert-verify, fingerprint, certificate, private-key, alpn)
+		// @ 下面支持填写针对server-url的TLS配置(sni, skip-cert-verify, name-cert-verify, fingerprint, certificate, private-key, alpn)
 
 		/* TLS fields */
 		so = ss.taboption('field_general', form.Flag, 'tls', _('TLS'));
@@ -1132,7 +1133,7 @@ return view.extend({
 		so.modalonly = true;
 
 		so = ss.taboption('field_tls', form.Value, 'tls_sni', _('TLS SNI'),
-			_('Used to verify the hostname on the returned certificates.'));
+			_('Hostname that the client attempts to connect to at the start of the TLS handshake process.'));
 		so.depends({tls: '1', type: /^(http|vmess|vless|trojan|anytls|hysteria|hysteria2|trusttunnel|masque)$/});
 		so.depends({tls: '1', type: /^(tuic)$/, tls_disable_sni: '0'});
 		so.modalonly = true;
@@ -1193,6 +1194,12 @@ return view.extend({
 			return true;
 		}
 		so.depends({tls: '1', type: /^(http|socks5|vmess|vless|trojan|hysteria|hysteria2)$/});
+		so.modalonly = true;
+
+		so = ss.taboption('field_tls', form.Value, 'tls_name_cert_verify', _('Override cert DNSName'),
+			_('Used to verify the hostname on the returned certificates.'));
+		so.datatype = 'hostname';
+		so.depends({tls: '1', type: /^(http|socks5|vmess|vless|trojan|anytls|tuic|hysteria|hysteria2|trusttunnel)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_tls', form.Flag, 'tls_skip_cert_verify', _('Skip cert verify'),
@@ -1645,6 +1652,7 @@ return view.extend({
 							'      udp-over-tcp: false\n' +
 							'      down: "50 Mbps"\n' +
 							'      up: "10 Mbps"\n' +
+							'      name-cert-verify: example.com\n' +
 							'      skip-cert-verify: true\n' +
 							'      dialer-proxy: proxy\n' +
 							'      interface-name: tailscale0\n' +
@@ -1962,6 +1970,12 @@ return view.extend({
 		so = ss.taboption('field_override', form.Value, 'override_down', _('down'),
 			_('In Mbps.'));
 		so.datatype = 'uinteger';
+		so.depends({type: 'inline', '!reverse': true});
+		so.modalonly = true;
+
+		so = ss.taboption('field_override', form.Value, 'override_name_cert_verify', _('Override cert DNSName'),
+			_('Used to verify the hostname on the returned certificates.'));
+		so.datatype = 'hostname';
 		so.depends({type: 'inline', '!reverse': true});
 		so.modalonly = true;
 

@@ -653,6 +653,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		...arrToObj([[(cfg.type in ['vmess', 'vless']) ? 'servername' : 'sni', cfg.tls_sni]]),
 		fingerprint: cfg.tls_fingerprint,
 		alpn: cfg.plugin_type in ['shadow-tls'] ? null : cfg.tls_alpn, // Array
+		"name-cert-verify": cfg.tls_name_cert_verify,
 		"skip-cert-verify": strToBool(cfg.tls_skip_cert_verify),
 		certificate: cfg.tls_cert_path, // mTLS
 		"private-key": cfg.masque_private_key || cfg.wireguard_private_key || cfg.ssh_priv_key || cfg.tls_key_path, // mTLS/SSH/WireGuard/Masque
@@ -830,6 +831,7 @@ uci.foreach(uciconf, uciprov, (cfg) => {
 				"udp-over-tcp": strToBool(cfg.override_uot),
 				up: cfg.override_up ? cfg.override_up + ' Mbps' : null,
 				down: cfg.override_down ? cfg.override_down + ' Mbps' : null,
+				"name-cert-verify": cfg.override_name_cert_verify,
 				"skip-cert-verify": cfg.override_skip_cert_verify ? strToBool(cfg.override_skip_cert_verify) || false : null,
 				"dialer-proxy": dialerproxy[cfg['.name']]?.detour,
 				"interface-name": cfg.override_interface_name,

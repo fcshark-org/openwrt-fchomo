@@ -104,7 +104,7 @@ const parseProviderYaml = hm.parseYaml.extend({
 		if (!cfg.type)
 			return null;
 
-		// key mapping // 2026/06/06
+		// key mapping // 2026/07/11
 		let config = hm.removeBlankAttrs({
 			id: this.id,
 			label: this.label,
@@ -130,6 +130,8 @@ const parseProviderYaml = hm.parseYaml.extend({
 				override_prefix: this.jq(cfg, "override.additional-prefix"),
 				override_suffix: this.jq(cfg, "override.additional-suffix"),
 				override_replace: (this.jq(cfg, "override.proxy-name") || []).map((obj) => JSON.stringify(obj)), // array.string: array.object
+				// Programmable replacement
+				override_expr: this.jq(cfg, "override.override-expr") || [], // array.string
 				// Other configuration items
 				override_tfo: this.bool2str(this.jq(cfg, "override.tfo")), // bool
 				override_mptcp: this.bool2str(this.jq(cfg, "override.mptcp")), // bool
@@ -1655,6 +1657,19 @@ return view.extend({
 							'          target: "TEST"\n' +
 							'        - pattern: "IPLC-(.*?)倍"\n' +
 							'          target: "iplc x $1"\n' +
+							'      override-expr:\n' +
+							"        - '.name = \"[provider1] \" + .name'                   # 普通赋值\n" +
+							"        - '.plugin-opts.mode = \"tls\"'                        # 自动创建缺失的 mapping\n" +
+							"        - '.alpn[] |= upcase'                                # 更新数组中的每一项\n" +
+							"        - 'del(.skip-cert-verify)'                           # 删除字段\n" +
+							"        - '.name = (.name | trim | upcase)'                  # 赋值右侧的管道需加括号\n" +
+							"        - '.name = \"[\\(.type)] \\(.name):\\(.port)\"'           # 字符串插值\n" +
+							"        - '(select(.port == 443) | .tls) = true'             # 条件不匹配时不修改\n" +
+							"        - '.tags |= (unique | sort)'                         # 去重后排序\n" +
+							"        - '.names = [.servers[] | select(.enabled) | .name]' # 收集多个结果\n" +
+							"        - '.servers |= map(select(.enabled))'                # 筛选数组\n" +
+							"        - '.options |= with_entries(.key |= upcase)'         # 转换 mapping\n" +
+							"        - '. | with_entries(.key |= upcase)'                 # 整体过滤结果仍须为 mapping\n" +
 							'    filter: "(?i)港|hk|hongkong|hong kong"\n' +
 							'    exclude-filter: "xxx"\n' +
 							'    exclude-type: "ss|http"\n' +
@@ -1898,6 +1913,13 @@ return view.extend({
 				.format('https://wiki.metacubex.one/config/proxy-providers/#overrideproxy-name', _('override.proxy-name')));
 		so.placeholder = '{"pattern": "IPLC-(.*?)倍", "target": "iplc x $1"}';
 		so.validate = hm.validateJson;
+		so.depends({type: 'inline', '!reverse': true});
+		so.modalonly = true;
+
+		so = ss.taboption('field_override', form.DynamicList, 'override_expr', _('Programmable replacement'),
+			_('For format see <a target="_blank" href="%s" rel="noreferrer noopener">%s</a>.')
+				.format('https://wiki.metacubex.one/config/proxy-providers/#override_expr', _('override.override-expr')));
+		so.placeholder = '.name = "[provider1] " + .name';
 		so.depends({type: 'inline', '!reverse': true});
 		so.modalonly = true;
 

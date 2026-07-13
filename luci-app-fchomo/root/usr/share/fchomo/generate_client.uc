@@ -834,7 +834,8 @@ uci.foreach(uciconf, uciprov, (cfg) => {
 				"dialer-proxy": dialerproxy[cfg['.name']]?.detour,
 				"interface-name": cfg.override_interface_name,
 				"routing-mark": strToInt(cfg.override_routing_mark) || null,
-				"ip-version": cfg.override_ip_version
+				"ip-version": cfg.override_ip_version,
+				"override-expr": cfg.override_expr
 			},
 			/* General fields */
 			filter: parse_filter(cfg.filter),

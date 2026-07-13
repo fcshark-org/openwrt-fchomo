@@ -622,8 +622,12 @@ function renderListeners(s, uciconfig, isClient) {
 	o.modalonly = true;
 
 	/* Plugin fields */
-	o = s.taboption('field_general', form.ListValue, 'plugin', _('Plugin'));
-	o.value('', _('none'));
+	o = s.taboption('field_general', form.Flag, 'plugin', _('Plugin'));
+	o.default = o.disabled;
+	o.depends({type: /^(shadowsocks|snell)$/});
+	o.modalonly = true;
+
+	o = s.taboption('field_plugin', form.ListValue, 'plugin_type', _('Plugin type'));
 	o.value('obfs', _('obfs-simple'));
 	o.value('shadow-tls', _('shadow-tls'));
 	o.value('restls', _('restls'));
@@ -640,33 +644,33 @@ function renderListeners(s, uciconfig, isClient) {
 
 		return true;
 	}
-	o.depends({type: /^(shadowsocks|snell)$/});
+	o.depends('plugin', '1');
 	o.modalonly = true;
 
 	o = s.taboption('field_plugin', form.ListValue, 'plugin_opts_obfsmode', _('Obfs Mode'));
 	o.value('http', _('HTTP'));
 	o.value('tls', _('TLS'));
-	o.depends('plugin', 'obfs');
+	o.depends('plugin_type', 'obfs');
 	o.modalonly = true;
 
 	o = s.taboption('field_plugin', form.Value, 'plugin_opts_host', _('Host that supports TLS 1.3'));
 	o.datatype = 'hostname';
 	o.placeholder = 'cloud.tencent.com';
 	o.rmempty = false;
-	o.depends({plugin: 'obfs', type: 'snell'});
+	o.depends({plugin_type: 'obfs', type: 'snell'});
 	o.modalonly = true;
 
 	o = s.taboption('field_plugin', form.Value, 'plugin_opts_handshake_dest', _('Handshake target that supports TLS 1.3'));
 	o.datatype = 'hostport';
 	o.placeholder = 'cloud.tencent.com:443';
 	o.rmempty = false;
-	o.depends({plugin: /^(shadow-tls|restls)$/});
+	o.depends({plugin_type: /^(shadow-tls|restls)$/});
 	o.modalonly = true;
 
 	o = s.taboption('field_plugin', hm.GenValue, 'plugin_opts_thetlspassword', _('Password'));
 	o.password = true;
 	o.rmempty = false;
-	o.depends({plugin: /^(shadow-tls|restls)$/});
+	o.depends({plugin_type: /^(shadow-tls|restls)$/});
 	o.modalonly = true;
 
 	o = s.taboption('field_plugin', form.ListValue, 'plugin_opts_shadowtls_version', _('Version'));
@@ -674,13 +678,13 @@ function renderListeners(s, uciconfig, isClient) {
 	o.value('2', _('v2'));
 	o.value('3', _('v3'));
 	o.default = '3';
-	o.depends({plugin: 'shadow-tls'});
+	o.depends({plugin_type: 'shadow-tls'});
 	o.modalonly = true;
 
 	o = s.taboption('field_plugin', form.Value, 'plugin_opts_restls_script', _('Restls script'));
 	o.default = '300?100<1,400~100,350~100,600~100,300~200,300~100';
 	o.rmempty = false;
-	o.depends({plugin: 'restls'});
+	o.depends({plugin_type: 'restls'});
 	o.modalonly = true;
 
 	/* Vless Encryption fields */

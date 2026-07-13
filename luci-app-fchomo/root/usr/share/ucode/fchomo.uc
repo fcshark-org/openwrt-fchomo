@@ -338,8 +338,8 @@ export function parseListener(cfg, isClient, label) {
 		udp: cfg.udp === '0' ? false : true,
 
 		/* Plugin fields */
-		...(cfg.plugin ? (
-			cfg.plugin === 'obfs' ? (
+		...(cfg.plugin === '1' ? (
+			cfg.plugin_type === 'obfs' ? (
 			// obfs-simple
 				cfg.type === 'snell' ? {
 					// snell
@@ -354,7 +354,7 @@ export function parseListener(cfg, isClient, label) {
 						mode: cfg.plugin_opts_obfsmode
 					}
 				}
-			) : cfg.plugin === 'shadow-tls' ? {
+			) : cfg.plugin_type === 'shadow-tls' ? {
 			// shadow-tls
 				"shadow-tls": {
 					enable: true,
@@ -371,7 +371,7 @@ export function parseListener(cfg, isClient, label) {
 						dest: cfg.plugin_opts_handshake_dest
 					}
 				}
-			} : cfg.plugin === 'restls' ? {
+			} : cfg.plugin_type === 'restls' ? {
 			// restls
 				"res-tls": {
 					enable: true,

@@ -936,8 +936,12 @@ return view.extend({
 		so.modalonly = true;
 
 		/* Plugin fields */
-		so = ss.taboption('field_general', form.ListValue, 'plugin', _('Plugin'));
-		so.value('', _('none'));
+		so = ss.taboption('field_general', form.Flag, 'plugin', _('Plugin'));
+		so.default = so.disabled;
+		so.depends({type: /^(ss|snell)$/});
+		so.modalonly = true;
+
+		so = ss.taboption('field_plugin', form.ListValue, 'plugin_type', _('Plugin type'));
 		so.value('obfs', _('obfs-simple'));
 		//so.value('v2ray-plugin', _('v2ray-plugin'));
 		//so.value('gost-plugin', _('gost-plugin'));
@@ -956,26 +960,26 @@ return view.extend({
 
 			return true;
 		}
-		so.depends({type: /^(ss|snell)$/});
+		so.depends('plugin', '1');
 		so.modalonly = true;
 
 		so = ss.taboption('field_plugin', form.ListValue, 'plugin_opts_obfsmode', _('Obfs Mode'));
 		so.value('http', _('HTTP'));
 		so.value('tls', _('TLS'));
-		so.depends('plugin', 'obfs');
+		so.depends('plugin_type', 'obfs');
 		so.modalonly = true;
 
 		so = ss.taboption('field_plugin', form.Value, 'plugin_opts_host', _('Host that supports TLS 1.3'));
 		so.datatype = 'hostname';
 		so.placeholder = 'cloud.tencent.com';
 		so.rmempty = false;
-		so.depends({plugin: /^(obfs|v2ray-plugin|shadow-tls|restls)$/});
+		so.depends({plugin_type: /^(obfs|v2ray-plugin|shadow-tls|restls)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_plugin', form.Value, 'plugin_opts_thetlspassword', _('Password'));
 		so.password = true;
 		so.rmempty = false;
-		so.depends({plugin: /^(shadow-tls|restls)$/});
+		so.depends({plugin_type: /^(shadow-tls|restls)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_plugin', form.ListValue, 'plugin_opts_shadowtls_version', _('Version'));
@@ -983,19 +987,19 @@ return view.extend({
 		so.value('2', _('v2'));
 		so.value('3', _('v3'));
 		so.default = '2';
-		so.depends({plugin: 'shadow-tls'});
+		so.depends({plugin_type: 'shadow-tls'});
 		so.modalonly = true;
 
 		so = ss.taboption('field_plugin', form.Value, 'plugin_opts_restls_versionhint', _('Version hint'));
 		so.default = 'tls13';
 		so.rmempty = false;
-		so.depends({plugin: 'restls'});
+		so.depends({plugin_type: 'restls'});
 		so.modalonly = true;
 
 		so = ss.taboption('field_plugin', form.Value, 'plugin_opts_restls_script', _('Restls script'));
 		so.default = '300?100<1,400~100,350~100,600~100,300~200,300~100';
 		so.rmempty = false;
-		so.depends({plugin: 'restls'});
+		so.depends({plugin_type: 'restls'});
 		so.modalonly = true;
 
 		/* Vless Encryption fields */
@@ -1135,7 +1139,7 @@ return view.extend({
 			_('List of supported application level protocols, in order of preference.'));
 		so.validate = function(section_id, value) {
 			const type = this.section.getOption('type').formvalue(section_id);
-			//const plugin = this.section.getOption('plugin').formvalue(section_id);
+			//const plugin_type = this.section.getOption('plugin_type').formvalue(section_id);
 			let tls_alpn = this.section.getUIElement(section_id, 'tls_alpn');
 
 			// Default alpn
@@ -1145,7 +1149,7 @@ return view.extend({
 				switch (type) {
 					case 'ss':
 					case 'snell':
-						def_alpn = ['h2', 'http/1.1']; // when plugin === 'shadow-tls'
+						def_alpn = ['h2', 'http/1.1']; // when plugin_type === 'shadow-tls'
 						break;
 					case 'tuic':
 					case 'hysteria':
@@ -1173,7 +1177,7 @@ return view.extend({
 			return true;
 		}
 		so.depends({tls: '1', type: /^(vmess|vless|trojan|anytls|tuic|hysteria|hysteria2|trusttunnel)$/});
-		so.depends({type: /^(ss|snell)$/, plugin: 'shadow-tls'});
+		so.depends({type: /^(ss|snell)$/, plugin_type: 'shadow-tls'});
 		so.modalonly = true;
 
 		so = ss.taboption('field_tls', form.Value, 'tls_fingerprint', _('Cert fingerprint'),
@@ -1228,7 +1232,7 @@ return view.extend({
 		so = ss.taboption('field_tls', form.Flag, 'tls_ech', _('Enable ECH'));
 		so.default = so.disabled;
 		so.depends({tls: '1', type: /^(vmess|vless|trojan|anytls|tuic|hysteria|hysteria2)$/});
-		so.depends({type: 'ss', plugin: /^(v2ray-plugin|gost-plugin)$/});
+		so.depends({type: 'ss', plugin_type: /^(v2ray-plugin|gost-plugin)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_tls', form.Value, 'tls_ech_config', _('ECH config'),
@@ -1249,7 +1253,7 @@ return view.extend({
 			so.value.apply(so, res);
 		})
 		so.depends({tls: '1', type: /^(vmess|vless|trojan|anytls|trusttunnel)$/});
-		so.depends({type: /^(ss|snell)$/, plugin: /^(shadow-tls|restls)$/});
+		so.depends({type: /^(ss|snell)$/, plugin_type: /^(shadow-tls|restls)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_tls', form.Flag, 'tls_reality', _('REALITY'));

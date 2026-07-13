@@ -306,7 +306,7 @@ return view.extend({
 		so = ss.taboption('field_general', form.Value, 'password', _('Password'));
 		so.password = true;
 		so.validate = hm.validateAuthPassword;
-		so.depends({type: /^(http|socks5|mieru|trojan|anytls|hysteria2|tuic|trusttunnel|ssh)$/});
+		so.depends({type: /^(http|socks5|mieru|trojan|anytls|tuic|hysteria2|trusttunnel|ssh)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', hm.TextValue, 'headers', _('HTTP header'));
@@ -975,12 +975,12 @@ return view.extend({
 			_('The default value is <code>%s</code>, indicating that only the outer connection timeout is used.').format('0'));
 		so.datatype = 'uinteger';
 		so.placeholder = '30';
-		so.depends({type: /^(masque|openvpn)$/});
+		so.depends({type: /^(openvpn|masque)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', form.Flag, 'udp', _('UDP'));
 		so.default = so.disabled;
-		so.depends({type: /^(rematch|direct|socks5|ss|mieru|vmess|vless|trojan|anytls|trusttunnel|masque|wireguard)$/});
+		so.depends({type: /^(rematch|direct|socks5|ss|mieru|vmess|vless|trojan|anytls|trusttunnel|wireguard|masque)$/});
 		so.depends({type: 'snell', snell_version: /^(3|4|5)$/});
 		so.modalonly = true;
 
@@ -1115,7 +1115,7 @@ return view.extend({
 
 			return true;
 		}
-		so.depends({type: /^(http|socks5|vmess|vless|trojan|anytls|hysteria|hysteria2|tuic|trusttunnel|masque)$/});
+		so.depends({type: /^(http|socks5|vmess|vless|trojan|anytls|tuic|hysteria|hysteria2|trusttunnel|masque)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_tls', form.Flag, 'tls_disable_sni', _('Disable SNI'),
@@ -1146,9 +1146,9 @@ return view.extend({
 					case 'snell':
 						def_alpn = ['h2', 'http/1.1']; // when plugin === 'shadow-tls'
 						break;
+					case 'tuic':
 					case 'hysteria':
 					case 'hysteria2':
-					case 'tuic':
 						def_alpn = ['h3'];
 						break;
 					case 'vmess':
@@ -1171,7 +1171,7 @@ return view.extend({
 
 			return true;
 		}
-		so.depends({tls: '1', type: /^(vmess|vless|trojan|anytls|hysteria|hysteria2|tuic|trusttunnel)$/});
+		so.depends({tls: '1', type: /^(vmess|vless|trojan|anytls|tuic|hysteria|hysteria2|trusttunnel)$/});
 		so.depends({type: /^(ss|snell)$/, plugin: 'shadow-tls'});
 		so.modalonly = true;
 
@@ -1193,7 +1193,7 @@ return view.extend({
 			'<br/>' +
 			_('This is <strong>DANGEROUS</strong>, your traffic is almost like <strong>PLAIN TEXT</strong>! Use at your own risk!'));
 		so.default = so.disabled;
-		so.depends({tls: '1', type: /^(http|socks5|vmess|vless|trojan|anytls|hysteria|hysteria2|tuic|trusttunnel)$/});
+		so.depends({tls: '1', type: /^(http|socks5|vmess|vless|trojan|anytls|tuic|hysteria|hysteria2|trusttunnel)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_tls', form.Value, 'tls_cert_path', _('Certificate path') + _(' (mTLS)'),
@@ -1226,7 +1226,7 @@ return view.extend({
 
 		so = ss.taboption('field_tls', form.Flag, 'tls_ech', _('Enable ECH'));
 		so.default = so.disabled;
-		so.depends({tls: '1', type: /^(vmess|vless|trojan|anytls|hysteria|hysteria2|tuic)$/});
+		so.depends({tls: '1', type: /^(vmess|vless|trojan|anytls|tuic|hysteria|hysteria2)$/});
 		so.depends({type: 'ss', plugin: /^(v2ray-plugin|gost-plugin)$/});
 		so.modalonly = true;
 

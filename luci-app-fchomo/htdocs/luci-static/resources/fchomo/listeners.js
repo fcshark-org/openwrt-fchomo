@@ -947,8 +947,8 @@ function renderListeners(s, uciconfig, isClient) {
 			let def_alpn;
 
 			switch (type) {
-				case 'hysteria2':
 				case 'tuic':
+				case 'hysteria2':
 					def_alpn = ['h3'];
 					break;
 				case 'hysteria2-realm':
@@ -1032,7 +1032,7 @@ function renderListeners(s, uciconfig, isClient) {
 	hm.tls_client_auth_types.forEach((res) => {
 		o.value.apply(o, res);
 	})
-	o.depends({tls: '1', type: /^(http|socks|mixed|vmess|vless|trojan|anytls|hysteria2|hysteria2-realm|tuic|trusttunnel)$/});
+	o.depends({tls: '1', type: /^(http|socks|mixed|vmess|vless|trojan|anytls|tuic|hysteria2|hysteria2-realm|trusttunnel)$/});
 	o.modalonly = true;
 
 	o = s.taboption('field_tls', form.Value, 'tls_client_auth_cert_path', _('Client Auth Certificate path') + _(' (mTLS)'),
@@ -1041,7 +1041,7 @@ function renderListeners(s, uciconfig, isClient) {
 	o.validate = function(/* ... */) {
 		return hm.validateMTLSClientAuth.call(this, 'tls_client_auth_type', ...arguments);
 	}
-	o.depends({tls: '1', type: /^(http|socks|mixed|vmess|vless|trojan|anytls|hysteria2|hysteria2-realm|tuic|trusttunnel)$/});
+	o.depends({tls: '1', type: /^(http|socks|mixed|vmess|vless|trojan|anytls|tuic|hysteria2|hysteria2-realm|trusttunnel)$/});
 	o.modalonly = true;
 
 	o = s.taboption('field_tls', form.Button, '_upload_client_auth_cert', _('Upload certificate') + _(' (mTLS)'),
@@ -1090,13 +1090,13 @@ function renderListeners(s, uciconfig, isClient) {
 
 		return node;
 	}
-	o.depends({tls: '1', type: /^(http|socks|mixed|vmess|vless|trojan|anytls|hysteria2|hysteria2-realm|tuic|trusttunnel)$/});
+	o.depends({tls: '1', type: /^(http|socks|mixed|vmess|vless|trojan|anytls|tuic|hysteria2|hysteria2-realm|trusttunnel)$/});
 	o.modalonly = true;
 
 	o = s.taboption('field_tls', hm.CopyValue, 'tls_ech_config', _('ECH config'),
 		_('This ECH parameter needs to be added to the HTTPS record of the domain.'));
 	o.placeholder = 'AEn+DQBFKwAgACABWIHUGj4u+PIggYXcR5JF0gYk3dCRioBW8uJq9H4mKAAIAAEAAQABAANAEnB1YmxpYy50bHMtZWNoLmRldgAA';
-	o.depends({tls: '1', type: /^(http|socks|mixed|vmess|vless|trojan|anytls|hysteria2|hysteria2-realm|tuic|trusttunnel)$/});
+	o.depends({tls: '1', type: /^(http|socks|mixed|vmess|vless|trojan|anytls|tuic|hysteria2|hysteria2-realm|trusttunnel)$/});
 	o.modalonly = true;
 
 	// uTLS fields
@@ -1235,7 +1235,7 @@ function renderListeners(s, uciconfig, isClient) {
 	/* Multiplex fields */
 	o = s.taboption('field_general', form.Flag, 'smux_enabled', _('Multiplex'));
 	o.default = o.disabled;
-	o.depends({type: /^(shadowsocks|vmess|vless|trojan|tuic|hysteria2|sudoku)$/});
+	o.depends({type: /^(shadowsocks|sudoku|vmess|vless|trojan|tuic|hysteria2)$/});
 	o.modalonly = true;
 
 	o = s.taboption('field_multiplex', form.Flag, 'smux_padding', _('Enable padding'));

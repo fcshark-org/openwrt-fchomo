@@ -734,7 +734,7 @@ function renderListeners(s, uciconfig, isClient) {
 	o.modalonly = true;
 
 	o = s.taboption('field_plugin', form.Flag, 'plugin_opts_quic_version_probe', _('QUIC version probe'),
-		_('Probe the QUIC version of the handshake target during the initial connection.'));
+		_('Probe the QUIC version of the handshake target during the first connection.'));
 	o.default = o.disabled;
 	o.depends({type: 'shadowquic'});
 	o.modalonly = true;

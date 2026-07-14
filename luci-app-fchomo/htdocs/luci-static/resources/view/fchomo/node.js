@@ -1271,6 +1271,7 @@ return view.extend({
 		})
 		so.depends({tls: '1', type: /^(vmess|vless|trojan|anytls|trusttunnel)$/});
 		so.depends({type: /^(ss|snell)$/, plugin_type: /^(shadow-tls|restls)$/});
+		so.depends({type: 'ss', plugin_type: 'jls'});
 		so.modalonly = true;
 
 		so = ss.taboption('field_tls', form.Flag, 'tls_reality', _('REALITY'));

@@ -950,6 +950,7 @@ return view.extend({
 		//so.value('gost-plugin', _('gost-plugin'));
 		so.value('shadow-tls', _('shadow-tls'));
 		so.value('restls', _('restls'));
+		so.value('jls', _('jls'));
 		//so.value('kcptun', _('kcptun'));
 		so.validate = function(section_id, value) {
 			const type = this.section.getOption('type').formvalue(section_id);
@@ -976,13 +977,19 @@ return view.extend({
 		so.datatype = 'hostname';
 		so.placeholder = 'cloud.tencent.com';
 		so.rmempty = false;
-		so.depends({plugin_type: /^(obfs|v2ray-plugin|shadow-tls|restls)$/});
+		so.depends({plugin_type: /^(obfs|v2ray-plugin|shadow-tls|restls|jls)$/});
+		so.modalonly = true;
+
+		so = ss.taboption('field_plugin', form.Value, 'plugin_opts_thetlsusername', _('Username'));
+		so.validate = hm.validateAuthUsername;
+		so.rmempty = false;
+		so.depends({plugin_type: 'jls'});
 		so.modalonly = true;
 
 		so = ss.taboption('field_plugin', form.Value, 'plugin_opts_thetlspassword', _('Password'));
 		so.password = true;
 		so.rmempty = false;
-		so.depends({plugin_type: /^(shadow-tls|restls)$/});
+		so.depends({plugin_type: /^(shadow-tls|restls|jls)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_plugin', form.ListValue, 'plugin_opts_shadowtls_version', _('Version'));
@@ -1152,7 +1159,7 @@ return view.extend({
 				switch (type) {
 					case 'ss':
 					case 'snell':
-						def_alpn = ['h2', 'http/1.1']; // when plugin_type === 'shadow-tls'
+						def_alpn = ['h2', 'http/1.1']; // when plugin_type in ['shadow-tls', 'jls']
 						break;
 					case 'tuic':
 					case 'hysteria':
@@ -1181,6 +1188,7 @@ return view.extend({
 		}
 		so.depends({tls: '1', type: /^(vmess|vless|trojan|anytls|tuic|hysteria|hysteria2|trusttunnel)$/});
 		so.depends({type: /^(ss|snell)$/, plugin_type: 'shadow-tls'});
+		so.depends({type: 'ss', plugin_type: 'jls'});
 		so.modalonly = true;
 
 		so = ss.taboption('field_tls', form.Value, 'tls_fingerprint', _('Cert fingerprint'),

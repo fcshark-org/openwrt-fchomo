@@ -631,6 +631,7 @@ function renderListeners(s, uciconfig, isClient) {
 	o.value('obfs', _('obfs-simple'));
 	o.value('shadow-tls', _('shadow-tls'));
 	o.value('restls', _('restls'));
+	o.value('jls', _('jls'));
 	//o.value('kcp-tun', _('kcp-tun'));
 	o.validate = function(section_id, value) {
 		const type = this.section.getOption('type').formvalue(section_id);
@@ -664,13 +665,19 @@ function renderListeners(s, uciconfig, isClient) {
 	o.datatype = 'hostport';
 	o.placeholder = 'cloud.tencent.com:443';
 	o.rmempty = false;
-	o.depends({plugin_type: /^(shadow-tls|restls)$/});
+	o.depends({plugin_type: /^(shadow-tls|restls|jls)$/});
+	o.modalonly = true;
+
+	o = s.taboption('field_plugin', form.Value, 'plugin_opts_thetlsusername', _('Username'));
+	o.validate = hm.validateAuthUsername;
+	o.rmempty = false;
+	o.depends({plugin_type: 'jls'});
 	o.modalonly = true;
 
 	o = s.taboption('field_plugin', hm.GenValue, 'plugin_opts_thetlspassword', _('Password'));
 	o.password = true;
 	o.rmempty = false;
-	o.depends({plugin_type: /^(shadow-tls|restls)$/});
+	o.depends({plugin_type: /^(shadow-tls|restls|jls)$/});
 	o.modalonly = true;
 
 	o = s.taboption('field_plugin', form.ListValue, 'plugin_opts_shadowtls_version', _('Version'));
@@ -685,6 +692,29 @@ function renderListeners(s, uciconfig, isClient) {
 	o.default = '300?100<1,400~100,350~100,600~100,300~200,300~100';
 	o.rmempty = false;
 	o.depends({plugin_type: 'restls'});
+	o.modalonly = true;
+
+	if (isClient) {
+		o = s.taboption('field_plugin', form.ListValue, 'plugin_opts_dest_proxy', _('Handshake target proxy'),
+			_('The proxy used to connect to the handshake target.'));
+		o.default = hm.preset_outbound.direct[0][0];
+		hm.preset_outbound.direct.forEach((res) => {
+			o.value.apply(o, res);
+		})
+		o.load = function(section_id) {
+			return hm.loadLabel.call(this, [
+				...hm.preset_outbound.direct,
+				...hm.loadLabelValues(this.config, 'proxy_group')
+			], section_id);
+		}
+		o.depends({plugin_type: /^(restls|jls)$/});
+		o.modalonly = true;
+	}
+
+	o = s.taboption('field_plugin', form.Value, 'plugin_opts_rate_limit', _('Forwarding rate limit'),
+		_('In bps. 0 means no speed limit.'));
+	o.datatype = 'uinteger';
+	o.depends({plugin_type: 'jls'});
 	o.modalonly = true;
 
 	/* Vless Encryption fields */
@@ -939,7 +969,6 @@ function renderListeners(s, uciconfig, isClient) {
 		const type = this.section.getOption('type').formvalue(section_id);
 		let tls = this.section.getUIElement(section_id, 'tls').node.querySelector('input');
 		let allow_insecure = this.section.getUIElement(section_id, 'allow_insecure').node.querySelector('input');
-		let tls_alpn = this.section.getUIElement(section_id, 'tls_alpn');
 		let tls_reality = this.section.getUIElement(section_id, 'tls_reality').node.querySelector('input');
 
 		// Force enabled
@@ -950,37 +979,12 @@ function renderListeners(s, uciconfig, isClient) {
 			tls.removeAttribute('disabled');
 		}
 
-		// Default alpn
-		if (!`${tls_alpn.getValue()}`) {
-			let def_alpn;
-
-			switch (type) {
-				case 'tuic':
-				case 'hysteria2':
-					def_alpn = ['h3'];
-					break;
-				case 'hysteria2-realm':
-					def_alpn = ['h2', 'http/1.1'];
-					break;
-				default:
-					def_alpn = [];
-			}
-
-			tls_alpn.setValue(def_alpn);
-		}
-
 		// Force disabled
 		if (!['vless', 'trojan', 'anytls'].includes(type)) {
 			allow_insecure.checked = false;
 		} else if (allow_insecure.checked) {
 			tls.checked = false;
 			tls.disabled = true;
-		}
-		if (['trusttunnel'].includes(type)) {
-			tls_alpn.node.querySelector('input').disabled = true;
-			tls_alpn.setValue('');
-		} else {
-			tls_alpn.node.querySelector('input').removeAttribute('disabled');
 		}
 		if (!['vmess', 'vless', 'trojan'].includes(type)) {
 			tls_reality.checked = false;
@@ -1000,9 +1004,52 @@ function renderListeners(s, uciconfig, isClient) {
 	o.depends({type: /^(vless|trojan|anytls)$/});
 	o.modalonly = true;
 
+	o = s.taboption('field_tls', form.Value, 'tls_sni', _('TLS SNI'),
+		_('Hostname that the client attempts to connect to at the start of the TLS handshake process.'));
+	o.depends('plugin_type', 'jls');
+	o.modalonly = true;
+
 	o = s.taboption('field_tls', form.DynamicList, 'tls_alpn', _('TLS ALPN'),
 		_('List of supported application level protocols, in order of preference.'));
+	o.validate = function(section_id, value) {
+		const type = this.section.getOption('type').formvalue(section_id);
+		//const plugin_type = this.section.getOption('plugin_type').formvalue(section_id);
+		let tls_alpn = this.section.getUIElement(section_id, 'tls_alpn');
+
+		// Default alpn
+		if (!`${tls_alpn.getValue()}`) {
+			let def_alpn;
+
+			switch (type) {
+				case 'shadowsocks':
+					def_alpn = ['h2', 'http/1.1']; // when plugin_type in ['jls']
+					break;
+				case 'tuic':
+				case 'hysteria2':
+					def_alpn = ['h3'];
+					break;
+				case 'hysteria2-realm':
+					def_alpn = ['h2', 'http/1.1'];
+					break;
+				default:
+					def_alpn = [];
+			}
+
+			tls_alpn.setValue(def_alpn);
+		}
+
+		// Force disabled
+		if (['trusttunnel'].includes(type)) {
+			tls_alpn.node.querySelector('input').disabled = true;
+			tls_alpn.setValue('');
+		} else {
+			tls_alpn.node.querySelector('input').removeAttribute('disabled');
+		}
+
+		return true;
+	}
 	o.depends('tls', '1');
+	o.depends({type: 'shadowsocks', plugin_type: 'jls'});
 	o.modalonly = true;
 
 	o = s.taboption('field_tls', form.Value, 'tls_cert_path', _('Certificate path'),

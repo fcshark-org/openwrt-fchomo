@@ -377,7 +377,23 @@ export function parseListener(cfg) {
 					password: cfg.plugin_opts_thetlspassword,
 					"restls-script": cfg.plugin_opts_restls_script,
 					//"min-record-len": 0,
-					//proxy: ""
+					proxy: cfg.plugin_opts_dest_proxy // raw data need post-processing
+				}
+			} : cfg.plugin_type === 'jls' ? {
+			// jls
+				"jls-config": {
+					enable: true,
+					users: [
+						{
+							username: cfg.plugin_opts_thetlsusername,
+							password: cfg.plugin_opts_thetlspassword
+						}
+					],
+					dest: cfg.plugin_opts_handshake_dest,
+					sni: cfg.tls_sni,
+					alpn: cfg.tls_alpn,
+					proxy: cfg.plugin_opts_dest_proxy, // raw data need post-processing
+					"rate-limit": strToInt(cfg.plugin_opts_rate_limit)
 				}
 			} : {}
 		) : {}),

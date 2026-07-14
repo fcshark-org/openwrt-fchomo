@@ -345,6 +345,10 @@ uci.foreach(uciconf, uciinbd, (cfg) => {
 
 	const listener = parseListener(cfg);
 	listener.proxy = get_proxy(listener.proxy);
+	if (listener["res-tls"])
+		listener["res-tls"].proxy = get_proxy(listener["res-tls"].proxy);
+	if (listener["jls-config"])
+		listener["jls-config"].proxy = get_proxy(listener["jls-config"].proxy);
 
 	push(config.listeners, listener);
 });
@@ -625,7 +629,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 			cfg.type === 'snell' ? {
 				// snell
 				"obfs-opts": {
-					mode: cfg.plugin_type in ['shadow-tls'] ? cfg.plugin_type : cfg.plugin_opts_obfsmode,
+					mode: cfg.plugin_type === 'shadow-tls' ? cfg.plugin_type : cfg.plugin_opts_obfsmode,
 					host: cfg.plugin_opts_host,
 					password: cfg.plugin_opts_thetlspassword,
 					version: strToInt(cfg.plugin_opts_shadowtls_version),
@@ -637,6 +641,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 				"plugin-opts": {
 					mode: cfg.plugin_opts_obfsmode,
 					host: cfg.plugin_opts_host,
+					username: cfg.plugin_opts_thetlsusername,
 					password: cfg.plugin_opts_thetlspassword,
 					version: strToInt(cfg.plugin_opts_shadowtls_version),
 					alpn: cfg.tls_alpn, // Array
@@ -652,7 +657,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		"disable-sni": strToBool(cfg.tls_disable_sni),
 		...arrToObj([[(cfg.type in ['vmess', 'vless']) ? 'servername' : 'sni', cfg.tls_sni]]),
 		fingerprint: cfg.tls_fingerprint,
-		alpn: cfg.plugin_type in ['shadow-tls'] ? null : cfg.tls_alpn, // Array
+		alpn: cfg.plugin_type in ['shadow-tls', 'jls'] ? null : cfg.tls_alpn, // Array
 		"name-cert-verify": cfg.tls_name_cert_verify,
 		"skip-cert-verify": strToBool(cfg.tls_skip_cert_verify),
 		certificate: cfg.tls_cert_path, // mTLS

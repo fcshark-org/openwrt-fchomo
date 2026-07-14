@@ -165,6 +165,7 @@ const inbound_type = [
 	['tuic', _('TUIC') + ' - ' + _('UDP')],
 	['hysteria2', _('Hysteria2') + ' - ' + _('UDP')],
 	['hysteria2-realm', _('Hysteria2 Realm Server') + ' - ' + _('TCP/UDP')],
+	['shadowquic', _('ShadowQUIC') + ' - ' + _('UDP')],
 	['trusttunnel', _('TrustTunnel') + ' - ' + _('TCP/UDP')],
 	['tunnel', _('Tunnel') + ' - ' + _('TCP/UDP')]
 ];

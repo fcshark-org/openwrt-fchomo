@@ -349,6 +349,8 @@ uci.foreach(uciconf, uciinbd, (cfg) => {
 		listener["res-tls"].proxy = get_proxy(listener["res-tls"].proxy);
 	if (listener["jls-config"])
 		listener["jls-config"].proxy = get_proxy(listener["jls-config"].proxy);
+	if (listener["jls-upstream"])
+		listener["jls-upstream"].proxy = get_proxy(listener["jls-upstream"].proxy);
 
 	push(config.listeners, listener);
 });

@@ -161,14 +161,14 @@ function renderListeners(s, uciconfig, isClient) {
 	/* hm.validateAuth */
 	o = s.taboption('field_general', form.Value, 'username', _('Username'));
 	o.validate = hm.validateAuthUsername;
-	o.depends({type: /^(http|socks|mixed|mieru|trojan|anytls|hysteria2|trusttunnel)$/});
+	o.depends({type: /^(http|socks|mixed|mieru|trojan|anytls|hysteria2|shadowquic|trusttunnel)$/});
 	o.modalonly = true;
 
 	o = s.taboption('field_general', hm.GenValue, 'password', _('Password'));
 	o.password = true;
 	o.validate = hm.validateAuthPassword;
 	o.rmempty = false;
-	o.depends({type: /^(http|socks|mixed|mieru|trojan|anytls|hysteria2|trusttunnel)$/, username: /.+/});
+	o.depends({type: /^(http|socks|mixed|mieru|trojan|anytls|hysteria2|shadowquic|trusttunnel)$/, username: /.+/});
 	o.depends({type: /^(tuic)$/, uuid: /.+/});
 	o.modalonly = true;
 
@@ -454,13 +454,6 @@ function renderListeners(s, uciconfig, isClient) {
 	o.depends('type', 'tuic');
 	o.modalonly = true;
 
-	o = s.taboption('field_general', form.Value, 'tuic_max_idle_time', _('Idle timeout'),
-		_('In seconds.'));
-	o.default = '15000';
-	o.validate = hm.validateTimeDuration;
-	o.depends('type', 'tuic');
-	o.modalonly = true;
-
 	o = s.taboption('field_general', form.Value, 'tuic_authentication_timeout', _('Auth timeout'),
 		_('In seconds.'));
 	o.default = '1000';
@@ -548,6 +541,19 @@ function renderListeners(s, uciconfig, isClient) {
 	o.depends('type', 'hysteria2-realm');
 	o.modalonly = true;
 
+	/* ShadowQUIC fields */
+	o = s.taboption('field_general', form.DynamicList, 'shadowquic_quic_versions', _('QUIC versions'),
+		_('Default version, Support %s.').format('v1/v2'));
+	o.default = 'v1';
+	o.rmempty = false;
+	o.depends('type', 'shadowquic');
+	o.modalonly = true;
+
+	o = s.taboption('field_general', form.Flag, 'shadowquic_zero_rtt', _('QUIC based 0-RTT'));
+	o.default = o.disabled;
+	o.depends('type', 'shadowquic');
+	o.modalonly = true;
+
 	/* TrustTunnel fields */
 
 	/* Tunnel fields */
@@ -597,7 +603,7 @@ function renderListeners(s, uciconfig, isClient) {
 	hm.congestion_controller.forEach((res) => {
 		o.value.apply(o, res);
 	})
-	o.depends({type: /^(tuic|trusttunnel)$/});
+	o.depends({type: /^(tuic|shadowquic|trusttunnel)$/});
 	o.modalonly = true;
 
 	o = s.taboption('field_general', form.ListValue, 'bbr_profile', _('BBR profile'));
@@ -605,8 +611,15 @@ function renderListeners(s, uciconfig, isClient) {
 	hm.bbr_profiles.forEach((res) => {
 		o.value.apply(o, res);
 	})
-	o.depends({congestion_controller: 'bbr'});
-	o.depends({type: 'hysteria2'});
+	o.depends('congestion_controller', 'bbr');
+	o.depends('type', 'hysteria2');
+	o.modalonly = true;
+
+	o = s.taboption('field_general', form.Value, 'max_idle_time', _('Idle timeout'),
+		_('In seconds.'));
+	o.placeholder = '15000';
+	o.validate = hm.validateTimeDuration;
+	o.depends({type: /^(tuic|shadowquic)$/});
 	o.modalonly = true;
 
 	o = s.taboption('field_general', form.MultiValue, 'network', _('Network type'));
@@ -666,6 +679,7 @@ function renderListeners(s, uciconfig, isClient) {
 	o.placeholder = 'cloud.tencent.com:443';
 	o.rmempty = false;
 	o.depends({plugin_type: /^(shadow-tls|restls|jls)$/});
+	o.depends({type: 'shadowquic'});
 	o.modalonly = true;
 
 	o = s.taboption('field_plugin', form.Value, 'plugin_opts_thetlsusername', _('Username'));
@@ -708,6 +722,7 @@ function renderListeners(s, uciconfig, isClient) {
 			], section_id);
 		}
 		o.depends({plugin_type: /^(restls|jls)$/});
+		o.depends({type: 'shadowquic'});
 		o.modalonly = true;
 	}
 
@@ -715,6 +730,13 @@ function renderListeners(s, uciconfig, isClient) {
 		_('In bps. 0 means no speed limit.'));
 	o.datatype = 'uinteger';
 	o.depends({plugin_type: 'jls'});
+	o.depends({type: 'shadowquic'});
+	o.modalonly = true;
+
+	o = s.taboption('field_plugin', form.Flag, 'plugin_opts_quic_version_probe', _('QUIC version probe'),
+		_('Probe the QUIC version of the handshake target during the initial connection.'));
+	o.default = o.disabled;
+	o.depends({type: 'shadowquic'});
 	o.modalonly = true;
 
 	/* Vless Encryption fields */
@@ -972,7 +994,7 @@ function renderListeners(s, uciconfig, isClient) {
 		let tls_reality = this.section.getUIElement(section_id, 'tls_reality').node.querySelector('input');
 
 		// Force enabled
-		if (['trojan', 'anytls', 'tuic', 'hysteria2', 'trusttunnel'].includes(type)) {
+		if (['trojan', 'anytls', 'tuic', 'hysteria2', 'shadowquic', 'trusttunnel'].includes(type)) {
 			tls.checked = true;
 			tls.disabled = true;
 		} else {
@@ -995,7 +1017,7 @@ function renderListeners(s, uciconfig, isClient) {
 
 		return true;
 	}
-	o.depends({type: /^(http|socks|mixed|vmess|vless|trojan|anytls|tuic|hysteria2|hysteria2-realm|trusttunnel)$/});
+	o.depends({type: /^(http|socks|mixed|vmess|vless|trojan|anytls|tuic|hysteria2|hysteria2-realm|shadowquic|trusttunnel)$/});
 	o.modalonly = true;
 
 	o = s.taboption('field_general', form.Flag, 'allow_insecure', _('Allow insecure connections'),
@@ -1007,6 +1029,7 @@ function renderListeners(s, uciconfig, isClient) {
 	o = s.taboption('field_tls', form.Value, 'tls_sni', _('TLS SNI'),
 		_('Hostname that the client attempts to connect to at the start of the TLS handshake process.'));
 	o.depends('plugin_type', 'jls');
+	o.depends({tls: '1', type: 'shadowquic'});
 	o.modalonly = true;
 
 	o = s.taboption('field_tls', form.DynamicList, 'tls_alpn', _('TLS ALPN'),
@@ -1026,6 +1049,7 @@ function renderListeners(s, uciconfig, isClient) {
 					break;
 				case 'tuic':
 				case 'hysteria2':
+				case 'shadowquic':
 					def_alpn = ['h3'];
 					break;
 				case 'hysteria2-realm':
@@ -1055,7 +1079,7 @@ function renderListeners(s, uciconfig, isClient) {
 	o = s.taboption('field_tls', form.Value, 'tls_cert_path', _('Certificate path'),
 		_('The %s public key, in PEM format.').format(_('Server')));
 	o.value('/etc/fchomo/certs/server_publickey.pem');
-	o.depends({tls: '1', tls_reality: '0'});
+	o.depends({tls: '1', tls_reality: '0', type: /^(http|socks|mixed|vmess|vless|trojan|anytls|tuic|hysteria2|hysteria2-realm|trusttunnel)$/});
 	o.rmempty = false;
 	o.modalonly = true;
 

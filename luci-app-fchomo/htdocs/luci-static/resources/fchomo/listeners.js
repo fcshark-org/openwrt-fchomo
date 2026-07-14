@@ -638,7 +638,7 @@ function renderListeners(s, uciconfig, isClient) {
 	o = s.taboption('field_general', form.Flag, 'plugin', _('Plugin'));
 	o.default = o.disabled;
 	o.depends({type: /^(shadowsocks|snell)$/});
-	o.depends({type: /^(vmess|vless|trojan)$/});
+	o.depends({type: /^(vmess|vless|trojan|anytls)$/});
 	o.modalonly = true;
 
 	o = s.taboption('field_plugin', form.ListValue, 'plugin_type', _('Plugin type'));
@@ -655,7 +655,7 @@ function renderListeners(s, uciconfig, isClient) {
 				return _('Expecting: only support %s.').format(_('obfs-simple') +
 					' / ' + _('ShadowTLS'));
 			}
-			if (['vmess', 'vless', 'trojan'].includes(type) && !['jls'].includes(value)) {
+			if (['vmess', 'vless', 'trojan', 'anytls'].includes(type) && !['jls'].includes(value)) {
 				return _('Expecting: only support %s.').format(_('JLS'));
 			}
 		}
@@ -1052,6 +1052,7 @@ function renderListeners(s, uciconfig, isClient) {
 				case 'vmess':
 				case 'vless':
 				case 'trojan':
+				case 'anytls':
 					def_alpn = ['h2', 'http/1.1']; // when plugin_type in ['jls']
 					break;
 				case 'tuic':

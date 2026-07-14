@@ -1310,7 +1310,7 @@ return view.extend({
 
 		so = ss.taboption('field_tls', form.Flag, 'tls_jls', _('JLS'));
 		so.default = so.disabled;
-		so.depends({tls: '1', type: /^(vmess|vless|trojan)$/});
+		so.depends({tls: '1', type: /^(vmess|vless|trojan|anytls)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_tls', form.Value, 'tls_jls_username', _('JLS username'));

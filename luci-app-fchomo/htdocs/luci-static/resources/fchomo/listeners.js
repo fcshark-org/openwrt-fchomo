@@ -652,11 +652,11 @@ function renderListeners(s, uciconfig, isClient) {
 
 		if (value) {
 			if (type === 'snell' && !['obfs', 'shadow-tls'].includes(value)) {
-				return _('Expecting: only support %s.').format(_('obfs-simple') +
+				return _('Expecting: Only support %s.').format(_('obfs-simple') +
 					' / ' + _('ShadowTLS'));
 			}
 			if (['vmess', 'vless', 'trojan', 'anytls'].includes(type) && !['jls'].includes(value)) {
-				return _('Expecting: only support %s.').format(_('JLS'));
+				return _('Expecting: Only support %s.').format(_('JLS'));
 			}
 		}
 
@@ -1093,10 +1093,10 @@ function renderListeners(s, uciconfig, isClient) {
 
 		if (plugin_type === 'jls' || tls_reality == 1) {
 			if (value)
-				return _('Expecting: keep empty when %s is enabled.').format(_('JLS') +
+				return _('Expecting: Keep empty when %s is enabled.').format(_('JLS') +
 					' / ' + _('REALITY'));
 		} else if (!value) {
-			return _('Expecting: cannot be empty.');
+			return _('Expecting: Cannot be empty.');
 		}
 
 		return true;
@@ -1207,7 +1207,7 @@ function renderListeners(s, uciconfig, isClient) {
 		value = this.formvalue(section_id);
 
 		if (value == 1 && plugin_type === 'jls')
-			return _('Expecting: cannot be enabled when %s is enabled.').format(_('JLS'));
+			return _('Expecting: Cannot be enabled when %s is enabled.').format(_('JLS'));
 
 		return true;
 	}
@@ -1273,14 +1273,14 @@ function renderListeners(s, uciconfig, isClient) {
 		switch (type) {
 			case 'vless':
 				if (!['grpc', 'ws', 'xhttp'].includes(value))
-					return _('Expecting: only support %s.').format(_('gRPC') +
+					return _('Expecting: Only support %s.').format(_('gRPC') +
 						' / ' + _('WebSocket') +
 						' / ' + _('XHTTP'));
 				break;
 			case 'vmess':
 			case 'trojan':
 				if (!['grpc', 'ws'].includes(value))
-					return _('Expecting: only support %s.').format(_('gRPC') +
+					return _('Expecting: Only support %s.').format(_('gRPC') +
 						' / ' + _('WebSocket'));
 				break;
 			default:

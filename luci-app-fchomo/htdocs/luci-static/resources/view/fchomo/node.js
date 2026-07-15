@@ -982,7 +982,7 @@ return view.extend({
 
 			if (value) {
 				if (type === 'snell' && !['obfs', 'shadow-tls'].includes(value)) {
-					return _('Expecting: only support %s.').format(_('obfs-simple') +
+					return _('Expecting: Only support %s.').format(_('obfs-simple') +
 						' / ' + _('ShadowTLS'));
 				}
 			}
@@ -1367,14 +1367,14 @@ return view.extend({
 			switch (type) {
 				case 'vmess':
 					if (!['http', 'h2', 'grpc', 'ws'].includes(value))
-						return _('Expecting: only support %s.').format(_('HTTP') +
+						return _('Expecting: Only support %s.').format(_('HTTP') +
 							' / ' + _('HTTPUpgrade') +
 							' / ' + _('gRPC') +
 							' / ' + _('WebSocket'));
 					break;
 				case 'vless':
 					if (!['http', 'h2', 'grpc', 'ws', 'xhttp'].includes(value))
-						return _('Expecting: only support %s.').format(_('HTTP') +
+						return _('Expecting: Only support %s.').format(_('HTTP') +
 							' / ' + _('HTTPUpgrade') +
 							' / ' + _('gRPC') +
 							' / ' + _('WebSocket') +
@@ -1382,7 +1382,7 @@ return view.extend({
 					break;
 				case 'trojan':
 					if (!['grpc', 'ws'].includes(value))
-						return _('Expecting: only support %s.').format(_('gRPC') +
+						return _('Expecting: Only support %s.').format(_('gRPC') +
 							' / ' + _('WebSocket'));
 					break;
 				default:

@@ -650,8 +650,15 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 					version: strToInt(cfg.plugin_opts_shadowtls_version),
 					alpn: cfg.tls_alpn // Array
 				}
+			} : cfg.type in ['vmess', 'vless', 'trojan', 'anytls'] ? {
+				// jls
+				...arrToObj([[(cfg.type in ['vmess', 'vless']) ? 'servername' : 'sni', cfg.plugin_opts_host]]),
+				"jls-opts": cfg.plugin_type === 'jls' ? {
+					"username": cfg.plugin_opts_thetlsusername,
+					"password": cfg.plugin_opts_thetlspassword
+				} : null,
 			} : {
-				// others
+				// shadowsocks
 				plugin: cfg.plugin_type,
 				"plugin-opts": {
 					mode: cfg.plugin_opts_obfsmode,
@@ -670,7 +677,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		/* TLS fields */
 		tls: (cfg.type in ['trojan', 'anytls', 'tuic', 'hysteria', 'hysteria2', 'shadowquic', 'trusttunnel']) ? null : strToBool(cfg.tls),
 		"disable-sni": strToBool(cfg.tls_disable_sni),
-		...arrToObj([[(cfg.type in ['vmess', 'vless']) ? 'servername' : 'sni', cfg.tls_sni]]),
+		...(cfg.tls_sni ? arrToObj([[(cfg.type in ['vmess', 'vless']) ? 'servername' : 'sni', cfg.tls_sni]]) : {}),
 		fingerprint: cfg.tls_fingerprint,
 		alpn: cfg.plugin_type in ['shadow-tls', 'jls'] ? null : cfg.tls_alpn, // Array
 		"name-cert-verify": cfg.tls_name_cert_verify,
@@ -683,10 +690,6 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 			enable: true,
 			config: cfg.tls_ech_config,
 			"query-server-name": cfg.tls_ech_query_server_name
-		} : null,
-		"jls-opts": cfg.tls_jls === '1' ? {
-			"username": cfg.tls_jls_username,
-			"password": cfg.tls_jls_password
 		} : null,
 		"reality-opts": cfg.tls_reality === '1' ? {
 			"public-key": cfg.tls_reality_public_key,

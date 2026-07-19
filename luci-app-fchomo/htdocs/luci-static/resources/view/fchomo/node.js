@@ -968,6 +968,7 @@ return view.extend({
 		so = ss.taboption('field_general', form.Flag, 'plugin', _('Plugin'));
 		so.default = so.disabled;
 		so.depends({type: /^(ss|snell)$/});
+		so.depends({type: /^(vmess|vless|trojan|anytls)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_plugin', form.ListValue, 'plugin_type', _('Plugin type'));
@@ -985,6 +986,9 @@ return view.extend({
 				if (type === 'snell' && !['obfs', 'shadow-tls'].includes(value)) {
 					return _('Expecting: Only support %s.').format(_('obfs-simple') +
 						' / ' + _('ShadowTLS'));
+				}
+				if (['vmess', 'vless', 'trojan', 'anytls'].includes(type) && !['jls'].includes(value)) {
+					return _('Expecting: only support %s.').format(_('JLS'));
 				}
 			}
 
@@ -1167,14 +1171,6 @@ return view.extend({
 
 		so = ss.taboption('field_tls', form.Value, 'tls_sni', _('TLS SNI'),
 			_('Hostname that the client attempts to connect to at the start of the TLS handshake process.'));
-		so.validate = function(section_id, value) {
-			const tls_jls = this.section.getOption('tls_jls').formvalue(section_id);
-
-			if (tls_jls == 1 && !value)
-				return _('Expecting: %s cannot be empty when %s is enabled.').format(_('TLS SNI'), _('JLS'));
-
-			return true;
-		};
 		so.depends({tls: '1', type: /^(http|vmess|vless|trojan|anytls|hysteria|hysteria2|shadowquic|trusttunnel|masque)$/});
 		so.depends({tls: '1', type: /^(tuic)$/, tls_disable_sni: '0'});
 		so.modalonly = true;
@@ -1309,24 +1305,18 @@ return view.extend({
 		so.depends({type: 'ss', plugin_type: 'jls'});
 		so.modalonly = true;
 
-		so = ss.taboption('field_tls', form.Flag, 'tls_jls', _('JLS'));
-		so.default = so.disabled;
-		so.depends({tls: '1', type: /^(vmess|vless|trojan|anytls)$/});
-		so.modalonly = true;
-
-		so = ss.taboption('field_tls', form.Value, 'tls_jls_username', _('JLS username'));
-		so.rmempty = false;
-		so.depends('tls_jls', '1');
-		so.modalonly = true;
-
-		so = ss.taboption('field_tls', form.Value, 'tls_jls_password', _('JLS password'));
-		so.rmempty = false;
-		so.depends('tls_jls', '1');
-		so.modalonly = true;
-
 		so = ss.taboption('field_tls', form.Flag, 'tls_reality', _('REALITY'));
 		so.default = so.disabled;
-		so.depends({tls: '1', tls_jls: '0', type: /^(vmess|vless|trojan)$/});
+		so.validate = function(section_id, value) {
+			const plugin_type = this.section.getOption('plugin_type').formvalue(section_id);
+			value = this.formvalue(section_id);
+
+			if (value == 1 && plugin_type === 'jls')
+				return _('Expecting: cannot be enabled when %s is enabled.').format(_('JLS'));
+
+			return true;
+		}
+		so.depends({tls: '1', type: /^(vmess|vless|trojan)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_tls', form.Value, 'tls_reality_public_key', _('REALITY public key'));

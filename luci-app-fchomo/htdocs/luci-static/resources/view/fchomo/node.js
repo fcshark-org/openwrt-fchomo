@@ -104,7 +104,7 @@ const parseProviderYaml = hm.parseYaml.extend({
 		if (!cfg.type)
 			return null;
 
-		// key mapping // 2026/07/12
+		// key mapping // 2026/07/18
 		let config = hm.removeBlankAttrs({
 			id: this.id,
 			label: this.label,
@@ -1982,7 +1982,7 @@ return view.extend({
 
 		so = ss.taboption('field_override', form.DynamicList, 'override_expr', _('Programmable replacement'),
 			_('For format see <a target="_blank" href="%s" rel="noreferrer noopener">%s</a>.')
-				.format('https://wiki.metacubex.one/config/proxy-providers/#override_expr', _('override.override-expr')));
+				.format('https://wiki.metacubex.one/config/proxy-providers/#overrideoverride-expr', _('override.override-expr')));
 		so.placeholder = '.name = "[provider1] " + .name';
 		so.depends({type: 'inline', '!reverse': true});
 		so.modalonly = true;

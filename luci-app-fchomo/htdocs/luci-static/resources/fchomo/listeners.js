@@ -652,9 +652,11 @@ function renderListeners(s, uciconfig, isClient) {
 		const type = this.section.getOption('type').formvalue(section_id);
 
 		if (value) {
-			if (type === 'snell' && !['obfs', 'shadow-tls'].includes(value)) {
+			if (type === 'snell' && !['obfs', 'shadow-tls', 'restls', 'jls'].includes(value)) {
 				return _('Expecting: Only support %s.').format(_('obfs-simple') +
-					' / ' + _('ShadowTLS'));
+					' / ' + _('ShadowTLS') +
+					' / ' + _('Restls') +
+					' / ' + _('JLS'));
 			}
 			if (['vmess', 'vless', 'trojan', 'anytls'].includes(type) && !['shadow-tls', 'restls', 'jls'].includes(value)) {
 				return _('Expecting: only support %s.').format(_('ShadowTLS') +
@@ -1035,8 +1037,8 @@ function renderListeners(s, uciconfig, isClient) {
 
 	o = s.taboption('field_tls', form.Value, 'tls_sni', _('TLS SNI'),
 		_('Hostname that the client attempts to connect to at the start of the TLS handshake process.'));
-	o.depends('plugin_type', 'jls');
 	o.depends({tls: '1', type: 'shadowquic'});
+	o.depends('plugin_type', 'jls');
 	o.modalonly = true;
 
 	o = s.taboption('field_tls', form.DynamicList, 'tls_alpn', _('TLS ALPN'),

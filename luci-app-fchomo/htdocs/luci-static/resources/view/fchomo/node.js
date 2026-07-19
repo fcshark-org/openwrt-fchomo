@@ -983,9 +983,11 @@ return view.extend({
 			const type = this.section.getOption('type').formvalue(section_id);
 
 			if (value) {
-				if (type === 'snell' && !['obfs', 'shadow-tls'].includes(value)) {
+				if (type === 'snell' && !['obfs', 'shadow-tls', 'restls', 'jls'].includes(value)) {
 					return _('Expecting: Only support %s.').format(_('obfs-simple') +
-						' / ' + _('ShadowTLS'));
+						' / ' + _('ShadowTLS') +
+						' / ' + _('Restls') +
+						' / ' + _('JLS'));
 				}
 				if (['vmess', 'vless', 'trojan', 'anytls'].includes(type) && !['shadow-tls', 'restls', 'jls'].includes(value)) {
 					return _('Expecting: only support %s.').format(_('ShadowTLS') +
@@ -1222,8 +1224,8 @@ return view.extend({
 			return true;
 		}
 		so.depends({tls: '1', type: /^(vmess|vless|trojan|anytls|tuic|hysteria|hysteria2|shadowquic|trusttunnel)$/});
-		so.depends({type: /^(ss|snell)$/, plugin_type: 'shadow-tls'});
-		so.depends({type: 'ss', plugin_type: 'jls'});
+		so.depends({type: 'ss', plugin_type: /^(shadow-tls|jls)$/});
+		so.depends({type: 'snell', plugin_type: 'shadow-tls'});
 		so.modalonly = true;
 
 		so = ss.taboption('field_tls', form.Value, 'tls_fingerprint', _('Cert fingerprint'),
@@ -1305,8 +1307,7 @@ return view.extend({
 			so.value.apply(so, res);
 		})
 		so.depends({tls: '1', type: /^(vmess|vless|trojan|anytls|trusttunnel)$/});
-		so.depends({type: /^(ss|snell)$/, plugin_type: /^(shadow-tls|restls)$/});
-		so.depends({type: 'ss', plugin_type: 'jls'});
+		so.depends({type: /^(ss|snell)$/, plugin_type: /^(shadow-tls|restls|jls)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_tls', form.Flag, 'tls_reality', _('REALITY'));

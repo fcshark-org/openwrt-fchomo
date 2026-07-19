@@ -543,7 +543,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 
 		/* Snell */
 		psk: cfg.snell_psk,
-		version: cfg.snell_version,
+		version: strToInt(cfg.snell_version),
 		reuse: strToBool(cfg.snell_reuse),
 
 		/* VMess / VLESS */
@@ -643,16 +643,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 
 		/* Plugin fields */
 		...(cfg.plugin === '1' ? (
-			cfg.type === 'snell' ? {
-				// snell
-				"obfs-opts": {
-					mode: cfg.plugin_type === 'shadow-tls' ? cfg.plugin_type : cfg.plugin_opts_obfsmode,
-					host: cfg.plugin_opts_host,
-					password: cfg.plugin_opts_thetlspassword,
-					version: strToInt(cfg.plugin_opts_shadowtls_version),
-					alpn: cfg.tls_alpn // Array
-				}
-			} : cfg.type in ['vmess', 'vless', 'trojan', 'anytls'] ? {
+			cfg.type in ['vmess', 'vless', 'trojan', 'anytls'] ? {
 				...arrToObj([[(cfg.type in ['vmess', 'vless']) ? 'servername' : 'sni', cfg.plugin_opts_host]]),
 				// shadow-tls
 				"shadow-tls-opts": cfg.plugin_type === 'shadow-tls' ? {
@@ -671,28 +662,30 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 					password: cfg.plugin_opts_thetlspassword
 				} : null,
 			} : {
-				// shadowsocks
-				plugin: cfg.plugin_type,
-				"plugin-opts": {
-					mode: cfg.plugin_opts_obfsmode,
-					host: cfg.plugin_opts_host,
-					username: cfg.plugin_opts_thetlsusername,
-					password: cfg.plugin_opts_thetlspassword,
-					version: strToInt(cfg.plugin_opts_shadowtls_version),
-					alpn: cfg.tls_alpn, // Array
-					"version-hint": cfg.plugin_opts_restls_versionhint,
-					"restls-script": cfg.plugin_opts_restls_script
-				}
+				// snell / shadowsocks
+				plugin: cfg.type === 'snell' ? null : cfg.plugin_type,
+				...arrToObj([[cfg.type === 'snell' ? "obfs-opts" : "plugin-opts",
+					{
+						mode: (cfg.type === 'snell' && cfg.plugin_type !== 'obfs') ? cfg.plugin_type : cfg.plugin_opts_obfsmode,
+						host: cfg.plugin_opts_host,
+						username: cfg.plugin_opts_thetlsusername,
+						password: cfg.plugin_opts_thetlspassword,
+						version: strToInt(cfg.plugin_opts_shadowtls_version),
+						alpn: cfg.tls_alpn, // Array
+						"version-hint": cfg.plugin_opts_restls_versionhint,
+						"restls-script": cfg.plugin_opts_restls_script
+					}
+				]])
 			}
 		) : {}),
 
 		/* SSH / WireGuard / Masque */
 		/* TLS fields */
-		tls: (cfg.type in ['trojan', 'anytls', 'tuic', 'hysteria', 'hysteria2', 'shadowquic', 'trusttunnel']) ? null : strToBool(cfg.tls),
+		tls: (cfg.type in ['trojan', 'anytls', 'tuic', 'hysteria', 'hysteria2', 'shadowquic', 'trusttunnel', 'masque']) ? null : strToBool(cfg.tls),
 		"disable-sni": strToBool(cfg.tls_disable_sni),
 		...(cfg.tls_sni ? arrToObj([[(cfg.type in ['vmess', 'vless']) ? 'servername' : 'sni', cfg.tls_sni]]) : {}),
 		fingerprint: cfg.tls_fingerprint,
-		alpn: cfg.plugin_type in ['shadow-tls', 'jls'] ? null : cfg.tls_alpn, // Array
+		alpn: cfg.tls === '1' ? cfg.tls_alpn : null, // Array
 		"name-cert-verify": cfg.tls_name_cert_verify,
 		"skip-cert-verify": strToBool(cfg.tls_skip_cert_verify),
 		certificate: cfg.tls_cert_path, // mTLS

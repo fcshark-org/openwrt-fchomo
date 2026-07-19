@@ -987,8 +987,10 @@ return view.extend({
 					return _('Expecting: Only support %s.').format(_('obfs-simple') +
 						' / ' + _('ShadowTLS'));
 				}
-				if (['vmess', 'vless', 'trojan', 'anytls'].includes(type) && !['jls'].includes(value)) {
-					return _('Expecting: only support %s.').format(_('JLS'));
+				if (['vmess', 'vless', 'trojan', 'anytls'].includes(type) && !['shadow-tls', 'restls', 'jls'].includes(value)) {
+					return _('Expecting: only support %s.').format(_('ShadowTLS') +
+						' / ' + _('Restls') +
+						' / ' + _('JLS'));
 				}
 			}
 
@@ -1032,6 +1034,8 @@ return view.extend({
 
 		so = ss.taboption('field_plugin', form.Value, 'plugin_opts_restls_versionhint', _('Version hint'));
 		so.default = 'tls13';
+		so.value('tls12', _('tls12'));
+		so.value('tls13', _('tls13'));
 		so.rmempty = false;
 		so.depends({plugin_type: 'restls'});
 		so.modalonly = true;
@@ -1311,8 +1315,10 @@ return view.extend({
 			const plugin_type = this.section.getOption('plugin_type').formvalue(section_id);
 			value = this.formvalue(section_id);
 
-			if (value == 1 && plugin_type === 'jls')
-				return _('Expecting: cannot be enabled when %s is enabled.').format(_('JLS'));
+			if (value == 1 && ['shadow-tls', 'restls', 'jls'].includes(plugin_type))
+				return _('Expecting: cannot be enabled when %s is enabled.').format(_('ShadowTLS') +
+					' / ' + _('Restls') +
+					' / ' + _('JLS'));
 
 			return true;
 		}

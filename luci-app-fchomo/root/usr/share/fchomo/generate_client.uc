@@ -345,6 +345,8 @@ uci.foreach(uciconf, uciinbd, (cfg) => {
 
 	const listener = parseListener(cfg);
 	listener.proxy = get_proxy(listener.proxy);
+	if (listener["shadow-tls"])
+		listener["shadow-tls"].handshake.proxy = get_proxy(listener["shadow-tls"].handshake.proxy);
 	if (listener["res-tls"])
 		listener["res-tls"].proxy = get_proxy(listener["res-tls"].proxy);
 	if (listener["jls-config"])
@@ -651,11 +653,22 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 					alpn: cfg.tls_alpn // Array
 				}
 			} : cfg.type in ['vmess', 'vless', 'trojan', 'anytls'] ? {
-				// jls
 				...arrToObj([[(cfg.type in ['vmess', 'vless']) ? 'servername' : 'sni', cfg.plugin_opts_host]]),
+				// shadow-tls
+				"shadow-tls-opts": cfg.plugin_type === 'shadow-tls' ? {
+					version: strToInt(cfg.plugin_opts_shadowtls_version),
+					password: cfg.plugin_opts_thetlspassword
+				} : null,
+				// restls
+				"restls-opts": cfg.plugin_type === 'restls' ? {
+					password: cfg.plugin_opts_thetlspassword,
+					"version-hint": cfg.plugin_opts_restls_versionhint,
+					"restls-script": cfg.plugin_opts_restls_script
+				} : null,
+				// jls
 				"jls-opts": cfg.plugin_type === 'jls' ? {
-					"username": cfg.plugin_opts_thetlsusername,
-					"password": cfg.plugin_opts_thetlspassword
+					username: cfg.plugin_opts_thetlsusername,
+					password: cfg.plugin_opts_thetlspassword
 				} : null,
 			} : {
 				// shadowsocks

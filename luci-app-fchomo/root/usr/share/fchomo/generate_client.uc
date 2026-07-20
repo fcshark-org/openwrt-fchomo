@@ -529,7 +529,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		"padding-max": strToInt(cfg.sudoku_padding_max),
 		"table-type": cfg.sudoku_table_type,
 		"custom-tables": cfg.sudoku_custom_tables,
-		"enable-pure-downlink": (cfg.sudoku_enable_pure_downlink === '0') ? false : true,
+		"enable-pure-downlink": (cfg.sudoku_enable_pure_downlink === '0') ? false : null,
 		...(cfg.type === 'sudoku' ? {
 			httpmask: (cfg.sudoku_http_mask === '0') ? { disable: true } : {
 				disable: false,
@@ -608,7 +608,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		"max-datagram-frame-size": strToInt(cfg.shadowquic_max_datagram_frame_size),
 		"recv-window-conn": strToInt(cfg.shadowquic_recv_window_conn),
 		"recv-window": strToInt(cfg.shadowquic_recv_window),
-		"disable-mtu-discovery": cfg.shadowquic_mtu_discovery === '0' ? true : false,
+		"disable-mtu-discovery": cfg.shadowquic_mtu_discovery === '0' ? true : null,
 
 		/* TrustTunnel */
 		"health-check": cfg.type === 'trusttunnel' ? (cfg.trusttunnel_health_check === '0' ? false : true) : null,

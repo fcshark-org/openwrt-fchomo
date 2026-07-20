@@ -766,7 +766,7 @@ return view.extend({
 		so.depends('type', 'shadowquic');
 		so.modalonly = true;
 
-		so = ss.taboption('field_general', form.Flag, 'shadowquic_mtu_discovery', _('MTU discovery'));
+		so = ss.taboption('field_general', form.Flag, 'shadowquic_mtu_discovery', _('Path MTU Discovery'));
 		so.default = so.enabled;
 		so.depends('type', 'shadowquic');
 		so.modalonly = true;
@@ -1019,7 +1019,7 @@ return view.extend({
 						' / ' + _('JLS'));
 				}
 				if (['vmess', 'vless', 'trojan', 'anytls'].includes(type) && !['shadow-tls', 'restls', 'jls'].includes(value)) {
-					return _('Expecting: only support %s.').format(_('ShadowTLS') +
+					return _('Expecting: Only support %s.').format(_('ShadowTLS') +
 						' / ' + _('Restls') +
 						' / ' + _('JLS'));
 				}
@@ -1346,7 +1346,7 @@ return view.extend({
 			value = this.formvalue(section_id);
 
 			if (value == 1 && ['shadow-tls', 'restls', 'jls'].includes(plugin_type))
-				return _('Expecting: cannot be enabled when %s is enabled.').format(_('ShadowTLS') +
+				return _('Expecting: Cannot be enabled when %s is enabled.').format(_('ShadowTLS') +
 					' / ' + _('Restls') +
 					' / ' + _('JLS'));
 

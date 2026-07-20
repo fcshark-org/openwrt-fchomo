@@ -330,7 +330,7 @@ export function parseListener(cfg) {
 		"zero-rtt": strToBool(cfg.shadowquic_zero_rtt),
 		"jls-upstream": cfg.type === 'shadowquic' ? {
 			addr: cfg.plugin_opts_handshake_dest,
-			sni: cfg.tls_sni,
+			sni: cfg.plugin_opts_host,
 			proxy: cfg.plugin_opts_dest_proxy, // raw data need post-processing
 			"rate-limit": strToInt(cfg.plugin_opts_rate_limit),
 			"quic-version-probe": strToBool(cfg.plugin_opts_quic_version_probe)
@@ -410,7 +410,7 @@ export function parseListener(cfg) {
 						}
 					],
 					dest: cfg.plugin_opts_handshake_dest,
-					sni: cfg.tls_sni,
+					sni: cfg.plugin_opts_host,
 					alpn: cfg.tls_alpn,
 					proxy: cfg.plugin_opts_dest_proxy, // raw data need post-processing
 					"rate-limit": strToInt(cfg.plugin_opts_rate_limit)

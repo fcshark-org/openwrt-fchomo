@@ -767,7 +767,7 @@ function renderListeners(s, uciconfig, isClient) {
 	o = s.taboption('field_plugin', form.Value, 'plugin_opts_rate_limit', _('Forwarding rate limit'),
 		_('In bps. 0 means no speed limit.'));
 	o.datatype = 'uinteger';
-	o.depends({plugin_type: 'jls'});
+	o.depends({plugin_type: /^(restls|jls)$/});
 	o.depends({type: 'shadowquic'});
 	o.modalonly = true;
 

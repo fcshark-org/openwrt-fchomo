@@ -32,6 +32,8 @@
 
 <details><summary>Expand/Collapse</summary>
 
+<img width="1368" height="1589" alt="dcea922ea3bed8a2356eb46c1e4633a3" src="https://github.com/user-attachments/assets/c18ca1f0-a516-4045-a1c9-e7d1d084fdf7" />
+
 ``` mermaid
 flowchart TD
   subgraph Firewall

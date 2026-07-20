@@ -942,7 +942,7 @@ return view.extend({
 			_('The default value is <code>%s</code>, indicating that only the outer connection timeout is used.').format('0'));
 		so.datatype = 'uinteger';
 		so.placeholder = '30';
-		so.depends({type: /^(openvpn|masque)$/});
+		so.depends({type: /^(hysteria2|openvpn|masque)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', form.Flag, 'udp', _('UDP'));

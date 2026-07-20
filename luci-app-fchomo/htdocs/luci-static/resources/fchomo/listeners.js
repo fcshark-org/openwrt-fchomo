@@ -555,6 +555,35 @@ function renderListeners(s, uciconfig, isClient) {
 	o.depends('type', 'shadowquic');
 	o.modalonly = true;
 
+	o = s.taboption('field_general', form.Value, 'shadowquic_cwnd', _('Initial congestion window size'));
+	o.datatype = 'uinteger';
+	o.placeholder = '32';
+	o.depends('type', 'shadowquic');
+	o.modalonly = true;
+
+	o = s.taboption('field_general', form.Value, 'shadowquic_max_datagram_frame_size', _('Max datagram frame size'));
+	o.datatype = 'uinteger';
+	o.placeholder = '1400';
+	o.depends('type', 'shadowquic');
+	o.modalonly = true;
+
+	o = s.taboption('field_general', form.Value, 'shadowquic_recv_window_conn', _('Stream-level receive window size'));
+	o.datatype = 'uinteger';
+	o.placeholder = '0';
+	o.depends('type', 'shadowquic');
+	o.modalonly = true;
+
+	o = s.taboption('field_general', form.Value, 'shadowquic_recv_window', _('Connection-level receive window size'));
+	o.datatype = 'uinteger';
+	o.placeholder = '0';
+	o.depends('type', 'shadowquic');
+	o.modalonly = true;
+
+	o = s.taboption('field_general', form.Flag, 'shadowquic_mtu_discovery', _('MTU discovery'));
+	o.default = o.enabled;
+	o.depends('type', 'shadowquic');
+	o.modalonly = true;
+
 	/* TrustTunnel fields */
 
 	/* Tunnel fields */

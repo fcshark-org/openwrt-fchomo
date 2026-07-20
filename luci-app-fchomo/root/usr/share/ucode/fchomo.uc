@@ -261,7 +261,7 @@ export function parseListener(cfg) {
 		"table-type": cfg.sudoku_table_type,
 		"custom-tables": cfg.sudoku_custom_tables,
 		"handshake-timeout": strToInt(cfg.sudoku_handshake_timeout) ?? null,
-		"enable-pure-downlink": (cfg.sudoku_enable_pure_downlink === '0') ? false : null,
+		"enable-pure-downlink": (cfg.sudoku_enable_pure_downlink === '0') ? false : true,
 		...(cfg.type === 'sudoku' ? {
 			httpmask: (cfg.sudoku_http_mask === '0') ? { disable: true } : {
 				disable: false,
@@ -335,11 +335,11 @@ export function parseListener(cfg) {
 			"rate-limit": strToInt(cfg.plugin_opts_rate_limit),
 			"quic-version-probe": strToBool(cfg.plugin_opts_quic_version_probe)
 		} : null,
-		// @# cwnd: 10 # default: 32,
-		// @# max-datagram-frame-size: 1400,
-		// @# recv-window-conn: 0,
-		// @# recv-window: 0,
-		// @# disable-mtu-discovery: false,
+		cwnd: strToInt(cfg.shadowquic_cwnd),
+		"max-datagram-frame-size": strToInt(cfg.shadowquic_max_datagram_frame_size),
+		"recv-window-conn": strToInt(cfg.shadowquic_recv_window_conn),
+		"recv-window": strToInt(cfg.shadowquic_recv_window),
+		"disable-mtu-discovery": cfg.shadowquic_mtu_discovery === '0' ? true : false,
 
 		/* TrustTunnel */
 

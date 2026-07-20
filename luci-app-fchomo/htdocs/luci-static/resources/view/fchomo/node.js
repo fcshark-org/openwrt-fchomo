@@ -742,6 +742,35 @@ return view.extend({
 		so.depends('type', 'shadowquic');
 		so.modalonly = true;
 
+		so = ss.taboption('field_general', form.Value, 'shadowquic_cwnd', _('Initial congestion window size'));
+		so.datatype = 'uinteger';
+		so.placeholder = '32';
+		so.depends('type', 'shadowquic');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.Value, 'shadowquic_max_datagram_frame_size', _('Max datagram frame size'));
+		so.datatype = 'uinteger';
+		so.placeholder = '1400';
+		so.depends('type', 'shadowquic');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.Value, 'shadowquic_recv_window_conn', _('Stream-level receive window size'));
+		so.datatype = 'uinteger';
+		so.placeholder = '0';
+		so.depends('type', 'shadowquic');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.Value, 'shadowquic_recv_window', _('Connection-level receive window size'));
+		so.datatype = 'uinteger';
+		so.placeholder = '0';
+		so.depends('type', 'shadowquic');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.Flag, 'shadowquic_mtu_discovery', _('MTU discovery'));
+		so.default = so.enabled;
+		so.depends('type', 'shadowquic');
+		so.modalonly = true;
+
 		/* TrustTunnel fields */
 		so = ss.taboption('field_general', form.Flag, 'trusttunnel_health_check', _('Health check'));
 		so.default = so.enabled;

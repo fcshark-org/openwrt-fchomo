@@ -261,12 +261,12 @@ return view.extend({
 		so = ss.taboption('field_general', form.Value, 'server', _('Server address'));
 		so.datatype = 'host';
 		so.rmempty = false;
-		so.depends({type: /^(rematch|direct)$/, '!reverse': true});
+		so.depends({type: /^(rematch|direct|zerotier)$/, '!reverse': true});
 
 		so = ss.taboption('field_general', form.Value, 'port', _('Port'));
 		so.datatype = 'port';
 		so.rmempty = false;
-		so.depends({type: /^(rematch|direct|mieru)$/, '!reverse': true});
+		so.depends({type: /^(rematch|direct|mieru|zerotier)$/, '!reverse': true});
 
 		/* Rematch fields */
 		// https://github.com/MetaCubeX/mihomo/pull/2862
@@ -782,6 +782,92 @@ return view.extend({
 		so.depends('type', 'trusttunnel');
 		so.modalonly = true;
 
+		/* ZeroTier fields */
+		so = ss.taboption('field_general', form.Value, 'zerotier_network_id', 'Network ID');
+		so.placeholder = '0123456789abcdef';
+		so.validate = L.bind(hm.validateHexstr, so, 64);
+		so.rmempty = false;
+		so.depends('type', 'zerotier');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.Value, 'zerotier_trace_target', _('Remote trace target'),
+			_('%s of the %s used to receiving remote debugging log.').format('Node ID', 'Node'));
+		so.placeholder = '0123456789';
+		so.validate = L.bind(hm.validateHexstr, so, 40);
+		so.depends('type', 'zerotier');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.ListValue, 'zerotier_trace_level', _('Remote trace level'));
+		so.value('0', _('Normal'));
+		so.value('10', _('Verbose'));
+		so.value('15', _('Rules'));
+		so.value('20', _('Debug'));
+		so.value('30', _('Insane'));
+		so.depends({zerotier_trace_target: /.+/});
+		so.modalonly = true;
+
+		so = ss.taboption('field_vpn', form.Value, 'zerotier_primary_port', _('Listen port') + ' (%s)'.format(_('Primary')),
+			_('%s UDP port. <code>0</code> selects an available port.').format(_('Primary')));
+		so.datatype = 'port';
+		so.placeholder = '9993';
+		so.depends('type', 'zerotier');
+		so.modalonly = true;
+
+		so = ss.taboption('field_vpn', form.Value, 'zerotier_secondary_port', _('Listen port') + ' (%s)'.format(_('Secondary')),
+			_('%s UDP port. <code>0</code> selects an available port.').format(_('Secondary')) + '</br>' +
+			_('<code>-1</code> disables it.'));
+		so.datatype = 'or(port, -1)';
+		so.placeholder = '0';
+		so.depends('type', 'zerotier');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.Value, 'zerotier_physical_mtu', _('Physical MTU'),
+			_('ZeroTier UDP payload MTU.'));
+		so.datatype = 'range(510, 10324)';
+		so.placeholder = '1432';
+		so.depends('type', 'zerotier');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.Flag, 'zerotier_low_bandwidth', _('Low Bandwidth Mode'),
+			_('Reduces background traffic and network configuration refresh frequency.'));
+		so.default = so.disabled;
+		so.depends('type', 'zerotier');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.Flag, 'zerotier_encrypted_hello', _('Encrypted Hello'),
+			_('Use protocol-13 extended encryption for outgoing HELLO packets.'));
+		so.default = so.disabled;
+		so.depends('type', 'zerotier');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.RichListValue, 'zerotier_fallback_mode', _('Fallback mode'));
+		so.value('auto', _('Auto'), _('Uses relay after UDP direct failure.'));
+		so.value('force', _('Force'), _('Uses TCP relay only.'));
+		so.value('disable', _('Disable'), _('Turns TCP relay off.'));
+		so.depends('type', 'zerotier');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.Value, 'zerotier_fallback_relay', _('Fallback relay'));
+		so.datatype = 'hostport';
+		so.placeholder = '204.80.128.1:443';
+		so.depends('type', 'zerotier');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.DynamicList, 'zerotier_orbit', 'Orbit',
+			_('Join %s. Format: <code>%s</code>').format('Moons', '000000<10-digit Moon World ID>:<10-digit Node ID of one Moon Root server>...'));
+		so.placeholder = '000000deadbeef00:deadbeef00:deadbeef11';
+		so.validate = function(section_id, value) {
+			if (!value)
+				return true;
+
+			if (!/^[0-9a-fA-F]{16}(:[0-9a-fA-F]{10})+$/.test(value))
+				return _('Expecting: %s').format(_('Valid 16-digit Moon World ID and 10-digit Node ID of Moon Root server.'));
+
+			return true;
+		}
+		so.depends('type', 'zerotier');
+		so.modalonly = true;
+
 		/* WireGuard fields */
 		so = ss.taboption('field_general', form.Value, 'wireguard_private_key', _('Private key'),
 			_('WireGuard requires base64-encoded private keys.'));
@@ -914,7 +1000,7 @@ return view.extend({
 
 		so = ss.taboption('field_general', form.Flag, 'udp', _('UDP'));
 		so.default = so.disabled;
-		so.depends({type: /^(rematch|direct|socks5|ss|mieru|vmess|vless|trojan|anytls|trusttunnel|wireguard|masque)$/});
+		so.depends({type: /^(rematch|direct|socks5|ss|mieru|vmess|vless|trojan|anytls|trusttunnel|zerotier|wireguard|masque)$/});
 		so.depends({type: 'snell', snell_version: /^(3|4|5)$/});
 		so.modalonly = true;
 
@@ -1374,6 +1460,9 @@ return view.extend({
 
 			let def_mtu;
 			switch (type) {
+				case 'zerotier':
+					def_mtu = '1400';
+					break;
 				case 'wireguard':
 					def_mtu = '1408';
 					break;
@@ -1385,14 +1474,14 @@ return view.extend({
 
 			return true;
 		}
-		so.depends('type', 'wireguard');
+		so.depends({type: /^(zerotier|wireguard)$/});
 		so.depends({type: 'masque', masque_network: /^(|h2)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_vpn', form.Flag, 'endpoint_remote_dns_resolve', _('Remote DNS resolve'),
 			_('Force DNS remote resolution.'));
 		so.default = so.disabled;
-		so.depends({type: /^(wireguard|masque)$/});
+		so.depends({type: /^(zerotier|wireguard|masque)$/});
 		so.modalonly = true;
 
 		so = ss.taboption('field_vpn', form.DynamicList, 'endpoint_dns', _('DNS server'));

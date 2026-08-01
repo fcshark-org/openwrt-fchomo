@@ -204,6 +204,7 @@ const outbound_type = [
 	['hysteria2', _('Hysteria2') + ' - ' + _('UDP')],
 	['shadowquic', _('ShadowQUIC') + ' - ' + _('UDP')],
 	['trusttunnel', _('TrustTunnel') + ' - ' + _('TCP/UDP')],
+	['zerotier', _('ZeroTier') + ' - ' + _('UDP') + ' - ' + _('L2')], // Endpoint
 	['wireguard', _('WireGuard') + ' - ' + _('UDP')], // Endpoint
 	['masque', _('Masque') + ' - ' + _('UDP')], // Endpoint // https://blog.cloudflare.com/post-quantum-warp/
 	['ssh', _('SSH') + ' - ' + _('TCP')]
@@ -1879,6 +1880,18 @@ function validateUrl(section_id, value) {
 	return true;
 }
 
+function validateHexstr(length, section_id, value) {
+	if (!value)
+		return true;
+
+	length /= 4; // Convert bits to hex characters
+	const regexp = new RegExp(`^[0-9a-fA-F]{${length}}$`);
+	if (!value.match(regexp))
+		return _('Expecting: %s').format(_('valid hex string with %d characters').format(length));
+
+	return true;
+}
+
 function validateBase64Key(length, section_id, value) {
 	/* Thanks to luci-proto-wireguard */
 	if (value)
@@ -2182,6 +2195,7 @@ return baseclass.extend({
 	validateUUID,
 	validateUrl,
 	// validate with bind this
+	validateHexstr,
 	validateBase64Key,
 	validateMTLSClientAuth,
 	validatePresetIDs,

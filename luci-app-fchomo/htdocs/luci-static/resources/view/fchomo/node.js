@@ -791,7 +791,7 @@ return view.extend({
 		so.depends('type', 'wireguard');
 		so.modalonly = true;
 
-		so = ss.taboption('field_general', form.Value, 'wireguard_peer_public_key', _('Peer pubkic key'),
+		so = ss.taboption('field_general', form.Value, 'wireguard_peer_public_key', _('Peer public key'),
 			_('WireGuard peer public key.'));
 		so.validate = L.bind(hm.validateBase64Key, so, 44);
 		so.rmempty = false;
@@ -832,7 +832,7 @@ return view.extend({
 		so.depends('type', 'masque');
 		so.modalonly = true;
 
-		so = ss.taboption('field_general', form.Value, 'masque_endpoint_public_key', _('Endpoint pubkic key'),
+		so = ss.taboption('field_general', form.Value, 'masque_endpoint_public_key', _('Endpoint public key'),
 			_('Base64 encoded ECDSA public key on the NIST P-256 curve.'));
 		so.validate = L.bind(hm.validateBase64Key, so, 124);
 		so.rmempty = false;

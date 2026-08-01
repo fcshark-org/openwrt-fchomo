@@ -984,7 +984,7 @@ msgid "Encryption method"
 msgstr "加密方法"
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:866
-msgid "Endpoint pubkic key"
+msgid "Endpoint public key"
 msgstr "端点公钥"
 
 #: htdocs/luci-static/resources/view/fchomo/global.js:540
@@ -2365,7 +2365,7 @@ msgid "Payload"
 msgstr "Payload"
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:808
-msgid "Peer pubkic key"
+msgid "Peer public key"
 msgstr "对端公钥"
 
 #: htdocs/luci-static/resources/view/fchomo/global.js:541

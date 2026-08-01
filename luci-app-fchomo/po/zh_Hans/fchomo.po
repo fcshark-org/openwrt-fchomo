@@ -3266,7 +3266,7 @@ msgstr ""
 #: htdocs/luci-static/resources/fchomo/listeners.js:123
 #: htdocs/luci-static/resources/view/fchomo/node.js:240
 msgid "TLS fields"
-msgstr "TLS字段"
+msgstr "TLS 字段"
 
 #: htdocs/luci-static/resources/fchomo.js:165
 #: htdocs/luci-static/resources/fchomo.js:202
@@ -3293,8 +3293,8 @@ msgstr "Cloudflare WARP 网络中使用的本机 %s 地址。"
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:787
 #: htdocs/luci-static/resources/view/fchomo/node.js:795
-msgid "The %s address used by local machine in the Wireguard network."
-msgstr "WireGuard 网络中使用的本机 %s 地址。"
+msgid "The %s address used by local machine in the %s network."
+msgstr "本机 %s 地址，用于在 %s 网络中使用。"
 
 #: htdocs/luci-static/resources/fchomo/listeners.js:1152
 #: htdocs/luci-static/resources/view/fchomo/node.js:1302
@@ -3681,6 +3681,10 @@ msgstr ""
 #: htdocs/luci-static/resources/fchomo.js:198
 msgid "VMess"
 msgstr ""
+
+#: htdocs/luci-static/resources/view/fchomo/node.js:241
+msgid "VPN fields"
+msgstr "VPN 字段"
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:1835
 #: htdocs/luci-static/resources/view/fchomo/node.js:2206

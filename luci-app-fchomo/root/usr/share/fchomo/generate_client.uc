@@ -148,16 +148,21 @@ function get_nameserver(cfg, detour) {
 
 	let servers = [];
 	for (let k in cfg) {
-		if (k === 'system-dns') {
-			push(servers, 'system');
-		} else if (k === 'default-dns') {
-			map(wan_dns, (dns) => {
-				push(servers, dns + '#DIRECT');
-			});
-		} else
-			push(servers, replace(dnsservers[k]?.address || '', /#detour=([^&]+)/, (m, c1) => {
-				return '#' + urlencode(get_proxy(detour || c1));
-			}));
+		switch (k) {
+			case 'system-dns':
+				push(servers, 'system');
+				break;
+			case 'default-dns':
+				map(wan_dns, (dns) => {
+					push(servers, dns + '#DIRECT');
+				});
+				break;
+			default:
+				push(servers, replace(dnsservers[k]?.address || '', /#detour=([^&]+)/, (m, c1) => {
+					return '#' + urlencode(get_proxy(detour || c1));
+				}));
+				break;
+		}
 	}
 
 	return servers;
@@ -209,12 +214,16 @@ uci.foreach(uciconf, ucichain, (cfg) => {
 		return;
 
 	let identifier = '';
-	if (cfg.type === 'provider')
-		identifier = cfg.chain_head_sub;
-	else if (cfg.type === 'node')
-		identifier = cfg.chain_head;
-	else
-		return;
+	switch (cfg.type) {
+		case 'provider':
+			identifier = cfg.chain_head_sub;
+			break;
+		case 'node':
+			identifier = cfg.chain_head;
+			break;
+		default:
+			return;
+	}
 
 	dialerproxy[identifier] = {
 		detour: get_proxy(cfg.chain_tail_group) || get_proxy(cfg.chain_tail)
@@ -431,13 +440,17 @@ map([
 			return null;
 
 		let key;
-		if (cfg.type === 'domain') {
-			key = isEmpty(cfg.domain) ? null : join(',', cfg.domain);
-		} else if (cfg.type === 'geosite') {
-			key = isEmpty(cfg.geosite) ? null : 'geosite:' + join(',', cfg.geosite);
-		} else if (cfg.type === 'rule_set') {
-			key = isEmpty(cfg.rule_set) ? null : 'rule-set:' + join(',', cfg.rule_set);
-		};
+		switch (cfg.type) {
+			case 'domain':
+				key = isEmpty(cfg.domain) ? null : join(',', cfg.domain);
+				break;
+			case 'geosite':
+				key = isEmpty(cfg.geosite) ? null : 'geosite:' + join(',', cfg.geosite);
+				break;
+			case 'rule_set':
+				key = isEmpty(cfg.rule_set) ? null : 'rule-set:' + join(',', cfg.rule_set);
+				break;
+		}
 
 		if (!key)
 			return null;

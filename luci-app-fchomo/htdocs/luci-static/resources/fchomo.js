@@ -1999,15 +1999,15 @@ function lsDir(type) {
 	});
 }
 
-function readFile(type, filename) {
+function readFile(type, filename, isbinary) {
 	const callReadFile = rpc.declare({
 		object: 'luci.fchomo',
 		method: 'file_read',
-		params: ['type', 'filename'],
+		params: ['type', 'filename', 'isbinary'],
 		expect: { '': {} }
 	});
 
-	return L.resolveDefault(callReadFile(type, filename), {}).then((res) => {
+	return L.resolveDefault(callReadFile(type, filename, isbinary), {}).then((res) => {
 		if (res.content ?? true) {
 			return res.content;
 		} else
@@ -2015,15 +2015,15 @@ function readFile(type, filename) {
 	});
 }
 
-function writeFile(type, filename, content) {
+function writeFile(type, filename, content, isbinary) {
 	const callWriteFile = rpc.declare({
 		object: 'luci.fchomo',
 		method: 'file_write',
-		params: ['type', 'filename', 'content'],
+		params: ['type', 'filename', 'content', 'isbinary'],
 		expect: { '': {} }
 	});
 
-	return L.resolveDefault(callWriteFile(type, filename, content), {}).then((res) => {
+	return L.resolveDefault(callWriteFile(type, filename, content, isbinary), {}).then((res) => {
 		if (res.result) {
 			return res.result;
 		} else

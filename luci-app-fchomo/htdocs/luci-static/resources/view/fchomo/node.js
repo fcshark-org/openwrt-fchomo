@@ -232,6 +232,19 @@ return view.extend({
 		ss.hm_prefmt = hm.glossary[ss.sectiontype].prefmt;
 		ss.hm_field  = hm.glossary[ss.sectiontype].field;
 		ss.hm_lowcase_only = true;
+		/* Remove idle files start */
+		ss.renderSectionAdd = function(/* ... */) {
+			let el = hm.GridSection.prototype.renderSectionAdd.apply(this, arguments);
+
+			el.appendChild(E('button', {
+				'class': 'cbi-button cbi-button-add',
+				'title': _('Remove idles'),
+				'click': ui.createHandlerFn(this, hm.handleRemoveIdles)
+			}, [ _('Remove idles') ]));
+
+			return el;
+		}
+		/* Remove idle files end */
 
 		ss.tab('field_general', _('General fields'));
 		ss.tab('field_plugin', _('Plugin fields'));
@@ -850,6 +863,30 @@ return view.extend({
 		so = ss.taboption('field_general', form.Value, 'zerotier_fallback_relay', _('Fallback relay'));
 		so.datatype = 'hostport';
 		so.placeholder = '204.80.128.1:443';
+		so.depends('type', 'zerotier');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.TextValue, 'zerotier_planet_file', 'Planet file',
+			_('Used to replace the built-in official %s.').format('<code>Earth</code> Planet file'));
+		so.placeholder = _('Add the base64 text of the planet file here.');
+		so.load = function(section_id) {
+			const vaule = form.TextValue.prototype.load.apply(this, arguments);
+
+			if (vaule)
+				return L.resolveDefault(hm.readFile(this.section.sectiontype, section_id + '/planet', '1'), '');
+			else
+				return vaule;
+		}
+		so.write = function(section_id, formvalue) {
+			form.TextValue.prototype.write.call(this, section_id, '1');
+
+			return hm.writeFile.call(this, this.section.sectiontype, section_id + '/planet', formvalue, '1');
+		}
+		so.remove = function(section_id) {
+			form.TextValue.prototype.remove.apply(this, arguments);
+
+			return hm.removeFile.call(this, this.section.sectiontype, section_id + '/planet');
+		}
 		so.depends('type', 'zerotier');
 		so.modalonly = true;
 

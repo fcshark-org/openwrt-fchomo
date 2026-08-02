@@ -454,6 +454,10 @@ stop_service() {
 	[ -z "$1" -o "$1" = "mihomo-c" ] && stop_client
 	# Server
 	[ -z "$1" -o "$1" = "mihomo-s" ] && stop_server
+	# Directory
+	#find "$RUN_DIR"/* -maxdepth 0 -type d -exec rm -rf "{}" \;
+	# Resources
+	rm -rf "$RUN_DIR"/*.lock
 	# Setup firewall
 	echo 2>"/dev/null" > "$RUN_DIR/fchomo_pre.nft"
 	return 0

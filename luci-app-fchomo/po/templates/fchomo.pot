@@ -1811,12 +1811,12 @@ msgstr ""
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:794
 #: htdocs/luci-static/resources/view/fchomo/node.js:881
-msgid "Local IPv6 address"
+msgid "Virtual IPv6 address"
 msgstr ""
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:786
 #: htdocs/luci-static/resources/view/fchomo/node.js:873
-msgid "Local address"
+msgid "Virtual address"
 msgstr ""
 
 #: root/usr/share/luci/menu.d/luci-app-fchomo.json:70

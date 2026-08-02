@@ -1841,13 +1841,13 @@ msgstr "本地"
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:794
 #: htdocs/luci-static/resources/view/fchomo/node.js:881
-msgid "Local IPv6 address"
-msgstr "本地 IPv6 地址"
+msgid "Virtual IPv6 address"
+msgstr "虚拟 IPv6 地址"
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:786
 #: htdocs/luci-static/resources/view/fchomo/node.js:873
-msgid "Local address"
-msgstr "本地地址"
+msgid "Virtual address"
+msgstr "虚拟地址"
 
 #: root/usr/share/luci/menu.d/luci-app-fchomo.json:70
 msgid "Log"

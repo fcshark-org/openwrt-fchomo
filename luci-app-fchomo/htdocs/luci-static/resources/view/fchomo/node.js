@@ -1315,9 +1315,9 @@ return view.extend({
 		// @VMess-TLSmirror fields
 
 		/* VPN fields */
-		so = ss.taboption('field_vpn', form.Value, 'endpoint_ip', _('Local address'),
+		so = ss.taboption('field_vpn', form.Value, 'endpoint_ip', _('Virtual address'),
 			_('The %s address used by local machine in the %s network.').format(_('IPv4'), _('VPN')));
-		so.datatype = 'ip4addr(1)';
+		so.datatype = 'or(ip4addr(1), cidr4)';
 		so.placeholder = '172.16.0.2';
 		so.validate = function(section_id, value) {
 			const type = this.section.getOption('type').formvalue(section_id);
@@ -1341,9 +1341,9 @@ return view.extend({
 		so.depends({type: 'masque', masque_network: /^(|h2)$/});
 		so.modalonly = true;
 
-		so = ss.taboption('field_vpn', form.Value, 'endpoint_ipv6', _('Local IPv6 address'),
+		so = ss.taboption('field_vpn', form.Value, 'endpoint_ipv6', _('Virtual IPv6 address'),
 			_('The %s address used by local machine in the %s network.').format(_('IPv6'), _('VPN')));
-		so.datatype = 'ip6addr(1)';
+		so.datatype = 'or(ip6addr(1), cidr6)';
 		so.validate = function(section_id, value) {
 			const type = this.section.getOption('type').formvalue(section_id);
 			const desc = this.getUIElement(section_id).node.nextSibling;

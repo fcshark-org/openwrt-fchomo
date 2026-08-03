@@ -652,6 +652,10 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 				return orbits;
 			})[0]
 		}),
+		"ip-stack": cfg.zerotier_ipstack ? {
+			mode: cfg.zerotier_ipstack,
+			"congestion-controller": replace(cfg.congestion_controller, 'new_reno', 'reno')
+		} : null,
 
 		/* WireGuard */
 		"pre-shared-key": cfg.wireguard_pre_shared_key,
@@ -670,7 +674,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		"udp-over-stream": strToBool(cfg.shadowquic_udp_over_stream || cfg.tuic_udp_over_stream),
 		"heartbeat-interval": strToInt(cfg.tuic_heartbeat) || null,
 		"keep-alive-interval": strToInt(cfg.shadowquic_heartbeat) || null,
-		"congestion-controller": cfg.congestion_controller,
+		"congestion-controller": cfg.type in ['zerotier'] ? null : cfg.congestion_controller,
 		"bbr-profile": cfg.bbr_profile,
 		"max-open-streams": strToInt(cfg.max_open_streams) || null,
 

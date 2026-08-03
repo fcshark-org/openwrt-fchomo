@@ -971,6 +971,14 @@ return view.extend({
 		so.depends('type', 'zerotier');
 		so.modalonly = true;
 
+		so = ss.taboption('field_general', form.ListValue, 'zerotier_ipstack', _('IP stack'));
+		so.value('', _('Keep default'));
+		so.value('auto', _('Auto'));
+		so.value('gvisor', _('gVisor'));
+		so.value('mips', _('mihomo IP stack (MIPS)'));
+		so.depends('type', 'zerotier');
+		so.modalonly = true;
+
 		/* WireGuard fields */
 		so = ss.taboption('field_general', form.Value, 'wireguard_private_key', _('Private key'),
 			_('WireGuard requires base64-encoded private keys.'));
@@ -1076,6 +1084,7 @@ return view.extend({
 		})
 		so.depends({type: /^(tuic|shadowquic|trusttunnel)$/});
 		so.depends({type: 'masque', masque_network: /^(|h3-l4proxy)$/});
+		so.depends({type: 'zerotier', zerotier_ipstack: /^(|gvisor)$/, '!reverse': true});
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', form.ListValue, 'bbr_profile', _('BBR profile'));

@@ -1806,7 +1806,7 @@ function validateCommonPort(section_id, value) {
 	for (let custom of arr) {
 		if (!routing_port_type.map(e => e[0]).includes(custom)) {
 			let ports = [];
-			for (let i of custom.split(',')) {
+			for (let i of custom.split(this.hm_separator ?? ',')) {
 				if (!stubValidator.apply('port', i) && !stubValidator.apply('portrange', i))
 					return _('Expecting: %s').format(_('valid port value'));
 				if (ports.includes(i))

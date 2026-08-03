@@ -230,7 +230,7 @@ export function parseListener(cfg) {
 		type: cfg.type,
 
 		listen: cfg.listen || '::',
-		port: strToInt(cfg.port),
+		port: strToInt(cfg.listen_port),
 		"routing-mark": strToInt(cfg.routing_mark) || null,
 		rule: cfg.rule,
 		proxy: cfg.proxy, // raw data need post-processing

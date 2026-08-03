@@ -819,10 +819,53 @@ return view.extend({
 		so.depends({zerotier_trace_target: /.+/});
 		so.modalonly = true;
 
+		so = ss.taboption('field_vpn', form.Flag, 'auto_firewall', _('Firewall'),
+			_('Auto configure firewall'));
+		so.default = so.enabled;
+		so.validate = function(section_id, value) {
+			const primary_port = this.section.getOption('zerotier_primary_port').formvalue(section_id);
+			const secondary_port = this.section.getOption('zerotier_secondary_port').formvalue(section_id);
+			const auto_firewall = this.getUIElement(section_id).node.querySelector('input');
+
+			// Force disabled
+			if ((!primary_port || primary_port <= 0) && (!secondary_port || secondary_port <= 0)) {
+				auto_firewall.checked = false;
+				auto_firewall.disabled = true;
+			} else
+				auto_firewall.removeAttribute('disabled');
+
+			return true;
+		}
+		so.depends('type', 'zerotier');
+		so.modalonly = true;
+
 		so = ss.taboption('field_vpn', form.Value, 'zerotier_primary_port', _('Listen port') + ' (%s)'.format(_('Primary')),
 			_('%s UDP port. <code>0</code> selects an available port.').format(_('Primary')));
 		so.datatype = 'port';
 		so.placeholder = '9993';
+		so.load = function(section_id) {
+			const listen_port = this.map.data.get(this.section.config, section_id, 'zerotier_listen_port');
+			const value = [
+				this.map.data.get(this.section.config, section_id, 'zerotier_primary_port'),
+				this.map.data.get(this.section.config, section_id, 'zerotier_secondary_port')
+			].filter(Boolean).join(',');
+
+			if (listen_port !== value) {
+				uci.set(this.section.config, section_id, 'zerotier_listen_port', value);
+				uci.save();
+			}
+
+			return form.Value.prototype.load.apply(this, arguments);
+		}
+		so.write = function(section_id, formvalue) {
+			uci.set(this.section.config, section_id, 'zerotier_listen_port', [
+				this.section.getOption('zerotier_primary_port').formvalue(section_id),
+				this.section.getOption('zerotier_secondary_port').formvalue(section_id)
+			].filter(Boolean).join(','));
+
+			return form.Value.prototype[formvalue ? 'write' : 'remove'].apply(this, arguments);
+		}
+		so.remove = so.write;
 		so.depends('type', 'zerotier');
 		so.modalonly = true;
 
@@ -831,6 +874,29 @@ return view.extend({
 			_('<code>-1</code> disables it.'));
 		so.datatype = 'or(port, -1)';
 		so.placeholder = '0';
+		so.load = function(section_id) {
+			const listen_port = this.map.data.get(this.section.config, section_id, 'zerotier_listen_port');
+			const value = [
+				this.map.data.get(this.section.config, section_id, 'zerotier_primary_port'),
+				this.map.data.get(this.section.config, section_id, 'zerotier_secondary_port')
+			].filter(Boolean).join(',');
+
+			if (listen_port !== value) {
+				uci.set(this.section.config, section_id, 'zerotier_listen_port', value);
+				uci.save();
+			}
+
+			return form.Value.prototype.load.apply(this, arguments);
+		}
+		so.write = function(section_id, formvalue) {
+			uci.set(this.section.config, section_id, 'zerotier_listen_port', [
+				this.section.getOption('zerotier_primary_port').formvalue(section_id),
+				this.section.getOption('zerotier_secondary_port').formvalue(section_id)
+			].filter(Boolean).join(','));
+
+			return form.Value.prototype[formvalue ? 'write' : 'remove'].apply(this, arguments);
+		}
+		so.remove = so.write;
 		so.depends('type', 'zerotier');
 		so.modalonly = true;
 
@@ -1247,7 +1313,7 @@ return view.extend({
 		so.default = so.disabled;
 		so.validate = function(section_id, value) {
 			const type = this.section.getOption('type').formvalue(section_id);
-			let tls = this.section.getUIElement(section_id, 'tls').node.querySelector('input');
+			const tls = this.getUIElement(section_id).node.querySelector('input');
 
 			// Force enabled
 			if (['trojan', 'anytls', 'tuic', 'hysteria', 'hysteria2', 'shadowquic', 'trusttunnel', 'masque'].includes(type)) {

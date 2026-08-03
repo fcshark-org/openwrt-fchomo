@@ -639,7 +639,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		"low-bandwidth": strToBool(cfg.zerotier_low_bandwidth),
 		"encrypted-hello": strToBool(cfg.zerotier_encrypted_hello),
 		"state-dir": `${HM_DIR}/${ucinode}/${cfg['.name']}`,
-		//planet: `${RUN_DIR}/zerotier/${cfg['.name']}/planet`,
+		//planet: `${HM_DIR}/${ucinode}/${cfg['.name']}/planet`,
 		...(isEmpty(cfg.zerotier_orbit) ? {} : {
 			orbit: map([0], () => {
 				const orbits = [];

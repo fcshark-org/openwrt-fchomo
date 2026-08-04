@@ -1014,8 +1014,8 @@ msgid "Encryption method"
 msgstr "加密方法"
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:951
-msgid "Endpoint public key"
-msgstr "端點公鑰"
+msgid "Server public key"
+msgstr "伺服器公鑰"
 
 #: htdocs/luci-static/resources/view/fchomo/global.js:540
 msgid "Endpoint-Independent NAT"

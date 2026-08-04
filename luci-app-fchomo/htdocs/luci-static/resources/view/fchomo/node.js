@@ -899,11 +899,24 @@ return view.extend({
 		so.modalonly = true;
 
 		/* WireGuard fields */
-		so = ss.taboption('field_general', form.Value, 'wireguard_private_key', _('Private key'),
+		so = ss.taboption('field_general', hm.GenValue, 'wireguard_private_key', _('Private key'),
 			_('WireGuard requires base64-encoded private keys.'));
+		so.hm_options = {
+			type: 'wg-keypair',
+			callback: function(result) {
+				return [
+					[this.option, result.private_key],
+					['wireguard_public_key', result.public_key]
+				]
+			}
+		}
 		so.password = true;
 		so.validate = L.bind(hm.validateBase64Key, so, 44);
 		so.rmempty = false;
+		so.depends('type', 'wireguard');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', hm.CopyValue, 'wireguard_public_key', _('Public key'));
 		so.depends('type', 'wireguard');
 		so.modalonly = true;
 
@@ -948,7 +961,7 @@ return view.extend({
 		so.depends('type', 'masque');
 		so.modalonly = true;
 
-		so = ss.taboption('field_general', form.Value, 'masque_endpoint_public_key', _('Endpoint public key'),
+		so = ss.taboption('field_general', form.Value, 'masque_endpoint_public_key', _('Server public key'),
 			_('Base64 encoded ECDSA public key on the NIST P-256 curve.'));
 		so.validate = L.bind(hm.validateBase64Key, so, 124);
 		so.rmempty = false;

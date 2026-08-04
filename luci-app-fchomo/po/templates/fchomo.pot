@@ -994,7 +994,7 @@ msgid "Encryption method"
 msgstr ""
 
 #: htdocs/luci-static/resources/view/fchomo/node.js:951
-msgid "Endpoint public key"
+msgid "Server public key"
 msgstr ""
 
 #: htdocs/luci-static/resources/view/fchomo/global.js:540

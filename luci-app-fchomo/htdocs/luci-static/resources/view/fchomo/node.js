@@ -274,12 +274,12 @@ return view.extend({
 		so = ss.taboption('field_general', form.Value, 'server', _('Server address'));
 		so.datatype = 'host';
 		so.rmempty = false;
-		so.depends({type: /^(rematch|direct|zerotier)$/, '!reverse': true});
+		so.depends({type: /^(rematch|direct|zerotier|tailscale)$/, '!reverse': true});
 
 		so = ss.taboption('field_general', form.Value, 'port', _('Port'));
 		so.datatype = 'port';
 		so.rmempty = false;
-		so.depends({type: /^(rematch|direct|mieru|zerotier)$/, '!reverse': true});
+		so.depends({type: /^(rematch|direct|mieru|zerotier|tailscale)$/, '!reverse': true});
 
 		/* Rematch fields */
 		// https://github.com/MetaCubeX/mihomo/pull/2862
@@ -952,6 +952,45 @@ return view.extend({
 		so.depends('type', 'wireguard');
 		so.modalonly = true;
 
+		/* Tailscale fields */
+		so = ss.taboption('field_general', form.Value, 'tailscale_hostname', _('%s Hostname').format(_('Tailscale')));
+		so.datatype = 'hostname';
+		so.depends('type', 'tailscale');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.Value, 'tailscale_control_url', _('Control server'),
+			_('Custom %s control server.').format(_('Headscale/Tailscale')));
+		so.validate = hm.validateUrl;
+		so.depends('type', 'tailscale');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.Value, 'tailscale_auth_key', _('Authentication key'));
+		so.password = true;
+		so.depends('type', 'tailscale');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.Flag, 'tailscale_ephemeral', _('As ephemeral node'));
+		so.default = so.disabled;
+		so.depends('type', 'tailscale');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.Flag, 'tailscale_accept_routes', _('Accept routes'),
+			_('Whether to accept routes advertised by other nodes.'));
+		so.default = so.disabled;
+		so.depends('type', 'tailscale');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.Value, 'tailscale_exit_node', _('Exit node'));
+		so.datatype = "or(ipaddr(1), 'auto:any')";
+		so.depends('type', 'tailscale');
+		so.modalonly = true;
+
+		so = ss.taboption('field_general', form.Flag, 'tailscale_exit_node_allow_lan_access', _('Allow LAN access'),
+			_('Allow access to the local LAN via the exit node.'));
+		so.default = so.disabled;
+		so.depends({tailscale_exit_node: /.+/});
+		so.modalonly = true;
+
 		/* Masque fields */
 		so = ss.taboption('field_general', form.Value, 'masque_private_key', _('Private key'),
 			_('Base64 encoded ECDSA private key on the NIST P-256 curve.'));
@@ -1016,7 +1055,7 @@ return view.extend({
 		})
 		so.depends({type: /^(tuic|shadowquic|trusttunnel)$/});
 		so.depends({type: 'masque', masque_network: /^(|h3-l4proxy)$/});
-		so.depends({type: 'zerotier', zerotier_ipstack: /^(|gvisor)$/, '!reverse': true});
+		so.depends({type: 'zerotier', zerotier_ipstack: /^(auto|mips)$/}); // not empty not gvisor
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', form.ListValue, 'bbr_profile', _('BBR profile'));
@@ -1044,7 +1083,7 @@ return view.extend({
 
 		so = ss.taboption('field_general', form.Flag, 'udp', _('UDP'));
 		so.default = so.disabled;
-		so.depends({type: /^(rematch|direct|socks5|ss|mieru|vmess|vless|trojan|anytls|trusttunnel|zerotier|wireguard|masque)$/});
+		so.depends({type: /^(rematch|direct|socks5|ss|mieru|vmess|vless|trojan|anytls|trusttunnel|zerotier|wireguard|tailscale|masque)$/});
 		so.depends({type: 'snell', snell_version: /^(3|4|5)$/});
 		so.modalonly = true;
 

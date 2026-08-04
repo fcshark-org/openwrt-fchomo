@@ -514,13 +514,14 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		"target-rematch-name": cfg.target_rematch_name,
 		"target-sub-rule": cfg.target_sub_rule,
 
-		/* HTTP / SOCKS / Shadowsocks / VMess / VLESS / Trojan / TUIC / hysteria2 / ZeroTier / Masque */
+		/* HTTP / SOCKS / Shadowsocks / VMess / VLESS / Trojan / TUIC / hysteria2 / ZeroTier / Tailscale / Masque */
 		username: cfg.username,
 		uuid: cfg.vmess_uuid || cfg.uuid,
 		cipher: cfg.vmess_chipher || cfg.shadowsocks_chipher,
 		password: cfg.shadowsocks_password || cfg.password,
 		headers: cfg.headers ? json(cfg.headers) : null,
 		network: cfg.zerotier_network_id || cfg.masque_network || null,
+		"state-dir": `${HM_DIR}/${ucinode}/${cfg['.name']}`,
 
 		/* Shadowsocks */
 
@@ -638,7 +639,6 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		"remote-trace-level": strToInt(cfg.zerotier_trace_level),
 		"low-bandwidth": strToBool(cfg.zerotier_low_bandwidth),
 		"encrypted-hello": strToBool(cfg.zerotier_encrypted_hello),
-		"state-dir": `${HM_DIR}/${ucinode}/${cfg['.name']}`,
 		//planet: `${HM_DIR}/${ucinode}/${cfg['.name']}/planet`,
 		...(isEmpty(cfg.zerotier_orbit) ? {} : {
 			orbit: map([0], () => {
@@ -662,6 +662,15 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		"allowed-ips": cfg.wireguard_allowed_ips,
 		reserved: cfg.wireguard_reserved,
 		"persistent-keepalive": strToInt(cfg.wireguard_persistent_keepalive),
+
+		/* Tailscale */
+		hostname: cfg.tailscale_hostname,
+		"auth-key": cfg.tailscale_auth_key,
+		"control-url": cfg.tailscale_control_url,
+		ephemeral: strToBool(cfg.tailscale_ephemeral),
+		"accept-routes": strToBool(cfg.tailscale_accept_routes),
+		"exit-node": cfg.tailscale_exit_node,
+		"exit-node-allow-lan-access": strToBool(cfg.tailscale_exit_node_allow_lan_access),
 
 		/* Masque */
 

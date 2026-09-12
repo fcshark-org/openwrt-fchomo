@@ -856,6 +856,12 @@ return view.extend({
 		so.depends('type', 'zerotier');
 		so.modalonly = true;
 
+		so = ss.taboption('field_general', form.TextValue, 'zerotier_identity_secret', 'identity.secret',
+			_('Used to replace the contents of default %s.').format('<code>identity.secret</code> file'));
+		so.placeholder = '0123456789:0:public-key:private-key';
+		so.depends('type', 'zerotier');
+		so.modalonly = true;
+
 		so = ss.taboption('field_general', form.TextValue, 'zerotier_planet_file', 'Planet file',
 			_('Used to replace the built-in official %s.').format('<code>Earth</code> Planet file'));
 		so.placeholder = _('Add the base64 text of the planet file here.');

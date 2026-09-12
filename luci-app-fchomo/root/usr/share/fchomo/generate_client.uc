@@ -642,6 +642,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		"remote-trace-level": strToInt(cfg.zerotier_trace_level),
 		"low-bandwidth": strToBool(cfg.zerotier_low_bandwidth),
 		"encrypted-hello": strToBool(cfg.zerotier_encrypted_hello),
+		"identity-secret": cfg.zerotier_identity_secret,
 		//planet: `${HM_DIR}/${ucinode}/${cfg['.name']}/planet`,
 		...(isEmpty(cfg.zerotier_orbit) ? {} : {
 			orbit: map([0], () => {

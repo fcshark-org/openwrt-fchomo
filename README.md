@@ -101,7 +101,7 @@ Used to override `/etc/config/fchomo`
 
 1. (Optional) add `Dst-address` to `Global > Access Control > Custom Proxy list` (domain requires `dnsmasq-full`)
 2. add `Dst-port` on `Global > Access Control > Routing Control > Routing port (UDP)`
-3. add rule to `Client > Routing rule`, requires the dest `Proxy group` is Fullcone link
+3. add rule to `Client > Routing rule`, requires the dest `Proxy group`/`Outbound node` is Fullcone link
 </details>
 
 ## Build

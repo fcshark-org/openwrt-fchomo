@@ -108,7 +108,7 @@ Used to override `/etc/config/fchomo`
 
 ``` bash
 # Take the x86_64 platform as an example
-tar xjf openwrt-sdk-23.05.3-x86-64_gcc-12.3.0_musl.Linux-x86_64.tar.xz
+tar --zstd -xf openwrt-sdk-24.10.8-x86-64_gcc-13.3.0_musl.Linux-x86_64.tar.zst
 # Go to the SDK root dir
 cd openwrt-sdk-*-x86_64_*
 # First run to generate a .config file

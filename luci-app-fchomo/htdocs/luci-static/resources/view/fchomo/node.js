@@ -1118,7 +1118,7 @@ return view.extend({
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', form.DynamicList, 'easytier_proxy_networks', _('Subnet proxy'),
-			_('List of remote subnets (CIDR) to be accessed through the EasyTier network.'));
+			_('List of local subnets (CIDR) to be open to other peers in the EasyTier network.'));
 		so.datatype = 'cidr4';
 		so.placeholder = '10.0.0.0/24';
 		so.depends('type', 'easytier');
@@ -1142,7 +1142,7 @@ return view.extend({
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', form.Flag, 'easytier_enable_exit_node', _('As exit node'),
-			_('Allow this node to be an exit node..'));
+			_('Allow this node to be an exit node.'));
 		so.default = so.disabled;
 		so.depends('type', 'easytier');
 		so.modalonly = true;
@@ -1166,8 +1166,8 @@ return view.extend({
 		so.modalonly = true;
 
 		so = ss.taboption('field_general', form.Value, 'easytier_tld_dns_zone', _('TLD DNS zone'),
-			_('TLD DNS zone used by MagicDNS, default is `et.net.`.') + '</br>' +
-			_('You can add `et://<proxy-name>` in the %s to resolve A/PTR records within the virtual network.').format(_('DNS server')) + '</br>' +
+			_('TLD DNS zone used by MagicDNS, default is %s.').format('<code>et.net.</code>') + '</br>' +
+			_('You can add %s in the %s to resolve A/PTR records within the virtual network.').format('<code>et://proxy-name</code>', _('DNS server')) + '</br>' +
 			_('Using this in conjunction with %s is recommended.').format(_('DNS policy')));
 		so.placeholder = 'et.net.';
 		so.depends('easytier_accept_dns', '1');
@@ -1763,7 +1763,7 @@ return view.extend({
 		};
 
 		so = ss.taboption('field_vpn', form.DynamicList, 'endpoint_listeners', _('Listeners'),
-			_('Only addresses %s are valid.').format('0.0.0.0'));
+			_('Only the address %s is valid.').format('0.0.0.0'));
 		so.placeholder = 'tcp://0.0.0.0:11010';
 		so.default = ['tcp://0.0.0.0:11010', 'udp://0.0.0.0:11010'];
 		so.load = easytier_listen_port.load;
@@ -1780,7 +1780,7 @@ return view.extend({
 		//so.depends({type: 'easytier', endpoint_no_listener: '0'});
 		//so.modalonly = true;
 
-		so = ss.taboption('field_vpn', form.Flag, 'endpoint_no_listener', _('NO-Listener'));
+		so = ss.taboption('field_vpn', form.Flag, 'endpoint_no_listener', _('NO Listener'));
 		so.default = so.enabled;
 		so.depends('type', 'easytier');
 		so.modalonly = true;

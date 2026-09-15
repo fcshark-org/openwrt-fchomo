@@ -1525,15 +1525,18 @@ return view.extend({
 
 		const zerotier_listen_port = {
 			load(section_id) {
-				const listen_port = this.map.data.get(this.section.config, section_id, 'zerotier_listen_port');
+				const listen_port = this.map.data.get(this.section.config, section_id, 'zerotier_listen_port') || '';
 				const value = [
 					this.map.data.get(this.section.config, section_id, 'zerotier_primary_port'),
 					this.map.data.get(this.section.config, section_id, 'zerotier_secondary_port')
 				].filter(Boolean).join(',');
 
-				if (listen_port !== value) {
+				if (listen_port != value) {
 					uci.set(this.section.config, section_id, 'zerotier_listen_port', value);
-					uci.save();
+					return uci.save()
+						.then(L.bind(this.map.load, this.map))
+						.then(L.bind(this.map.reset, this.map))
+						.catch(() => {});
 				}
 
 				return form.Value.prototype.load.apply(this, arguments);

@@ -1543,10 +1543,12 @@ return view.extend({
 			},
 
 			write(section_id, formvalue) {
-				uci.set(this.section.config, section_id, 'zerotier_listen_port', [
+				const value = [
 					this.section.getOption('zerotier_primary_port').formvalue(section_id),
 					this.section.getOption('zerotier_secondary_port').formvalue(section_id)
-				].filter(Boolean).join(','));
+				].filter(Boolean).join(',');
+
+				uci.set(this.section.config, section_id, 'zerotier_listen_port', value);
 
 				return form.Value.prototype[formvalue ? 'write' : 'remove'].apply(this, arguments);
 			}

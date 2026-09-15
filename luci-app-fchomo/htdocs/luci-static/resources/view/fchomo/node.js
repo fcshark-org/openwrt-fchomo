@@ -1100,7 +1100,7 @@ return view.extend({
 		so.depends({type: /^(hysteria2|openvpn|masque)$/});
 		so.modalonly = true;
 
-		so = ss.taboption('field_general', form.Flag, 'udp', _('UDP'));
+		so = ss.taboption('field_general', form.Flag, 'udp', _('Force UDP'));
 		so.default = so.disabled;
 		so.depends({type: /^(rematch|direct|socks5|ss|mieru|vmess|vless|trojan|anytls|trusttunnel|zerotier|wireguard|tailscale|masque)$/});
 		so.depends({type: 'snell', snell_version: /^(3|4|5)$/});
@@ -1523,33 +1523,39 @@ return view.extend({
 		so.depends('type', 'zerotier');
 		so.modalonly = true;
 
+		const zerotier_listen_port = {
+			load(section_id) {
+				const listen_port = this.map.data.get(this.section.config, section_id, 'zerotier_listen_port');
+				const value = [
+					this.map.data.get(this.section.config, section_id, 'zerotier_primary_port'),
+					this.map.data.get(this.section.config, section_id, 'zerotier_secondary_port')
+				].filter(Boolean).join(',');
+
+				if (listen_port !== value) {
+					uci.set(this.section.config, section_id, 'zerotier_listen_port', value);
+					uci.save();
+				}
+
+				return form.Value.prototype.load.apply(this, arguments);
+			},
+
+			write(section_id, formvalue) {
+				uci.set(this.section.config, section_id, 'zerotier_listen_port', [
+					this.section.getOption('zerotier_primary_port').formvalue(section_id),
+					this.section.getOption('zerotier_secondary_port').formvalue(section_id)
+				].filter(Boolean).join(','));
+
+				return form.Value.prototype[formvalue ? 'write' : 'remove'].apply(this, arguments);
+			}
+		};
+
 		so = ss.taboption('field_vpn', form.Value, 'zerotier_primary_port', _('Listen port') + ' (%s)'.format(_('Primary')),
 			_('%s UDP port. <code>0</code> selects an available port.').format(_('Primary')));
 		so.datatype = 'port';
 		so.placeholder = '9993';
-		so.load = function(section_id) {
-			const listen_port = this.map.data.get(this.section.config, section_id, 'zerotier_listen_port');
-			const value = [
-				this.map.data.get(this.section.config, section_id, 'zerotier_primary_port'),
-				this.map.data.get(this.section.config, section_id, 'zerotier_secondary_port')
-			].filter(Boolean).join(',');
-
-			if (listen_port !== value) {
-				uci.set(this.section.config, section_id, 'zerotier_listen_port', value);
-				uci.save();
-			}
-
-			return form.Value.prototype.load.apply(this, arguments);
-		}
-		so.write = function(section_id, formvalue) {
-			uci.set(this.section.config, section_id, 'zerotier_listen_port', [
-				this.section.getOption('zerotier_primary_port').formvalue(section_id),
-				this.section.getOption('zerotier_secondary_port').formvalue(section_id)
-			].filter(Boolean).join(','));
-
-			return form.Value.prototype[formvalue ? 'write' : 'remove'].apply(this, arguments);
-		}
-		so.remove = so.write;
+		so.load = zerotier_listen_port.load;
+		so.write = zerotier_listen_port.write;
+		so.remove = zerotier_listen_port.write;
 		so.depends('type', 'zerotier');
 		so.modalonly = true;
 
@@ -1558,29 +1564,9 @@ return view.extend({
 			_('<code>-1</code> disables it.'));
 		so.datatype = 'or(port, -1)';
 		so.placeholder = '0';
-		so.load = function(section_id) {
-			const listen_port = this.map.data.get(this.section.config, section_id, 'zerotier_listen_port');
-			const value = [
-				this.map.data.get(this.section.config, section_id, 'zerotier_primary_port'),
-				this.map.data.get(this.section.config, section_id, 'zerotier_secondary_port')
-			].filter(Boolean).join(',');
-
-			if (listen_port !== value) {
-				uci.set(this.section.config, section_id, 'zerotier_listen_port', value);
-				uci.save();
-			}
-
-			return form.Value.prototype.load.apply(this, arguments);
-		}
-		so.write = function(section_id, formvalue) {
-			uci.set(this.section.config, section_id, 'zerotier_listen_port', [
-				this.section.getOption('zerotier_primary_port').formvalue(section_id),
-				this.section.getOption('zerotier_secondary_port').formvalue(section_id)
-			].filter(Boolean).join(','));
-
-			return form.Value.prototype[formvalue ? 'write' : 'remove'].apply(this, arguments);
-		}
-		so.remove = so.write;
+		so.load = zerotier_listen_port.load;
+		so.write = zerotier_listen_port.write;
+		so.remove = zerotier_listen_port.write;
 		so.depends('type', 'zerotier');
 		so.modalonly = true;
 

@@ -524,7 +524,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		hostname: cfg.tailscale_hostname || cfg.easytier_hostname,
 		headers: cfg.headers ? json(cfg.headers) : null,
 		network: cfg.zerotier_network_id || cfg.masque_network || null,
-		"state-dir": `${HM_DIR}/${ucinode}/${cfg['.name']}`,
+		"state-dir": (cfg.type in ['zerotier', 'tailscale', 'easytier']) ? `${HM_DIR}/${ucinode}/${cfg['.name']}` : null,
 
 		/* Shadowsocks */
 
@@ -781,7 +781,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		/* VPN fields */
 		listeners: cfg.endpoint_listeners, // Array
 		//"mapped-listeners": cfg.endpoint_mapped_listeners, // Array
-		"no-listener": cfg.endpoint_no_listener === '0' ? false : true,
+		"no-listener": cfg.endpoint_no_listener === '0' ? false : cfg.type === 'easytier' ? true : null,
 		ip: cfg.endpoint_ip,
 		ipv4: cfg.endpoint_ipv4,
 		ipv6: cfg.endpoint_ipv6,

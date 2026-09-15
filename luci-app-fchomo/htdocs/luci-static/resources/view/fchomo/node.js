@@ -1738,8 +1738,7 @@ return view.extend({
 		const easytier_listen_port = {
 			load(section_id) {
 				const listen_port = this.map.data.get(this.section.config, section_id, 'easytier_listen_port') || '';
-				const value = this.map.data.get(this.section.config, section_id, 'endpoint_listeners')
-					?.map(uri => new URL(uri).port)
+				const value = [...new Set(this.map.data.get(this.section.config, section_id, 'endpoint_listeners')?.map(uri => new URL(uri).port) || [])]
 					.filter(Boolean).join(',');
 
 				if (listen_port != value) {
@@ -1754,7 +1753,7 @@ return view.extend({
 			},
 
 			write(section_id, formvalue) {
-				const value = formvalue?.map(uri => new URL(uri).port)
+				const value = [...new Set(formvalue?.map(uri => new URL(uri).port) || [])]
 					.filter(Boolean).join(',');
 
 				uci.set(this.section.config, section_id, 'easytier_listen_port', value);

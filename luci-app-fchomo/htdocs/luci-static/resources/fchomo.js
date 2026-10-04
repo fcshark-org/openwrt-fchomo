@@ -545,6 +545,16 @@ const CBIGridSection = form.GridSection.extend({
 	}
 });
 
+const CBIListValue = form.ListValue.extend({
+	renderWidget(/* ... */) {
+		let frameEl = form.ListValue.prototype.renderWidget.apply(this, arguments);
+
+		frameEl.querySelector('select').style["min-width"] = '10em';
+
+		return frameEl;
+	}
+});
+
 const CBIDynamicList = form.DynamicList.extend({ // @less_25_12
 	__name__: 'CBI.DynamicList',
 
@@ -568,6 +578,18 @@ const CBIDynamicList = form.DynamicList.extend({ // @less_25_12
 	}
 });
 
+const CBIStaticList = form.DynamicList.extend({
+	__name__: 'CBI.StaticList',
+
+	renderWidget(/* ... */) {
+		let El = (less_25_12 ? CBIDynamicList : form.DynamicList).prototype.renderWidget.apply(this, arguments); // @less_25_12
+
+		El.querySelector('.add-item ul > li[data-value="-"]')?.remove();
+
+		return El;
+	}
+});
+
 const CBIMultiValue = form.MultiValue.extend({ // @pr8758_merged
 	__name__: 'CBI.MultiValue',
 
@@ -582,28 +604,6 @@ const CBIMultiValue = form.MultiValue.extend({ // @pr8758_merged
 		).call(this, UIDropdown, ...arguments);
 
 		return sb;
-	}
-});
-
-const CBIStaticList = form.DynamicList.extend({
-	__name__: 'CBI.StaticList',
-
-	renderWidget(/* ... */) {
-		let El = (less_25_12 ? CBIDynamicList : form.DynamicList).prototype.renderWidget.apply(this, arguments); // @less_25_12
-
-		El.querySelector('.add-item ul > li[data-value="-"]')?.remove();
-
-		return El;
-	}
-});
-
-const CBIListValue = form.ListValue.extend({
-	renderWidget(/* ... */) {
-		let frameEl = form.ListValue.prototype.renderWidget.apply(this, arguments);
-
-		frameEl.querySelector('select').style["min-width"] = '10em';
-
-		return frameEl;
 	}
 });
 
@@ -2035,10 +2035,10 @@ return baseclass.extend({
 
 	/* Prototype */
 	GridSection: CBIGridSection,
-	DynamicList: CBIDynamicList,
-	MultiValue: CBIMultiValue,
-	StaticList: CBIStaticList,
 	ListValue: CBIListValue,
+	DynamicList: CBIDynamicList, // @less_25_12
+	StaticList: CBIStaticList,
+	MultiValue: CBIMultiValue,
 	GroupListValue: CBIGroupListValue,
 	GroupStaticList: CBIGroupStaticList,
 	RichValue: CBIRichValue,

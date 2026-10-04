@@ -295,47 +295,79 @@ const routing_port_type = [
 ];
 
 const rules_type = [
-	['DOMAIN'],
-	['DOMAIN-SUFFIX'],
-	['DOMAIN-KEYWORD'],
-	['DOMAIN-WILDCARD'],
-	['DOMAIN-REGEX'],
-	['GEOSITE'],
-
-	['IP-CIDR'],
-	['IP-CIDR6'],
-	['IP-SUFFIX'],
-	['IP-ASN'],
-	['GEOIP'],
-
-	['SRC-GEOIP'],
-	['SRC-IP-ASN'],
-	['SRC-IP-CIDR'],
-	['SRC-IP-SUFFIX'],
-
-	['DST-PORT'],
-	['SRC-PORT'],
-
-	//['IN-PORT'],
-	//['IN-TYPE'],
-	//['IN-USER'],
-	//['IN-NAME'],
-	['REMATCH-NAME'],
-
-	['PROCESS-PATH'],
-	['PROCESS-PATH-REGEX'],
-	['PROCESS-PATH-WILDCARD'],
-	['PROCESS-NAME'],
-	['PROCESS-NAME-REGEX'],
-	['PROCESS-NAME-WILDCARD'],
-	['UID'],
-
-	['NETWORK'],
-	['DSCP'],
-
-	['RULE-SET'],
-
-	['MATCH']
+	{
+		label: _('Domain'),
+		types: [
+			['DOMAIN'],
+			['DOMAIN-SUFFIX'],
+			['DOMAIN-KEYWORD'],
+			['DOMAIN-WILDCARD'],
+			['DOMAIN-REGEX'],
+			['GEOSITE']
+		]
+	},
+	{
+		label: _('Dst-IP'),
+		types: [
+			['IP-CIDR'],
+			['IP-CIDR6'],
+			['IP-SUFFIX'],
+			['IP-ASN'],
+			['GEOIP']
+		]
+	},
+	{
+		label: _('Src-IP'),
+		types: [
+			['SRC-GEOIP'],
+			['SRC-IP-ASN'],
+			['SRC-IP-CIDR'],
+			['SRC-IP-SUFFIX']
+		]
+	},
+	{
+		label: _('Port'),
+		types: [
+			['DST-PORT'],
+			['SRC-PORT']
+		]
+	},
+	{
+		label: _('Inbound'),
+		types: [
+			//['IN-PORT'],
+			//['IN-TYPE'],
+			//['IN-USER'],
+			//['IN-NAME'],
+			['REMATCH-NAME']
+		]
+	},
+	{
+		label: _('Process'),
+		types: [
+			['PROCESS-PATH'],
+			['PROCESS-PATH-REGEX'],
+			['PROCESS-PATH-WILDCARD'],
+			['PROCESS-NAME'],
+			['PROCESS-NAME-REGEX'],
+			['PROCESS-NAME-WILDCARD'],
+			['UID']
+		]
+	},
+	{
+		label: _('Network'),
+		types: [
+			['NETWORK'],
+			['DSCP']
+		]
+	},
+	{
+		label: _('Other'),
+		types: [
+			['RULE-SET'],
+			['MATCH']
+		]
+	}
 ];
 
 const rules_type_allowparms = [
@@ -349,12 +381,15 @@ const rules_type_allowparms = [
 	'RULE-SET',
 ];
 
-const rules_logical_type = [
-	['AND'],
-	['OR'],
-	['NOT'],
-	//['SUB-RULE'],
-];
+const rules_logical_type = {
+	label: _('Logical'),
+	types: [
+		['AND'],
+		['OR'],
+		['NOT'],
+		//['SUB-RULE']
+	]
+};
 
 const rules_logical_payload_count = {
 	'AND': { low: 2, high: undefined },
@@ -570,6 +605,68 @@ const CBIListValue = form.ListValue.extend({
 
 		return frameEl;
 	}
+});
+
+const CBIGroupListValue = CBIListValue.extend({
+	__name__: 'CBI.GroupListValue',
+
+	renderWidget(section_id, option_index, cfgvalue) {
+		const frameEl = CBIListValue.prototype.renderWidget.apply(this, arguments);
+		const select = frameEl.querySelector('select');
+		const options = Array.from(select.options);
+
+		Object.keys(this.grplist).forEach((label) => {
+			const groupEl = E('optgroup', {label: label}, []);
+			for (const option of options)
+				if (this.grplist[label].includes(option.value))
+					groupEl.appendChild(option);
+			select.appendChild(groupEl);
+		});
+
+		select.value = (cfgvalue != null) ? cfgvalue : this.default;
+		return frameEl;
+	},
+
+	value(key, val) {
+		this.keylist ??= [];
+		this.vallist ??= [];
+		this.grplist ??= {};
+
+		if (Array.isArray(key)) {
+			this.grplist[val] ??= [];
+			this.grplist[val].push(key[0]);
+			this.super('value', ...key);
+		} else
+			this.super('value', key, val);
+	}
+});
+
+const CBIGroupStaticList = CBIStaticList.extend({
+	__name__: 'CBI.GroupStaticList',
+
+	renderWidget(section_id, option_index, cfgvalue) {
+		const frameEl = CBIStaticList.prototype.renderWidget.apply(this, arguments);
+		const select = frameEl.querySelector('ul');
+		const optLis = Array.from(select.querySelectorAll('li'));
+
+		Object.keys(this.grplist).forEach((label) => {
+			const groupLi = E('li', {
+				class: "group-title",
+				style: "font-weight: bold; pointer-events: none;"
+			}, [label]);
+			for (const optLi of optLis)
+				if (this.grplist[label].includes(optLi.getAttribute('data-value'))) {
+					optLi.classList.add('group-item');
+					optLi.style.paddingLeft = '20px';
+				}
+			const firstLi = select.querySelector(`li[data-value="${this.grplist[label][0]}"]`);
+			select.insertBefore(groupLi, firstLi);
+		});
+
+		return frameEl;
+	},
+
+	value: CBIGroupListValue.prototype.value
 });
 
 const CBIRichValue = form.Value.extend({
@@ -1942,6 +2039,8 @@ return baseclass.extend({
 	MultiValue: CBIMultiValue,
 	StaticList: CBIStaticList,
 	ListValue: CBIListValue,
+	GroupListValue: CBIGroupListValue,
+	GroupStaticList: CBIGroupStaticList,
 	RichValue: CBIRichValue,
 	RichMultiValue: CBIRichMultiValue,
 	TextValue: CBITextValue,

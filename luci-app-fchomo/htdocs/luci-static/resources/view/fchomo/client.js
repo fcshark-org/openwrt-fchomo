@@ -694,7 +694,7 @@ function renderPayload(s, total, uciconfig) {
 			return true;
 		}
 
-		o = s.option(hm.less_25_12 ? hm.DynamicList : form.DynamicList, prefix + 'fused', _('Factor') + ' ++', // @less_25_12
+		o = s.option(hm.GroupDynamicList, prefix + 'fused', _('Factor') + ' ++',
 			_('Content will not be verified, Please make sure you enter it correctly.'));
 		extenbox[n].forEach((type) => {
 			o.depends(Object.fromEntries([['type', type], [prefix + 'type', /.+/]]));
@@ -702,13 +702,10 @@ function renderPayload(s, total, uciconfig) {
 		initDynamicPayload(o, n, 'factor', uciconfig);
 		o.load = L.bind(function(n, key, uciconfig, section_id) {
 			hm.loadLabel.call(this, [
-				['REMATCHNAME', _('-- REMATCH-NAME --')],
-				...hm.loadLabelValues(this.config, 'rematch-name'),
-				['NETWORK', _('-- NETWORK --')],
-				['udp', _('UDP')],
-				['tcp', _('TCP')],
-				['RULESET', _('-- RULE-SET --')],
-				...hm.loadLabelValues(this.config, 'ruleset')
+				...hm.loadLabelValues(this.config, 'rematch-name').map(e => [e, _('REMATCH-NAME')]),
+				[['udp', _('UDP')], _('NETWORK')],
+				[['tcp', _('TCP')], _('NETWORK')],
+				...hm.loadLabelValues(this.config, 'ruleset').map(e => [e, _('RULE-SET')])
 			], section_id);
 
 			return new RulesEntry(uci.get(uciconfig, section_id, 'entry')).getPayloads().slice(n).map(e => e[key] ?? '');

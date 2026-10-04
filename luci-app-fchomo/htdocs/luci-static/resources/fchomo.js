@@ -641,11 +641,11 @@ const CBIGroupListValue = CBIListValue.extend({
 	}
 });
 
-const CBIGroupStaticList = CBIStaticList.extend({
-	__name__: 'CBI.GroupStaticList',
+const CBIGroupDynamicList = (less_25_12 ? CBIDynamicList : form.DynamicList).extend({ // @less_25_12
+	__name__: 'CBI.GroupDynamicList',
 
 	renderWidget(section_id, option_index, cfgvalue) {
-		const frameEl = CBIStaticList.prototype.renderWidget.apply(this, arguments);
+		const frameEl = (less_25_12 ? CBIDynamicList : form.DynamicList).prototype.renderWidget.apply(this, arguments); // @less_25_12
 		const select = frameEl.querySelector('ul');
 		const optLis = Array.from(select.querySelectorAll('li'));
 
@@ -667,6 +667,18 @@ const CBIGroupStaticList = CBIStaticList.extend({
 	},
 
 	value: CBIGroupListValue.prototype.value
+});
+
+const CBIGroupStaticList = CBIGroupDynamicList.extend({
+	__name__: 'CBI.GroupStaticList',
+
+	renderWidget(/* ... */) {
+		let El = CBIGroupDynamicList.prototype.renderWidget.apply(this, arguments);
+
+		El.querySelector('.add-item ul > li[data-value="-"]')?.remove();
+
+		return El;
+	}
 });
 
 const CBIRichValue = form.Value.extend({
@@ -2040,6 +2052,7 @@ return baseclass.extend({
 	StaticList: CBIStaticList,
 	MultiValue: CBIMultiValue,
 	GroupListValue: CBIGroupListValue,
+	GroupDynamicList: CBIGroupDynamicList,
 	GroupStaticList: CBIGroupStaticList,
 	RichValue: CBIRichValue,
 	RichMultiValue: CBIRichMultiValue,

@@ -238,10 +238,10 @@ const outbound_type = [
 	['shadowquic', _('ShadowQUIC') + ' - ' + _('UDP')],
 	['trusttunnel', _('TrustTunnel') + ' - ' + _('TCP/UDP')],
 	['zerotier', _('ZeroTier') + ' - ' + _('UDP') + ' - ' + _('L2')], // Endpoint
-	['wireguard', _('WireGuard') + ' - ' + _('UDP')], // Endpoint
-	['tailscale', _('Tailscale') + ' - ' + _('UDP')], // Endpoint
-	['masque', _('Masque') + ' - ' + _('UDP')], // Endpoint // https://blog.cloudflare.com/post-quantum-warp/
-	['easytier', _('EasyTier') + ' - ' + _('TCP/UDP')], // Endpoint
+	['wireguard', _('WireGuard') + ' - ' + _('UDP') + ' - ' + _('L3')], // Endpoint
+	['tailscale', _('Tailscale') + ' - ' + _('UDP') + ' - ' + _('L3')], // Endpoint
+	['masque', _('Masque') + ' - ' + _('UDP') + ' - ' + _('L3')], // Endpoint // https://blog.cloudflare.com/post-quantum-warp/
+	['easytier', _('EasyTier') + ' - ' + _('TCP/UDP') + ' - ' + _('L3')], // Endpoint
 	['ssh', _('SSH') + ' - ' + _('TCP')]
 ];
 

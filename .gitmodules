@@ -1,3 +1,3 @@
-[submodule "js-md5"]
-	path = js-md5
-	url = https://github.com/emn178/js-md5
+[submodule "luci-app-fchomo/htdocs/luci-static/resources/fchomo/js-md5"]
+	path = luci-app-fchomo/htdocs/luci-static/resources/fchomo/js-md5
+	url = https://github.com/emn178/js-md5.git

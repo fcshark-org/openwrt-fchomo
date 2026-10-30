@@ -1738,6 +1738,14 @@ function validateBase64Key(length, section_id, value) {
 	return true;
 }
 
+function validateSha256Key(section_id, value) {
+	if (!value)
+		return true;
+	if (!((value.length === 64) && (value.match(/^[0-9a-fA-F]+$/))))
+		return _('Expecting: %s').format(_('valid SHA256 string with %d characters').format(64));
+	return true;
+}
+
 function validateMTLSClientAuth(type_option, section_id, value) {
 	// If `client-auth-type` is set to "verify-if-given" or "require-and-verify", `client-auth-cert` must not be empty.
 	const auth_type = this.section.getOption(type_option).formvalue(section_id);
@@ -2037,9 +2045,9 @@ return baseclass.extend({
 	validateJson,
 	validateUUID,
 	validateUrl,
-	// validate with bind this
 	validateHexstr,
 	validateBase64Key,
+	validateSha256Key,
 	validateMTLSClientAuth,
 	validatePresetIDs,
 	validateShadowsocksPassword,

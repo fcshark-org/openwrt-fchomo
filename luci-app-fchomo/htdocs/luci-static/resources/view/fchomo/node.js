@@ -1491,7 +1491,7 @@ return view.extend({
 		so.validate = function(section_id, value) {
 			const type = this.section.getOption('type').formvalue(section_id);
 			//const plugin_type = this.section.getOption('plugin_type').formvalue(section_id);
-			let tls_alpn = this.section.getUIElement(section_id, 'tls_alpn');
+			let tls_alpn = this.getUIElement(section_id);
 
 			// Default alpn
 			if (!`${tls_alpn.getValue()}`) {
@@ -1535,14 +1535,7 @@ return view.extend({
 
 		so = ss.taboption('field_tls', form.Value, 'tls_fingerprint', _('Cert fingerprint'),
 			_('Certificate fingerprint. Used to implement SSL Pinning and prevent MitM.'));
-		so.validate = function(section_id, value) {
-			if (!value)
-				return true;
-			if (!((value.length === 64) && (value.match(/^[0-9a-fA-F]+$/))))
-				return _('Expecting: %s').format(_('valid SHA256 string with %d characters').format(64));
-
-			return true;
-		}
+		so.validate = hm.validateSha256Key;
 		so.depends({tls: '1', type: /^(http|socks5|vmess|vless|trojan|hysteria|hysteria2)$/});
 		so.modalonly = true;
 

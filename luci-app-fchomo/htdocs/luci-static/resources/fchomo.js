@@ -912,7 +912,7 @@ const CBIHandleImport = baseclass.extend(/** @lends hm.HandleImport.prototype */
 		return uci.save()
 			.then(L.bind(this.map.load, this.map))
 			.then(L.bind(this.map.reset, this.map))
-			.then(L.ui.hideModal)
+			.then(ui.hideModal)
 			.catch(() => {});
 	},
 

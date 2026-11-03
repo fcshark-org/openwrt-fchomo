@@ -710,7 +710,7 @@ const CBITextValue = form.TextValue.extend({
 const CBIGenValue = form.Value.extend({
 	__name__: 'CBI.GenValue',
 
-	renderWidget(/* ... */) {
+	renderWidget(section_id, option_index, cfgvalue) {
 		let node = form.Value.prototype.renderWidget.apply(this, arguments);
 
 		if (!this.password)
@@ -719,7 +719,7 @@ const CBIGenValue = form.Value.extend({
 		(node.querySelector('.control-group') || node).appendChild(E('button', {
 			class: 'cbi-button cbi-button-add',
 			title: _('Generate'),
-			click: ui.createHandlerFn(this, handleGenKey, this.hm_options || this.option)
+			click: ui.createHandlerFn(this, handleGenKey, section_id, this.hm_options || this.option)
 		}, [ _('Generate') ]));
 
 		return node;
@@ -729,13 +729,13 @@ const CBIGenValue = form.Value.extend({
 const CBIGenText = CBITextValue.extend({
 	__name__: 'CBI.GenText',
 
-	renderWidget(/* ... */) {
+	renderWidget(section_id, option_index, cfgvalue) {
 		let node = CBITextValue.prototype.renderWidget.apply(this, arguments);
 
 		node.appendChild(E('button', {
 			class: 'cbi-button cbi-button-add',
 			title: _('Generate'),
-			click: ui.createHandlerFn(this, handleGenKey, this.hm_options || this.option)
+			click: ui.createHandlerFn(this, handleGenKey, section_id, this.hm_options || this.option)
 		}, [ _('Generate') ]));
 
 		return node;
@@ -748,7 +748,7 @@ const CBICopyValue = form.Value.extend({
 	readonly: true,
 
 	renderWidget(section_id, option_index, cfgvalue) {
-		let node = form.Value.prototype.renderWidget.call(this, section_id, option_index, cfgvalue);
+		let node = form.Value.prototype.renderWidget.apply(this, arguments);
 
 		node.classList.add('control-group');
 
@@ -1548,8 +1548,7 @@ function renderResLink(section_id) {
 	return El;
 }
 
-function handleGenKey(option) {
-	const section_id = this.section.section;
+function handleGenKey(section_id, option) {
 	const type = this.section.getOption('type')?.formvalue(section_id);
 	const widget = L.bind(function(option) {
 		return this.map.findElement('id', 'widget.' + this.cbid(section_id).replace(/\.[^\.]+$/, '.') + option);

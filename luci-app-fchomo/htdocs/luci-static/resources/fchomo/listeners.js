@@ -264,7 +264,7 @@ function renderListeners(s, uciconfig, isClient) {
 				click: ui.createHandlerFn(this, () => {
 					this.hm_options.type = document.getElementById(cbid).value;
 
-					return hm.handleGenKey.call(this, this.hm_options);
+					return hm.handleGenKey.call(this, section_id, this.hm_options);
 				})
 			}, [ _('Generate') ])
 		]));
@@ -311,7 +311,7 @@ function renderListeners(s, uciconfig, isClient) {
 		(node.querySelector('.control-group') || node).appendChild(E('button', {
 			class: 'cbi-button cbi-button-positive',
 			title: _('Generate'),
-			click: ui.createHandlerFn(this, hm.handleGenKey, this.hm_options || this.option)
+			click: ui.createHandlerFn(this, hm.handleGenKey, section_id, this.hm_options || this.option)
 		}, [ _('Generate') ]));
 
 		return node;
@@ -960,7 +960,7 @@ function renderListeners(s, uciconfig, isClient) {
 				click: ui.createHandlerFn(this, () => {
 					this.hm_options.type = document.getElementById(cbid).value;
 
-					return hm.handleGenKey.call(this, this.hm_options);
+					return hm.handleGenKey.call(this, section_id, this.hm_options);
 				})
 			}, [ _('Generate') ])
 		]));
@@ -1213,7 +1213,7 @@ function renderListeners(s, uciconfig, isClient) {
 				click: ui.createHandlerFn(this, () => {
 					this.hm_options.params = document.getElementById(cbid).value;
 
-					return hm.handleGenKey.call(this, this.hm_options);
+					return hm.handleGenKey.call(this, section_id, this.hm_options);
 				})
 			}, [ _('Generate') ])
 		]));

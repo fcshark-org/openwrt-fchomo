@@ -2464,7 +2464,7 @@ return view.extend({
 						else
 							this.hm_options.params = '';
 
-						return hm.handleGenKey.call(this, this.hm_options);
+						return hm.handleGenKey.call(this, section_id, this.hm_options);
 					})
 				}, [ _('Generate') ])
 			]));

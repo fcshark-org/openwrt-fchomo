@@ -616,10 +616,10 @@ function renderListeners(s, uciconfig, isClient) {
 
 		o = s.taboption('field_general', hm.ListValue, 'rule', _('Sub rule'),
 			_('Name of the Sub rule used for inbound matching.'));
-		o.value.apply(o, ['', _('null')]);
+		o.value.apply(o, ['', _('none')]);
 		o.load = function(section_id) {
 			return hm.loadLabel.call(this, [
-				['', _('null')],
+				['', _('none')],
 				...hm.loadLabelValues(this.config, 'subrule-group')
 			], section_id);
 		}

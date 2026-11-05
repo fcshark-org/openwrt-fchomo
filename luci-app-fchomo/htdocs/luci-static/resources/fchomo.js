@@ -268,7 +268,7 @@ const preset_outbound = {
 		['COMPATIBLE']
 	],
 	direct: [
-		['', _('null')],
+		['', _('none')],
 		['DIRECT'],
 		['GLOBAL']
 	],

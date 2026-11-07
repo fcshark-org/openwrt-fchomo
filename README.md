@@ -120,6 +120,7 @@ git clone --depth 1 --branch master --single-branch --no-checkout https://github
 pushd package/openwrt-fchomo
 umask 022
 git checkout
+git submodule update --init --recursive
 popd
 # Select the package LuCI -> Applications -> luci-app-fchomo
 make menuconfig

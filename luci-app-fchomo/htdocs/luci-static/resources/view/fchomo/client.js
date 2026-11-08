@@ -563,27 +563,6 @@ function renderPayload(s, total, uciconfig) {
 		o.depends(Object.fromEntries([[prefix + 'type', /\bPROCESS\b/]]));
 		initPayload(o, n, 'factor', uciconfig);
 
-		o = s.option(form.ListValue, prefix + 'rematchname', _('Factor') + ` ${n+1}`);
-		if (n === 0)
-			o.depends('type', 'REMATCH-NAME');
-		o.depends(prefix + 'type', 'REMATCH-NAME');
-		initPayload(o, n, 'factor', uciconfig);
-		o.load = L.bind(function(n, key, uciconfig, section_id) {
-			hm.loadLabel.call(this, [
-				['', _('-- Please choose --')],
-				...hm.loadLabelValues(this.config, 'rematch-name')
-			], section_id);
-
-			return new RulesEntry(uci.get(uciconfig, section_id, 'entry')).getPayload(n)[key];
-		}, o, n, 'factor', uciconfig)
-
-		o = s.option(form.Value, prefix + 'uint', _('Factor') + ` ${n+1}`);
-		o.datatype = 'uinteger';
-		if (n === 0)
-			o.depends('type', 'UID');
-		o.depends(prefix + 'type', 'UID');
-		initPayload(o, n, 'factor', uciconfig);
-
 		o = s.option(form.Value, prefix + 'ip', _('Factor') + ` ${n+1}`);
 		o.datatype = 'cidr';
 		if (n === 0) {
@@ -612,6 +591,27 @@ function renderPayload(s, total, uciconfig) {
 			}
 			return result;
 		}
+
+		o = s.option(form.ListValue, prefix + 'rematchname', _('Factor') + ` ${n+1}`);
+		if (n === 0)
+			o.depends('type', 'REMATCH-NAME');
+		o.depends(prefix + 'type', 'REMATCH-NAME');
+		initPayload(o, n, 'factor', uciconfig);
+		o.load = L.bind(function(n, key, uciconfig, section_id) {
+			hm.loadLabel.call(this, [
+				['', _('-- Please choose --')],
+				...hm.loadLabelValues(this.config, 'rematch-name')
+			], section_id);
+
+			return new RulesEntry(uci.get(uciconfig, section_id, 'entry')).getPayload(n)[key];
+		}, o, n, 'factor', uciconfig)
+
+		o = s.option(form.Value, prefix + 'uint', _('Factor') + ` ${n+1}`);
+		o.datatype = 'uinteger';
+		if (n === 0)
+			o.depends('type', 'UID');
+		o.depends(prefix + 'type', 'UID');
+		initPayload(o, n, 'factor', uciconfig);
 
 		o = s.option(form.ListValue, prefix + 'l4', _('Factor') + ` ${n+1}`);
 		o.value('udp', _('UDP'));

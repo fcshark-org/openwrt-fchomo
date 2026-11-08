@@ -288,6 +288,7 @@ export function parseListener(cfg) {
 		/* Snell */
 		psk: cfg.snell_psk,
 		version: cfg.snell_version,
+		mode: cfg.snell_mode,
 
 		/* VMess / VLESS */
 		decryption: cfg.vless_decryption === '1' ? parseVlessEncryption(cfg.vless_encryption_hmpayload, 'server') : null,

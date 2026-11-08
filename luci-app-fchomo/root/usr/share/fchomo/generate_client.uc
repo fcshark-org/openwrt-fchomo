@@ -561,6 +561,7 @@ uci.foreach(uciconf, ucinode, (cfg) => {
 		psk: cfg.snell_psk,
 		version: strToInt(cfg.snell_version),
 		reuse: strToBool(cfg.snell_reuse),
+		mode: cfg.snell_mode,
 
 		/* VMess / VLESS */
 		flow: cfg.vless_flow,

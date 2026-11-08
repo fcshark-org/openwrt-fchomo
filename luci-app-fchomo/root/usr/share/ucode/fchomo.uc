@@ -249,13 +249,13 @@ export function parseListener(cfg) {
 			} : null
 			/*{
 			}*/
-		] : ((cfg.type in ['mieru', 'anytls', 'tuic', 'hysteria2']) ? {
+		] : (cfg.type in ['mieru', 'anytls', 'tuic', 'hysteria2']) ? {
 			/* Mieru / AnyTLS / Hysteria2 */
 			...arrToObj([[cfg.username, cfg.password]]),
 
 			/* Tuic */
 			...arrToObj([[cfg.uuid, cfg.password]])
-		} : null),
+		} : null,
 
 		/* Shadowsocks */
 		cipher: cfg.shadowsocks_chipher,

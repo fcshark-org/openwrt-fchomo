@@ -305,7 +305,7 @@ function renderListeners(s, uciconfig, isClient) {
 
 	o = s.taboption('field_general', form.DynamicList, 'sudoku_custom_tables', _('Custom byte layout'),
 			_('Only applies to the %s.').format(_('Low-entropy data stream')));
-	o.renderWidget = function(/* ... */) {
+	o.renderWidget = function(section_id, option_index, cfgvalue) {
 		let node = form.DynamicList.prototype.renderWidget.apply(this, arguments);
 
 		(node.querySelector('.control-group') || node).appendChild(E('button', {

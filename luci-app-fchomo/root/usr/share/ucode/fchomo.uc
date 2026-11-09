@@ -234,7 +234,7 @@ export function parseListener(cfg, proxyResolver) {
 		);
 
 	return {
-		name: cfg['.name'],
+		name: cfg.label,
 		type: cfg.type,
 
 		listen: cfg.listen || '::',

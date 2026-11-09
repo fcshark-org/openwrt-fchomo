@@ -121,6 +121,20 @@ function parse_filter(cfg) {
 		return cfg;
 }
 
+function get_listener(cfg, no_verify) {
+	if (isEmpty(cfg))
+		return null;
+
+	const label = uci.get(uciconf, cfg, 'label');
+	if (isEmpty(label)) {
+		if (no_verify)
+			return cfg;
+		else
+			die(sprintf("%s's label is missing, please check your configuration.", cfg));
+	} else
+		return label;
+}
+
 function get_proxy(cfg, no_verify) {
 	if (isEmpty(cfg))
 		return null;
@@ -179,7 +193,11 @@ function parse_entry(cfg) {
 	function _payloadStrategy(payload) {
 		// LOGIC_TYPE,((payload1),(payload2))
 		if (payload.factor === null || (type(payload.factor) in ['bool', 'int', 'string'])) {
-			return sprintf(payload.deny ? 'NOT,((%s))' : '%s', join(',', [payload.type, payload.factor ?? '']));
+			return sprintf(payload.deny ? 'NOT,((%s))' : '%s', join(',',
+				(payload.type === 'IN-NAME')
+				? [payload.type, get_listener(payload.factor) ?? '']
+				: [payload.type, payload.factor ?? '']
+			));
 		} else if (type(payload.factor) === 'array') {
 			return sprintf(`${payload.type},(%s)`, join(',', map(payload.factor, p => `(${_payloadStrategy(p)})`)));
 		} else if (type(payload.factor) === 'object') {

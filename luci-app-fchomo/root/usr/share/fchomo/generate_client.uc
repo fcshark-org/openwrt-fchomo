@@ -352,22 +352,7 @@ uci.foreach(uciconf, uciinbd, (cfg) => {
 	if (cfg.enabled === '0')
 		return;
 
-	const listener = parseListener(cfg);
-	listener.proxy = get_proxy(listener.proxy);
-	if (listener["reality-config"])
-		listener["reality-config"].proxy = get_proxy(listener["reality-config"].proxy);
-	if (listener["shadow-tls"])
-		listener["shadow-tls"].handshake.proxy = get_proxy(listener["shadow-tls"].handshake.proxy);
-	if (listener["res-tls"])
-		listener["res-tls"].proxy = get_proxy(listener["res-tls"].proxy);
-	if (listener["jls-config"])
-		listener["jls-config"].proxy = get_proxy(listener["jls-config"].proxy);
-	if (listener["jls-upstream"])
-		listener["jls-upstream"].proxy = get_proxy(listener["jls-upstream"].proxy);
-	if (listener["realm-opts"])
-		listener["realm-opts"].proxy = get_proxy(listener["realm-opts"].proxy);
-
-	push(config.listeners, listener);
+	push(config.listeners, parseListener(cfg, get_proxy));
 });
 /* Tun settings */
 if (match(proxy_mode, /tun/))

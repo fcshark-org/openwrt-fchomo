@@ -224,7 +224,15 @@ export function parseVlessEncryption(payload, side) {
 		(isEmpty(content.keypairs) ? '' : '.' + join('.', map(content.keypairs, e => e[side]))); // Required
 };
 
-export function parseListener(cfg) {
+export function parseListener(cfg, proxyResolver) {
+	if (proxyResolver == null)
+		proxyResolver = value => value;
+	else
+		assert(
+			type(proxyResolver) == 'function',
+			'parseListener: proxyResolver must be a function'
+		);
+
 	return {
 		name: cfg['.name'],
 		type: cfg.type,
@@ -233,7 +241,7 @@ export function parseListener(cfg) {
 		port: strToInt(cfg.listen_port),
 		"routing-mark": strToInt(cfg.routing_mark) || null,
 		rule: cfg.rule,
-		proxy: cfg.proxy, // raw data need post-processing
+		proxy: proxyResolver(cfg.proxy),
 
 		/* HTTP / SOCKS / Mieru / VMess / VLESS / Trojan / AnyTLS / Tuic / Hysteria2 / TrustTunnel */
 		users: (cfg.type in ['http', 'socks', 'mixed', 'vmess', 'vless', 'trojan', 'trusttunnel']) ? [
@@ -332,7 +340,7 @@ export function parseListener(cfg) {
 			"skip-cert-verify": strToBool(cfg.hysteria2_realm_skip_cert_verify),
 			certificate: cfg.hysteria2_realm_cert_path, // mTLS
 			"private-key": cfg.hysteria2_realm_key_path, // mTLS
-			proxy: cfg.hysteria2_realm_proxy // raw data need post-processing
+			proxy: proxyResolver(cfg.hysteria2_realm_proxy)
 		} : null,
 
 		/* Hysteria2 Realmserver */
@@ -356,7 +364,7 @@ export function parseListener(cfg) {
 		"jls-upstream": cfg.type === 'shadowquic' ? {
 			addr: cfg.plugin_opts_handshake_dest,
 			sni: cfg.plugin_opts_host,
-			proxy: cfg.plugin_opts_dest_proxy, // raw data need post-processing
+			proxy: proxyResolver(cfg.plugin_opts_dest_proxy),
 			"rate-limit": strToInt(cfg.plugin_opts_rate_limit)
 		} : null,
 		cwnd: strToInt(cfg.shadowquic_cwnd),
@@ -410,7 +418,7 @@ export function parseListener(cfg) {
 					} : { password: cfg.plugin_opts_thetlspassword }),
 					handshake: {
 						dest: cfg.plugin_opts_handshake_dest,
-						proxy: cfg.plugin_opts_dest_proxy // raw data need post-processing
+						proxy: proxyResolver(cfg.plugin_opts_dest_proxy)
 					}
 				}
 			} : cfg.plugin_type === 'restls' ? {
@@ -421,7 +429,7 @@ export function parseListener(cfg) {
 					password: cfg.plugin_opts_thetlspassword,
 					"restls-script": cfg.plugin_opts_restls_script,
 					//"min-record-len": 0,
-					proxy: cfg.plugin_opts_dest_proxy, // raw data need post-processing
+					proxy: proxyResolver(cfg.plugin_opts_dest_proxy),
 					"rate-limit": strToInt(cfg.plugin_opts_rate_limit)
 				}
 			} : cfg.plugin_type === 'jls' ? {
@@ -437,7 +445,7 @@ export function parseListener(cfg) {
 					dest: cfg.plugin_opts_handshake_dest,
 					sni: cfg.plugin_opts_host,
 					alpn: cfg.tls_alpn,
-					proxy: cfg.plugin_opts_dest_proxy, // raw data need post-processing
+					proxy: proxyResolver(cfg.plugin_opts_dest_proxy),
 					"rate-limit": strToInt(cfg.plugin_opts_rate_limit)
 				}
 			} : {}
@@ -453,7 +461,7 @@ export function parseListener(cfg) {
 					"short-id": cfg.tls_reality_short_id,
 					"server-names": cfg.tls_reality_server_names,
 					"max-time-difference": strToInt(cfg.tls_reality_max_time_difference),
-					proxy: cfg.plugin_opts_dest_proxy, // raw data need post-processing
+					proxy: proxyResolver(cfg.plugin_opts_dest_proxy),
 				}
 			} : {
 				certificate: cfg.tls_cert_path,

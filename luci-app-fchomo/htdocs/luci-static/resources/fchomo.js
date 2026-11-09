@@ -339,10 +339,10 @@ const rules_type = [
 	{
 		label: _('Inbound'),
 		types: [
-			//['IN-PORT'],
-			//['IN-TYPE'],
+			['IN-PORT'],
+			['IN-TYPE'],
 			//['IN-USER'],
-			//['IN-NAME'],
+			['IN-NAME'],
 			['REMATCH-NAME']
 		]
 	},
@@ -1327,6 +1327,7 @@ function loadLabelValues(uciconfig, sectiontype, options = {}) {
 
 	switch (sectiontype) {
 		case 'proxy_group':
+		case 'inbound':
 		case 'node':
 		case 'provider':
 			uci.sections(uciconfig, sectiontype, (res) => {

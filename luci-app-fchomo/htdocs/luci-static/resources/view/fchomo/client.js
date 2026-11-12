@@ -543,6 +543,7 @@ function renderPayload(s, total, uciconfig) {
 	}
 
 	let o, prefix;
+
 	// StaticList payload
 	for (let n=0; n<total; n++) {
 		prefix = `payload${n}_`;
@@ -766,7 +767,7 @@ function renderRules(s, uciconfig) {
 		return El;
 	}
 	o.load = function(section_id) {
-		return form.DummyValue.prototype.load.call(this, section_id) || new RulesEntry().toString('json');
+		return this.super('load', section_id) || new RulesEntry().toString('json');
 	}
 	o.write = form.AbstractValue.prototype.write;
 	o.remove = form.AbstractValue.prototype.remove;
@@ -779,6 +780,14 @@ function renderRules(s, uciconfig) {
 	}
 	o.load = function(section_id) {
 		return new RulesEntry(uci.get(uciconfig, section_id, 'entry')).type;
+	}
+	o.onchange = function(ev, section_id, value) {
+		let UIEl = this.section.getUIElement(section_id, 'entry');
+
+		let rule = new RulesEntry(UIEl.getValue()).setKey('type', value);
+
+		UIEl.node.previousSibling.innerText = rule.toString('mihomo');
+		UIEl.setValue(rule.toString('json'));
 	}
 	o.validate = function(section_id, value) {
 		// params only available for types other than
@@ -803,14 +812,6 @@ function renderRules(s, uciconfig) {
 		}
 
 		return true;
-	}
-	o.onchange = function(ev, section_id, value) {
-		let UIEl = this.section.getUIElement(section_id, 'entry');
-
-		let rule = new RulesEntry(UIEl.getValue()).setKey('type', value);
-
-		UIEl.node.previousSibling.innerText = rule.toString('mihomo');
-		UIEl.setValue(rule.toString('json'));
 	}
 	o.write = function() {};
 	o.rmempty = false;

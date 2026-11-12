@@ -827,13 +827,16 @@ function renderListeners(s, uciconfig, isClient) {
 	o.modalonly = true;
 
 	// common part
-	const initVlessEncryptionOption = function(o, key, load_callback = v => v) {
+	const initVlessEncryptionOption = function(o, key,
+		load_callback = (k, inst) => inst[k],
+		onchange_callback = (k, v, inst) => inst.setKey(k, v)
+	) {
 		o.load = function(section_id) {
-			return load_callback(new VlessEncryption(uci.get(uciconfig, section_id, 'vless_encryption_hmpayload'))[key]);
+			return load_callback(key, new VlessEncryption(uci.get(uciconfig, section_id, 'vless_encryption_hmpayload')));
 		}
 		o.onchange = function(ev, section_id, value) {
 			let UIEl = this.section.getUIElement(section_id, 'vless_encryption_hmpayload');
-			let newpayload = new VlessEncryption(UIEl.getValue()).setKey(key, value);
+			let newpayload = onchange_callback(key, value, new VlessEncryption(UIEl.getValue()));
 
 			UIEl.setValue(newpayload.toString());
 
@@ -979,7 +982,7 @@ function renderListeners(s, uciconfig, isClient) {
 		return node;
 	}
 	initVlessEncryptionOption(o, 'keypairs',
-		(keypairs) => JSON.stringify(keypairs, null, 2)
+		(k, inst) => JSON.stringify(inst[k], null, 2)
 	);
 	const keypairs_onchange = o.onchange;
 	o.onchange = function() {};

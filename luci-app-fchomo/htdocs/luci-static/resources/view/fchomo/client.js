@@ -1580,85 +1580,84 @@ return view.extend({
 		so.editable = true;
 
 		so = ss.option(form.DummyValue, 'address', _('Address'));
+		so.load = function(section_id) {
+			const value = this.super('load', section_id);
+
+			this[`${this.option}_${section_id}`] = new DNSAddress(value);
+
+			return value;
+		}
+		so.instget = function(section_id) {return this[`${this.option}_${section_id}`]}
+		so.instset = function(section_id, callback = inst => inst) {
+			const UIEl = this.getUIElement(section_id);
+
+			const inst = this[`${this.option}_${section_id}`];
+			callback(inst);
+
+			UIEl.node.previousSibling.innerText = inst.toString();
+			UIEl.setValue(inst.toString());
+		}
 		so.write = form.AbstractValue.prototype.write;
 		so.remove = form.AbstractValue.prototype.remove;
 		so.editable = true;
 
-		so = ss.option(form.Value, 'addr', _('Address'));
-		so.load = function(section_id) {
-			return new DNSAddress(uci.get(data[0], section_id, 'address')).addr;
+		// common part
+		const initAddressOption = function(o, key,
+			load_callback = (k, inst) => boolToFlag(inst.parseParam(k) ? true : false),
+			onchange_callback = (k, v, inst) => inst.setParam(k, flagToBool(v) || null)
+		) {
+			o.load = function(section_id) {
+				return load_callback(key, this.section.getOption('address').instget(section_id));
+			}
+			o.onchange = function(ev, section_id, value) {
+				this.section.getOption('address').instset(section_id, L.bind(onchange_callback, this, key, value));
+			}
+			o.write = function() {};
 		}
+
+		so = ss.option(form.Value, 'addr', _('Address'));
+		initAddressOption(so, 'addr',
+			(k, inst) => inst[k],
+			(k, v, inst) => inst[k] = v
+		);
 		so.validate = function(section_id, value) {
 			if (value.match('#'))
 				return _('Expecting: %s').format(_('No add\'l params'));
 
-			// params only available on DoH
-			// https://github.com/muink/mihomo/blob/43f21c0b412b7a8701fe7a2ea6510c5b985a53d6/config/config.go#L1211C8-L1211C14
-			if (value.match(/^https?:\/\//)){
-				this.section.getUIElement(section_id, 'h3').node.querySelector('input').removeAttribute('disabled');
-			} else {
-				let UIEl = this.section.getUIElement(section_id, 'address');
+			let UIEl = this.section.getUIElement(section_id, 'h3');
+			if (value.match(/^https?:\/\//))
+				UIEl.node.querySelector('input').removeAttribute('disabled');
+			else {
+				this.section.getOption('address').instset(section_id, inst => inst.setParam('h3'));
 
-				let newvalue = new DNSAddress(UIEl.getValue()).setParam('h3').toString();
-
-				UIEl.node.previousSibling.innerText = newvalue;
-				UIEl.setValue(newvalue);
-
-				['h3'].forEach((opt) => {
-					let UIEl = this.section.getUIElement(section_id, opt);
-					UIEl.setValue('');
-					UIEl.node.querySelector('input').disabled = true;
-				});
+				UIEl.setValue('');
+				UIEl.node.querySelector('input').disabled = true;
 			}
 
 			return true;
 		}
-		so.onchange = function(ev, section_id, value) {
-			let UIEl = this.section.getUIElement(section_id, 'address');
-
-			let newvalue = ('N' + UIEl.getValue()).replace(/^[^#]+/, value);
-
-			UIEl.node.previousSibling.innerText = newvalue;
-			UIEl.setValue(newvalue);
-		}
-		so.write = function() {};
 		so.rmempty = false;
 		so.modalonly = true;
 
 		so = ss.option(hm.ListValue, 'detour', _('Proxy group'));
+		initAddressOption(so, 'detour',
+			(k, inst) => inst.parseParam(k),
+			(k, v, inst) => inst.setParam(k, v)
+		);
+		const detour_old_load = so.load;
 		so.load = function(section_id) {
 			hm.loadLabel.call(this, [
 				...hm.preset_outbound.dns,
 				...hm.loadLabelValues(this.config, 'proxy_group')
 			], section_id);
 
-			return new DNSAddress(uci.get(data[0], section_id, 'address')).parseParam('detour');
+			return detour_old_load.apply(this, arguments);
 		}
-		so.onchange = function(ev, section_id, value) {
-			let UIEl = this.section.getUIElement(section_id, 'address');
-
-			let newvalue = new DNSAddress(UIEl.getValue()).setParam('detour', value).toString();
-
-			UIEl.node.previousSibling.innerText = newvalue;
-			UIEl.setValue(newvalue);
-		}
-		so.write = function() {};
 		so.editable = true;
 
 		so = ss.option(form.Flag, 'h3', _('HTTP/3'));
 		so.default = so.disabled;
-		so.load = function(section_id) {
-			return boolToFlag(new DNSAddress(uci.get(data[0], section_id, 'address')).parseParam('h3') ? true : false);
-		}
-		so.onchange = function(ev, section_id, value) {
-			let UIEl = this.section.getUIElement(section_id, 'address');
-
-			let newvalue = new DNSAddress(UIEl.getValue()).setParam('h3', flagToBool(value) || null).toString();
-
-			UIEl.node.previousSibling.innerText = newvalue;
-			UIEl.setValue(newvalue);
-		}
-		so.write = function() {};
+		initAddressOption(so, 'h3');
 		so.modalonly = true;
 
 		so = ss.option(form.Flag, 'skip-cert-verify', _('Skip cert verify'),
@@ -1666,101 +1665,42 @@ return view.extend({
 			'<br/>' +
 			_('This is <strong>DANGEROUS</strong>, your traffic is almost like <strong>PLAIN TEXT</strong>! Use at your own risk!'));
 		so.default = so.disabled;
-		so.load = function(section_id) {
-			return boolToFlag(new DNSAddress(uci.get(data[0], section_id, 'address')).parseParam('skip-cert-verify') ? true : false);
-		}
-		so.onchange = function(ev, section_id, value) {
-			let UIEl = this.section.getUIElement(section_id, 'address');
-
-			let newvalue = new DNSAddress(UIEl.getValue()).setParam('skip-cert-verify', flagToBool(value) || null).toString();
-
-			UIEl.node.previousSibling.innerText = newvalue;
-			UIEl.setValue(newvalue);
-		}
-		so.write = function() {};
+		initAddressOption(so, 'skip-cert-verify');
 		so.modalonly = true;
 
 		so = ss.option(form.Value, 'ecs', _('EDNS Client Subnet'));
 		so.datatype = 'cidr';
-		so.load = function(section_id) {
-			return new DNSAddress(uci.get(data[0], section_id, 'address')).parseParam('ecs');
-		}
-		so.onchange = function(ev, section_id, value) {
-			let UIEl = this.section.getUIElement(section_id, 'address');
-
-			let newvalue = new DNSAddress(UIEl.getValue()).setParam('ecs', value).toString();
-
-			UIEl.node.previousSibling.innerText = newvalue;
-			UIEl.setValue(newvalue);
-		}
-		so.write = function() {};
+		initAddressOption(so, 'ecs',
+			(k, inst) => inst.parseParam(k),
+			(k, v, inst) => inst.setParam(k, v)
+		);
 		so.modalonly = true;
 
 		so = ss.option(form.Flag, 'ecs-override', _('ECS override'),
 			_('Override the existing ECS in original request.'));
 		so.default = so.disabled;
-		so.load = function(section_id) {
-			return boolToFlag(new DNSAddress(uci.get(data[0], section_id, 'address')).parseParam('ecs-override') ? true : false);
-		}
-		so.onchange = function(ev, section_id, value) {
-			let UIEl = this.section.getUIElement(section_id, 'address');
-
-			let newvalue = new DNSAddress(UIEl.getValue()).setParam('ecs-override', flagToBool(value) || null).toString();
-
-			UIEl.node.previousSibling.innerText = newvalue;
-			UIEl.setValue(newvalue);
-		}
-		so.write = function() {};
+		initAddressOption(so, 'ecs-override');
 		so.depends({'ecs': /.+/});
 		so.modalonly = true;
 
 		so = ss.option(form.Flag, 'disable-ipv4', _('Filter record: %s').format('A'));
 		so.default = so.disabled;
-		so.load = function(section_id) {
-			return boolToFlag(new DNSAddress(uci.get(data[0], section_id, 'address')).parseParam('disable-ipv4') ? true : false);
-		}
-		so.onchange = function(ev, section_id, value) {
-			let UIEl = this.section.getUIElement(section_id, 'address');
-
-			let newvalue = new DNSAddress(UIEl.getValue()).setParam('disable-ipv4', flagToBool(value) || null).toString();
-
-			UIEl.node.previousSibling.innerText = newvalue;
-			UIEl.setValue(newvalue);
-		}
+		initAddressOption(so, 'disable-ipv4');
 		so.write = function() {};
 		so.modalonly = true;
 
 		so = ss.option(form.Flag, 'disable-ipv6', _('Filter record: %s').format('AAAA'));
 		so.default = so.disabled;
-		so.load = function(section_id) {
-			return boolToFlag(new DNSAddress(uci.get(data[0], section_id, 'address')).parseParam('disable-ipv6') ? true : false);
-		}
-		so.onchange = function(ev, section_id, value) {
-			let UIEl = this.section.getUIElement(section_id, 'address');
-
-			let newvalue = new DNSAddress(UIEl.getValue()).setParam('disable-ipv6', flagToBool(value) || null).toString();
-
-			UIEl.node.previousSibling.innerText = newvalue;
-			UIEl.setValue(newvalue);
-		}
-		so.write = function() {};
+		initAddressOption(so, 'disable-ipv6');
 		so.modalonly = true;
 
 		so = ss.option(form.DynamicList, 'disable-qtypes', _('Filter record type:'));
 		so.datatype = 'uinteger';
 		so.placeholder = '65';
-		so.load = function(section_id) {
-			return new DNSAddress(uci.get(data[0], section_id, 'address')).parseParam('disable-qtypes');
-		}
-		so.onchange = function(ev, section_id, value) {
-			let UIEl = this.section.getUIElement(section_id, 'address');
-
-			let newvalue = new DNSAddress(UIEl.getValue()).setParam('disable-qtypes', value).toString();
-
-			UIEl.node.previousSibling.innerText = newvalue;
-			UIEl.setValue(newvalue);
-		}
-		so.write = function() {};
+		initAddressOption(so, 'disable-qtypes',
+			(k, inst) => inst.parseParam(k),
+			(k, v, inst) => inst.setParam(k, v)
+		);
 		so.modalonly = true;
 		/* DNS server END */
 

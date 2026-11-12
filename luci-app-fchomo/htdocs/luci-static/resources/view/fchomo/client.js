@@ -495,16 +495,11 @@ function renderPayload(s, total, uciconfig) {
 		onchange_callback = (n, k, v, inst) => inst.setPayload(n, Object.fromEntries([[k, v]]))
 	) {
 		o.load = function(section_id) {
-			return load_callback(n, key, new RulesEntry(uci.get(uciconfig, section_id, 'entry')));
+			return load_callback(n, key, this.section.getOption('entry').instget(section_id));
 		}
 		o.onchange = function(ev, section_id, value) {
-			let UIEl = this.section.getUIElement(section_id, 'entry');
-
 			let n = this.option.match(/^payload(\d+)_/)[1];
-			let rule = onchange_callback(n, key, value, new RulesEntry(UIEl.getValue()));
-
-			UIEl.node.previousSibling.innerText = rule.toString('mihomo');
-			UIEl.setValue(rule.toString('json'));
+			this.section.getOption('entry').instset(section_id, L.bind(onchange_callback, this, n, key, value));
 		}
 		o.write = function() {};
 		o.rmempty = false;
@@ -522,18 +517,12 @@ function renderPayload(s, total, uciconfig) {
 	) {
 		o.allowduplicates = true;
 		o.load = function(section_id) {
-			return load_callback(n, key, new RulesEntry(uci.get(uciconfig, section_id, 'entry')));
+			return load_callback(n, key, this.section.getOption('entry').instget(section_id));
 		}
 		o.validate = function(section_id, value) {
 			value = this.formvalue(section_id);
-			let UIEl = this.section.getUIElement(section_id, 'entry');
-			let rule = new RulesEntry(UIEl.getValue());
-
 			let n = this.option.match(/^payload(\d+)_/)[1];
-			onchange_callback(n, key, value, rule);
-
-			UIEl.node.previousSibling.innerText = rule.toString('mihomo');
-			UIEl.setValue(rule.toString('json'));
+			this.section.getOption('entry').instset(section_id, L.bind(onchange_callback, this, n, key, value));
 
 			return true;
 		}
@@ -767,28 +756,46 @@ function renderRules(s, uciconfig) {
 		return El;
 	}
 	o.load = function(section_id) {
-		return this.super('load', section_id) || new RulesEntry().toString('json');
+		const value = this.super('load', section_id);
+
+		this[`${this.option}_${section_id}`] = new RulesEntry(value);
+
+		return value;
+	}
+	o.instget = function(section_id) {return this[`${this.option}_${section_id}`]}
+	o.instset = function(section_id, callback = inst => inst) {
+		const UIEl = this.getUIElement(section_id);
+
+		const inst = this[`${this.option}_${section_id}`];
+		callback(inst);
+
+		UIEl.node.previousSibling.innerText = inst.toString('mihomo');
+		UIEl.setValue(inst.toString('json'));
 	}
 	o.write = form.AbstractValue.prototype.write;
 	o.remove = form.AbstractValue.prototype.remove;
 	o.editable = true;
+
+	// common part
+	const initEntryOption = function(o, key,
+		load_callback = (k, inst) => inst[k],
+		onchange_callback = (k, v, inst) => inst.setKey(k, v)
+	) {
+		o.load = function(section_id) {
+			return load_callback(key, this.section.getOption('entry').instget(section_id));
+		}
+		o.onchange = function(ev, section_id, value) {
+			this.section.getOption('entry').instset(section_id, L.bind(onchange_callback, this, key, value));
+		}
+		o.write = function() {};
+	}
 
 	o = s.option(hm.GroupListValue, 'type', _('Type'));
 	o.default = hm.rules_type[0].types[0][0];
 	for (const {label, types} of hm.rules_type.concat(hm.rules_logical_type)) {
 		types.forEach((res) => o.value.call(o, res, label));
 	}
-	o.load = function(section_id) {
-		return new RulesEntry(uci.get(uciconfig, section_id, 'entry')).type;
-	}
-	o.onchange = function(ev, section_id, value) {
-		let UIEl = this.section.getUIElement(section_id, 'entry');
-
-		let rule = new RulesEntry(UIEl.getValue()).setKey('type', value);
-
-		UIEl.node.previousSibling.innerText = rule.toString('mihomo');
-		UIEl.setValue(rule.toString('json'));
-	}
+	initEntryOption(o, 'type');
 	o.validate = function(section_id, value) {
 		// params only available for types other than
 		if (hm.rules_type_allowparms.includes(value)) {
@@ -803,58 +810,37 @@ function renderRules(s, uciconfig) {
 				UIEl.node.querySelector('input').disabled = true;
 			});
 
-			let UIEl = this.section.getUIElement(section_id, 'entry');
-
-			let rule = new RulesEntry(UIEl.getValue()).setParam('no-resolve').setParam('src');
-
-			UIEl.node.previousSibling.innerText = rule.toString('mihomo');
-			UIEl.setValue(rule.toString('json'));
+			this.section.getOption('entry').instset(section_id, inst => inst.setParam('no-resolve').setParam('src'));
 		}
 
 		return true;
 	}
-	o.write = function() {};
 	o.rmempty = false;
 	o.modalonly = true;
 
 	renderPayload(s, Math.max(...Object.values(hm.rules_logical_payload_count).map(e => e.low)), uciconfig);
 
 	o = s.option(hm.ListValue, 'detour', _('Proxy group'));
+	initEntryOption(o, 'detour');
+	const detour_old_load = o.load;
 	o.load = function(section_id) {
 		hm.loadLabel.call(this, [
 			...hm.preset_outbound.full,
 			...hm.loadLabelValues(this.config, 'proxy_group')
 		], section_id);
 
-		return new RulesEntry(uci.get(uciconfig, section_id, 'entry')).detour;
+		return detour_old_load.apply(this, arguments);
 	}
-	o.onchange = function(ev, section_id, value) {
-		let UIEl = this.section.getUIElement(section_id, 'entry');
-
-		let rule = new RulesEntry(UIEl.getValue()).setKey('detour', value);
-
-		UIEl.node.previousSibling.innerText = rule.toString('mihomo');
-		UIEl.setValue(rule.toString('json'));
-	}
-	o.write = function() {};
 	//o.depends('SUB-RULE', ''); // work on subrules not rules
 	o.editable = true;
 
 	o = s.option(form.Flag, 'src', _('src'),
 		_('Treat the <code>destination IP</code> as the <code>source IP</code>.'));
 	o.default = o.disabled;
-	o.load = function(section_id) {
-		return boolToFlag(new RulesEntry(uci.get(uciconfig, section_id, 'entry')).getParam('src') ? true : false);
-	}
-	o.onchange = function(ev, section_id, value) {
-		let UIEl = this.section.getUIElement(section_id, 'entry');
-
-		let rule = new RulesEntry(UIEl.getValue()).setParam('src', flagToBool(value) || null);
-
-		UIEl.node.previousSibling.innerText = rule.toString('mihomo');
-		UIEl.setValue(rule.toString('json'));
-	}
-	o.write = function() {};
+	initEntryOption(o, 'src',
+		(k, inst) => boolToFlag(inst.getParam(k) ? true : false),
+		(k, v, inst) => inst.setParam(k, flagToBool(v) || null)
+	);
 	o.depends('SUB-RULE', '');
 	o.modalonly = true;
 
@@ -862,18 +848,10 @@ function renderRules(s, uciconfig) {
 		_('Do not resolve the domain connection to IP for this match.</br>' +
 		'Only works for pure domain inbound connections without DNS resolution. e.g., socks5h'));
 	o.default = o.disabled;
-	o.load = function(section_id) {
-		return boolToFlag(new RulesEntry(uci.get(uciconfig, section_id, 'entry')).getParam('no-resolve') ? true : false);
-	}
-	o.onchange = function(ev, section_id, value) {
-		let UIEl = this.section.getUIElement(section_id, 'entry');
-
-		let rule = new RulesEntry(UIEl.getValue()).setParam('no-resolve', flagToBool(value) || null);
-
-		UIEl.node.previousSibling.innerText = rule.toString('mihomo');
-		UIEl.setValue(rule.toString('json'));
-	}
-	o.write = function() {};
+	initEntryOption(o, 'no-resolve',
+		(k, inst) => boolToFlag(inst.getParam(k) ? true : false),
+		(k, v, inst) => inst.setParam(k, flagToBool(v) || null)
+	);
 	o.depends('SUB-RULE', '');
 	o.modalonly = true;
 }
@@ -1387,7 +1365,10 @@ return view.extend({
 				...hm.loadLabelValues(this.config, 'subrule-group')
 			], section_id);
 
-			return new RulesEntry(uci.get(data[0], section_id, 'entry')).subrule || '';
+			return this.section.getOption('entry').instget(section_id).subrule || '';
+		}
+		so.onchange = function(ev, section_id, value) {
+			this.section.getOption('entry').instset(section_id, inst => inst.setKey('subrule', value));
 		}
 		so.validate = function(section_id, value) {
 			let UIEl = this.section.getUIElement(section_id, 'detour');
@@ -1396,14 +1377,6 @@ return view.extend({
 			UIEl.node.querySelector('select').disabled = value ? true : null;
 
 			return true;
-		}
-		so.onchange = function(ev, section_id, value) {
-			let UIEl = this.section.getUIElement(section_id, 'entry');
-
-			let rule = new RulesEntry(UIEl.getValue()).setKey('subrule', value);
-
-			UIEl.node.previousSibling.innerText = rule.toString('mihomo');
-			UIEl.setValue(rule.toString('json'));
 		}
 		so.write = function() {};
 		so.modalonly = true;

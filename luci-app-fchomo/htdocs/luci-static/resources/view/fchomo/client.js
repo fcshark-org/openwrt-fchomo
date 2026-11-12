@@ -738,7 +738,7 @@ function renderPayload(s, total, uciconfig) {
 				v.forEach((val) => {
 					inst.setPayload(n, Object.fromEntries([[k, flagToBool(val) || null]])); n++;
 				});
-				inst.setPayload(limit, Object.fromEntries([[k, null]], limit));
+				inst.setPayload(limit, Object.fromEntries([[k, null]]), limit);
 			}
 		);
 	})
@@ -798,19 +798,18 @@ function renderRules(s, uciconfig) {
 	initEntryOption(o, 'type');
 	o.validate = function(section_id, value) {
 		// params only available for types other than
-		if (hm.rules_type_allowparms.includes(value)) {
-			['no-resolve', 'src'].forEach((opt) => {
-				let UIEl = this.section.getUIElement(section_id, opt);
+		const params = ['no-resolve', 'src'];
+		for (let param of params) {
+			let UIEl = this.section.getUIElement(section_id, param);
+
+			if (hm.rules_type_allowparms.includes(value))
 				UIEl.node.querySelector('input').removeAttribute('disabled');
-			});
-		} else {
-			['no-resolve', 'src'].forEach((opt) => {
-				let UIEl = this.section.getUIElement(section_id, opt);
+			else {
 				UIEl.setValue('');
 				UIEl.node.querySelector('input').disabled = true;
-			});
 
-			this.section.getOption('entry').instset(section_id, inst => inst.setParam('no-resolve').setParam('src'));
+				this.section.getOption('entry').instset(section_id, inst => params.forEach(param => inst.setParam(param)));
+			}
 		}
 
 		return true;
